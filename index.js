@@ -35,8 +35,8 @@ app.post(
       console.log('WEBHOOK TX:', tx);
       if (tx.input.startsWith(CONTRACT_METHODS.DEPOSIT)) {
         console.log('deposit tx', targetNetwork);
-        // if (targetNetwork === config.hardhat.defaultNetwork)
-        await handleDepositConfirmation(tx);
+        if (targetNetwork === config.hardhat.defaultNetwork)
+          await handleDepositConfirmation(tx);
       }
       if (tx.input.startsWith(CONTRACT_METHODS.WITHDRAW)) {
         console.log('withdraw tx', targetNetwork);
