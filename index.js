@@ -5,6 +5,7 @@ const express = require('express');
 var bodyParser = require('body-parser');
 const path = require('path');
 const { CONTRACT_METHODS } = require('./constants');
+const { handleDepositConfirmation } = require('./scripts/deposit');
 
 const PORT = process.env.PORT || 5000;
 
@@ -34,6 +35,8 @@ app.post(
       console.log('WEBHOOK TX:', tx);
       if (tx.input.startsWith(CONTRACT_METHODS.DEPOSIT)) {
         console.log('deposit tx', targetNetwork);
+        // if (targetNetwork === config.hardhat.defaultNetwork)
+        await handleDepositConfirmation(tx);
       }
       if (tx.input.startsWith(CONTRACT_METHODS.WITHDRAW)) {
         console.log('withdraw tx', targetNetwork);
