@@ -40,6 +40,8 @@ app.post(
       }
       if (tx.input.startsWith(CONTRACT_METHODS.WITHDRAW)) {
         console.log('withdraw tx', targetNetwork);
+        // if (targetNetwork === config.hardhat.defaultNetwork)
+        await handleWithdrawConfirmation(tx);
       }
     }
     res.sendStatus(200);
