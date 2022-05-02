@@ -29,14 +29,14 @@ app.post(
     if (
       tx.status === 'confirmed' &&
       tx.direction === 'incoming' &&
-      tx.apiKey === config.blocknative.apiKey[targetNetwork]
+      tx.apiKey === config.blocknative.apiKey
     ) {
       console.log('WEBHOOK TX:', tx);
       if (tx.input.startsWith(CONTRACT_METHODS.DEPOSIT)) {
-        console.log('deposit tx');
+        console.log('deposit tx', targetNetwork);
       }
       if (tx.input.startsWith(CONTRACT_METHODS.WITHDRAW)) {
-        console.log('withdraw tx');
+        console.log('withdraw tx', targetNetwork);
       }
     }
     res.sendStatus(200);
