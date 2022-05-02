@@ -11,26 +11,26 @@
   "author": "Nifty Andy",
   "license": "MIT",
   "dependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.2",
-    "body-parser": "^1.19.0",
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
+    "body-parser": "^1.20.0",
     "chalk": "^4.1.2",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
-    "ejs": "^2.6.1",
-    "ethers": "^5.4.7",
-    "express": "^4.16.4",
+    "ejs": "^2.7.4",
+    "ethers": "^5.6.4",
+    "express": "^4.18.1",
     "getconfig": "^4.5.0",
-    "hardhat": "^2.6.4",
-    "it-all": "^1.0.5",
+    "hardhat": "^2.9.3",
+    "it-all": "^1.0.6",
     "json-colorizer": "^2.2.2",
-    "moment": "^2.22.2",
-    "node-fetch": "^2.6.2",
+    "moment": "^2.29.3",
+    "node-fetch": "^2.6.7",
     "uint8arrays": "^3.0.0",
-    "web3": "^1.5.2"
+    "web3": "^1.7.3"
   },
   "devDependencies": {
-    "request": "^2.81.0",
-    "tape": "^4.7.0"
+    "request": "^2.88.2",
+    "tape": "^4.15.1"
   },
   "engines": {
     "node": "14.17.6"
