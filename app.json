@@ -1,0 +1,29 @@
+{
+  "name": "Nifty League Game Account Webhooks",
+  "description": "API for Blocknative to catch important hooks for deposit/withdraw txs.",
+  "keywords": ["productivity", "HTML5", "scalpel"],
+  "website": "https://api.niftyleague.com/",
+  "repository": "https://github.com/NiftyLeague/GameAccountWebhooks",
+  "env": {
+    "HARDHAT_NETWORK": {
+      "description": "Determine which Ethereum network to run app on for web3 calls.",
+      "value": "mainnet | rinkeby"
+    },
+    "ETHERSCAN_API_KEY": {
+      "description": "API key created on Etherscan.",
+      "generator": "secret"
+    },
+    "INFURA_PROJECT_ID": {
+      "description": "Project ID generated on Infura.",
+      "generator": "secret"
+    },
+    "WEBHOOK_SECRET": {
+      "description": "Secret added to API to avoid spam calls. Check Blocknative account for value.",
+      "value": "secret"
+    },
+    "BLOCKNATIVE_API_KEY": {
+      "description": "API key created on Blocknative.",
+      "value": "secret"
+    }
+  }
+}
