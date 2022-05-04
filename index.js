@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 const path = require('path');
 const { CONTRACT_METHODS } = require('./constants');
 const { handleDepositConfirmation } = require('./scripts/deposit');
+const { handleWithdrawConfirmation } = require('./scripts/withdraw');
 
 const PORT = process.env.PORT || 5000;
 
