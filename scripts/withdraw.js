@@ -29,7 +29,7 @@ async function handleWithdrawConfirmation(tx) {
   console.log('body', body);
   try {
     const response = await fetch(
-      `${API_BASE_URL}/accounts/withdraw/confirm?secret=${config.secret}`,
+      `${API_BASE_URL}/accounts/withdraw-confirm?secret=${config.secret}`,
       {
         method: 'POST',
         body,
