@@ -37,8 +37,7 @@ async function handleWithdrawConfirmation(tx) {
     );
     console.log('response', response);
     if (!response.ok) throw new Error(response.statusText);
-    const json = await response.json();
-    console.log('json', json);
+    return response;
   } catch (error) {
     console.error('error', error);
   }
