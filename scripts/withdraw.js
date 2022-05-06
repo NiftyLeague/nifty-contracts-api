@@ -21,10 +21,11 @@ async function parseInputData(input) {
 }
 
 async function handleWithdrawConfirmation(tx) {
-  const { signature } = await parseInputData(tx.input);
+  const { signature, nonce } = await parseInputData(tx.input);
   const body = JSON.stringify({
     withdrawal_signature: signature,
     transfer_hash: tx.hash,
+    nonce,
   });
   console.log('body', body);
   try {
