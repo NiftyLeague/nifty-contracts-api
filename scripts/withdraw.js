@@ -16,7 +16,8 @@ async function parseInputData(input) {
   return {
     amount: ethers.utils.formatEther(inputData[0]),
     nonce: inputData[1].toNumber(),
-    signature: inputData[2],
+    expireAt: inputData[2],
+    signature: inputData[3],
   };
 }
 
