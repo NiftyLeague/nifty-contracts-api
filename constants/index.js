@@ -3,7 +3,7 @@ const API_BASE_URL =
 
 const CONTRACT_METHODS = {
   DEPOSIT: '0xb6b55f25',
-  WITHDRAW: '0x744fb6ca',
+  WITHDRAW: '0xfe55892d',
 };
 
 module.exports = {
