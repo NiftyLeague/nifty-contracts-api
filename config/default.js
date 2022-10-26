@@ -3,7 +3,10 @@ const config = {
   secret: '$$BE_API_SECRET',
 
   blocknative: {
-    apiKey: '$$BLOCKNATIVE_API_KEY',
+    apiKey: {
+      p2e: '$$BLOCKNATIVE_API_KEY_P2E',
+      comics: '$$BLOCKNATIVE_API_KEY_COMICS',
+    },
     webhookSecret: '$$WEBHOOK_SECRET',
   },
 
