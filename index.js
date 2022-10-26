@@ -31,7 +31,7 @@ app.post(
     if (
       tx.status === 'confirmed' &&
       tx.direction === 'incoming' &&
-      tx.apiKey === config.blocknative.apiKey
+      tx.apiKey === config.blocknative.apiKey.p2e
     ) {
       console.log('WEBHOOK TX:', tx);
       if (tx.input.startsWith(CONTRACT_METHODS.DEPOSIT)) {
@@ -44,6 +44,22 @@ app.post(
         if (targetNetwork === config.hardhat.defaultNetwork)
           await handleWithdrawConfirmation(tx);
       }
+    }
+    res.sendStatus(200);
+  }
+);
+
+app.post(
+  `/:network/webhooks/comics/${config.blocknative.webhookSecret}`,
+  async function (req, res) {
+    const targetNetwork = req.params.network;
+    const tx = req.body;
+    if (
+      tx.status === 'confirmed' &&
+      tx.direction === 'incoming' &&
+      tx.apiKey === config.blocknative.apiKey.comics
+    ) {
+      // TODO: Mint item logic
     }
     res.sendStatus(200);
   }
