@@ -4,6 +4,8 @@ const API_BASE_URL =
 const CONTRACT_METHODS = {
   DEPOSIT: '0xb6b55f25',
   WITHDRAW: '0xfe55892d',
+  PURCHASE: '0x72c9f580',
+  RENAME: '0xc39cbef1',
 };
 
 module.exports = {
