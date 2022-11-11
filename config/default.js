@@ -4,8 +4,9 @@ const config = {
 
   blocknative: {
     apiKey: {
-      p2e: '$$BLOCKNATIVE_API_KEY_P2E',
       comics: '$$BLOCKNATIVE_API_KEY_COMICS',
+      degens: '$$BLOCKNATIVE_API_KEY_DEGENS',
+      p2e: '$$BLOCKNATIVE_API_KEY_P2E',
     },
     webhookSecret: '$$WEBHOOK_SECRET',
   },
