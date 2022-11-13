@@ -1,14 +1,10 @@
-// @ts-expect-error TS(2580): Cannot find name 'require'. Do you need to install... Remove this comment to see the full error message
-const { spawn } = require('child_process');
-// @ts-expect-error TS(2580): Cannot find name 'require'. Do you need to install... Remove this comment to see the full error message
-const request = require('request');
-// @ts-expect-error TS(2580): Cannot find name 'require'. Do you need to install... Remove this comment to see the full error message
-const test = require('tape');
+import { spawn } from 'child_process';
+import request from 'request';
+import test from 'tape';
 
 // Start the app
-// @ts-expect-error TS(2580): Cannot find name 'process'. Do you need to install... Remove this comment to see the full error message
 const env = Object.assign({}, process.env, { PORT: 5000 });
-const child = spawn('node', ['index.js'], { env });
+const child = spawn('node', ['index.ts'], { env });
 
 test('responds to requests', (t: any) => {
   t.plan(4);

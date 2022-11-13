@@ -1,22 +1,25 @@
-// @ts-expect-error TS(2451): Cannot redeclare block-scoped variable 'config'.
+import dotenv from 'dotenv';
+dotenv.config();
+
 const config = {
   host: 'https://api.niftyleague.com',
-  secret: '$$BE_API_SECRET',
+  port: process.env.PORT || 5000,
+  secret: process.env.BE_API_SECRET,
 
   blocknative: {
     apiKey: {
-      comics: '$$BLOCKNATIVE_API_KEY_COMICS',
-      degens: '$$BLOCKNATIVE_API_KEY_DEGENS',
-      p2e: '$$BLOCKNATIVE_API_KEY_P2E',
+      comics: process.env.BLOCKNATIVE_API_KEY_COMICS,
+      degens: process.env.BLOCKNATIVE_API_KEY_DEGENS,
+      p2e: process.env.BLOCKNATIVE_API_KEY_P2E,
     },
-    webhookSecret: '$$WEBHOOK_SECRET',
+    webhookSecret: process.env.WEBHOOK_SECRET,
   },
 
   hardhat: {
-    defaultNetwork: '$$HARDHAT_NETWORK',
-    infura: '$$INFURA_PROJECT_ID',
+    defaultNetwork: process.env.HARDHAT_NETWORK,
+    infura: process.env.INFURA_PROJECT_ID,
+    etherscan: process.env.ETHERSCAN_API_KEY,
   },
 };
 
-// @ts-expect-error TS(2580): Cannot find name 'module'. Do you need to install ... Remove this comment to see the full error message
-module.exports = config;
+export default config;
