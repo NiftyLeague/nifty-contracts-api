@@ -75,7 +75,7 @@ app.get('/:network/degen/:token_id/background', async function (req, res) {
 app.get('/imx/comics/metadata/:token_id', async function (req, res) {
   const tokenId = req.params.token_id;
   pipeRequest(
-    `https://nifty-league.s3.amazonaws.com/launch-comics/metadata/${tokenId}.json`,
+    `https://nifty-league.s3.amazonaws.com/imx/comics/metadata/${tokenId}.json`,
     res
   );
 });
@@ -83,7 +83,7 @@ app.get('/imx/comics/metadata/:token_id', async function (req, res) {
 app.get('/imx/comics/image/:token_id', async function (req, res) {
   const tokenId = req.params.token_id;
   pipeRequest(
-    `https://nifty-league.s3.amazonaws.com/launch-comics/images/${tokenId}.png`,
+    `https://nifty-league.s3.amazonaws.com/imx/comics/images/${tokenId}.png`,
     res
   );
 });
