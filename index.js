@@ -52,8 +52,11 @@ app.get('/:network/degen/image/:token_id', async function (req, res) {
   const metadata = await resolveDegenMetadata(req);
   const background = metadata?.attributes?.find(
     a => a.trait_type === 'Background'
-  );
-  const type = background.value === 'Legendary' ? 'mp4' : 'png';
+  )?.value;
+  const tribe = metadata?.attributes?.find(
+    a => a.trait_type === 'Tribe'
+  )?.value;
+  const type = background === 'Legendary' || tribe === '???' ? 'mp4' : 'png';
   pipeRequest(
     `https://nifty-league.s3.amazonaws.com/degens/${network}/images/${token_id}.${type}`,
     res
