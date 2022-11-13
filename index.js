@@ -1,14 +1,14 @@
 require('dotenv').config();
+const bodyParser = require('body-parser');
 const config = require('getconfig');
 const cors = require('cors');
 const express = require('express');
-var bodyParser = require('body-parser');
-const fetch = require('node-fetch');
 const path = require('path');
 const { CONTRACT_METHODS } = require('./constants');
-const { sleep } = require('./scripts/helpers');
+const { resolveDegenMetadata, pipeRequest } = require('./scripts/helpers');
 const { handleDepositConfirmation } = require('./scripts/deposit');
 const { handleWithdrawConfirmation } = require('./scripts/withdraw');
+const { resolveCirculatingSupply } = require('./scripts/nftl');
 
 const PORT = process.env.PORT || 5000;
 
@@ -29,31 +29,9 @@ app.use(cors());
 // ------ NFTL
 //////////////////////////////////////////////
 
-async function resolveCirculatingSupply(req) {
-  try {
-    const secret = process.env.ETHERSCAN_API_KEY;
-    const contractaddress = '0x3c8d2fce49906e11e71cb16fa0ffeb2b16c29638';
-    const supplyURI = `https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress=${contractaddress}&apikey=${secret}`;
-    const supplyRes = await fetch(supplyURI);
-    await sleep(5000);
-    const timelockaddress = '0xfeb2f45a3817ef9156a6c771ffc90098d3dfe003';
-    const timelockURI = `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=${contractaddress}&address=${timelockaddress}&tag=latest&apikey=${secret}`;
-    const lockedRes = await fetch(timelockURI);
-    if (supplyRes.status < 400 && lockedRes.status < 400) {
-      const { result: supply } = await supplyRes.json();
-      const { result: locked } = await lockedRes.json();
-      return BigInt(supply) - BigInt(locked);
-    }
-    return null;
-  } catch (e) {
-    return null;
-  }
-}
-
 app.get('/NFTL/supply', async function (req, res) {
-  const supply = await resolveCirculatingSupply(req);
-  console.log('supply', supply, supply.toString());
-  if (supply) res.send(supply.toString());
+  const supply = await resolveCirculatingSupply();
+  if (supply) res.send(supply);
   else res.sendStatus(404);
 });
 
@@ -61,27 +39,25 @@ app.get('/NFTL/supply', async function (req, res) {
 // ------ METADATA
 //////////////////////////////////////////////
 
-async function fetchMetadata(URI) {
-  try {
-    const response = await fetch(URI);
-    if (response.status < 400) return response.json();
-    return null;
-  } catch (e) {
-    return null;
-  }
-}
+app.get('/:network/degen/metadata/:token_id', async function (req, res) {
+  const { network, token_id } = req.params;
+  pipeRequest(
+    `https://nifty-league.s3.amazonaws.com/degens/${network}/metadata/${token_id}.json`,
+    res
+  );
+});
 
-async function resolveDegenMetadata(req) {
-  const targetNetwork = req.params.network;
-  const tokenId = parseInt(req.params.token_id).toString();
-  const URI = `https://nifty-league.s3.amazonaws.com/degens/${targetNetwork}/metadata/${tokenId}.json`;
-  return fetchMetadata(URI);
-}
-
-app.get('/:network/degen/:token_id', async function (req, res) {
+app.get('/:network/degen/image/:token_id', async function (req, res) {
+  const { network, token_id } = req.params;
   const metadata = await resolveDegenMetadata(req);
-  if (metadata) res.send(metadata);
-  else res.sendStatus(404);
+  const background = metadata?.attributes?.find(
+    a => a.trait_type === 'Background'
+  );
+  const type = background.value === 'Legendary' ? 'mp4' : 'png';
+  pipeRequest(
+    `https://nifty-league.s3.amazonaws.com/degens/${network}/images/${token_id}.${type}`,
+    res
+  );
 });
 
 app.get('/:network/degen/:token_id/background', async function (req, res) {
@@ -93,28 +69,36 @@ app.get('/:network/degen/:token_id/background', async function (req, res) {
   else res.sendStatus(404);
 });
 
-async function resolveComicMetadata(req) {
-  const tokenId = parseInt(req.params.token_id, 16).toString();
-  const URI = `https://nifty-league.s3.amazonaws.com/launch-comics/metadata/${tokenId}.json`;
-  return fetchMetadata(URI);
-}
-
-app.get('/:network/comics/:token_id', async function (req, res) {
-  const metadata = await resolveComicMetadata(req);
-  if (metadata) res.send(metadata);
-  else res.sendStatus(404);
+app.get('/imx/comics/metadata/:token_id', async function (req, res) {
+  const tokenId = req.params.token_id;
+  pipeRequest(
+    `https://nifty-league.s3.amazonaws.com/launch-comics/metadata/${tokenId}.json`,
+    res
+  );
 });
 
-async function resolveItemMetadata(req) {
-  const itemId = parseInt(req.params.item_id, 16).toString();
-  const URI = `https://nifty-league.s3.amazonaws.com/imx/items/metadata/${itemId}.json`;
-  return fetchMetadata(URI);
-}
+app.get('/imx/comics/image/:token_id', async function (req, res) {
+  const tokenId = req.params.token_id;
+  pipeRequest(
+    `https://nifty-league.s3.amazonaws.com/launch-comics/images/${tokenId}.png`,
+    res
+  );
+});
 
-app.get('/imx/items/:item_id', async function (req, res) {
-  const metadata = await resolveItemMetadata(req);
-  if (metadata) res.send(metadata);
-  else res.sendStatus(404);
+app.get('/imx/items/metadata/:item_id', async function (req, res) {
+  const itemId = req.params.item_id;
+  pipeRequest(
+    `https://nifty-league.s3.amazonaws.com/imx/items/metadata/${itemId}.json`,
+    res
+  );
+});
+
+app.get('/imx/items/image/:item_id', async function (req, res) {
+  const itemId = req.params.item_id;
+  pipeRequest(
+    `https://nifty-league.s3.amazonaws.com/imx/items/images/${itemId}.mp4`,
+    res
+  );
 });
 
 //////////////////////////////////////////////
