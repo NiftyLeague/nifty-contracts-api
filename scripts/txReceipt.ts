@@ -10,7 +10,7 @@ const { sleep } = require('./helpers');
  */
 async function getTxReceipt(tx: any) {
   while (true) {
-    let receipt = await ethers.provider.getTransactionReceipt(tx);
+    const receipt = await ethers.provider.getTransactionReceipt(tx);
     if (receipt && receipt.logs) {
       console.log('TX RECEIPT', receipt);
       return receipt;
