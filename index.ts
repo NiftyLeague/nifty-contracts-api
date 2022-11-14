@@ -14,6 +14,7 @@ import { handleDepositConfirmation } from './scripts/deposit';
 import { handleWithdrawConfirmation } from './scripts/withdraw';
 import { resolveCirculatingSupply } from './scripts/nftl';
 import { handleIMXMint } from './scripts/imx-mint';
+import { TargetNetwork } from './types';
 require('dotenv').config();
 
 const NIFTY_BURNING_COMICS_L2_ABI = JSON.parse(
@@ -21,8 +22,6 @@ const NIFTY_BURNING_COMICS_L2_ABI = JSON.parse(
     encoding: 'utf8',
   })
 );
-
-const PORT = process.env.PORT || 5000;
 
 const app = express()
   .set('port', config.get('port'))
@@ -119,9 +118,15 @@ app.get(
   '/imx/items/metadata/:token_id',
   async function (req: Request, res: Response) {
     const tokenId = req.params.token_id;
-    const providerUrl = `https://goerli.infura.io/v3/${getEnv('INFURA_PROJECT_ID')}`;
+    const providerUrl = `https://goerli.infura.io/v3/${getEnv(
+      'INFURA_PROJECT_ID'
+    )}`;
     const provider = new JsonRpcProvider(providerUrl);
-    const contract = new Contract(getEnv('NIFTY_BURNING_COMICS_L2'), NIFTY_BURNING_COMICS_L2_ABI, provider);
+    const contract = new Contract(
+      getEnv('NIFTY_BURNING_COMICS_L2'),
+      NIFTY_BURNING_COMICS_L2_ABI,
+      provider
+    );
     const itemId = await contract['itemIdByTokenId'](tokenId);
     pipeRequest(
       `https://nifty-league.s3.amazonaws.com/imx/items/metadata/${itemId.toString()}.json`,
@@ -148,7 +153,7 @@ app.get(
 app.post(
   `/:network/webhooks/degen/${config.get('blocknative.webhookSecret')}`,
   async function (req: Request, res: Response) {
-    const targetNetwork = req.params.network;
+    const targetNetwork = req.params.network as TargetNetwork;
     const tx = req.body;
     if (
       targetNetwork === 'mainnet' &&
@@ -173,7 +178,7 @@ app.post(
 app.post(
   `/:network/webhooks/p2e/${config.get('blocknative.webhookSecret')}`,
   async function (req: Request, res: Response) {
-    const targetNetwork = req.params.network;
+    const targetNetwork = req.params.network as TargetNetwork;
     const tx = req.body;
     if (
       targetNetwork === 'mainnet' &&
@@ -194,15 +199,15 @@ app.post(
 app.post(
   `/:network/webhooks/comics/${config.get('blocknative.webhookSecret')}`,
   async function (req: Request, res: Response) {
-    const targetNetwork = req.params.network;
+    const targetNetwork = req.params.network as TargetNetwork;
     const tx = req.body;
     if (
       tx.status === 'confirmed' &&
       tx.direction === 'incoming' &&
       tx.apiKey === config.get('blocknative.apiKey.comics')
     ) {
-      console.log('COMICS WEBHOOK TX:', tx);
-      handleIMXMint(tx);
+      console.log('COMICS WEBHOOK TX:', targetNetwork, tx);
+      handleIMXMint(tx, targetNetwork);
     }
     res.sendStatus(200);
   }
