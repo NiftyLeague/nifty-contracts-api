@@ -117,7 +117,7 @@ app.get(
   async function (req: Request, res: Response) {
     const itemId = req.params.item_id;
     pipeRequest(
-      `https://nifty-league.s3.amazonaws.com/imx/items/images/${itemId}.mp4`,
+      `https://nifty-league.s3.amazonaws.com/imx/items/images/${itemId}.gif`,
       res
     );
   }
