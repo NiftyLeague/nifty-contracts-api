@@ -1,10 +1,11 @@
 import hre from 'hardhat';
 import fs from 'fs';
-import { JsonRpcProvider } from "@ethersproject/providers";
+import { JsonRpcProvider } from '@ethersproject/providers';
 
-import { mint } from "../imx-mint/minting/minting";
+import { mint } from '../imx-mint/minting/minting';
 import { getEnv } from '../imx-mint/libs/utils';
-import Config from "../imx-mint/minting/config";
+import Config from '../imx-mint/minting/config';
+import { TargetNetwork } from '../types';
 
 const NIFTY_BURNING_COMICS_L2 = JSON.parse(
   fs.readFileSync('./contracts/NiftyBurningComicsL2.abi.json', {
@@ -18,8 +19,12 @@ function parseTopics(log: any, eventName: string) {
   return inputData;
 }
 
-function proceedIMXMint(topics: any, isKey: boolean) {
-  const config = Config(getEnv("HARDHAT_NETWORK"));
+function proceedIMXMint(
+  targetNetwork: TargetNetwork,
+  topics: any,
+  isKey: boolean
+) {
+  const config = Config(targetNetwork);
   const by = topics[0];
   const tokenIds = topics[1];
   const values = topics[2];
@@ -28,32 +33,46 @@ function proceedIMXMint(topics: any, isKey: boolean) {
   if (isKey) {
     const ids: string[] = [];
     for (let i = 0; i < values.toNumber(); i++) {
-      ids.push("" + (startIds.toNumber() + i));
+      ids.push('' + (startIds.toNumber() + i));
     }
     // key itemId: 7
-    mint(config.item_addr, by, ids, "7");
+    mint(targetNetwork, config.item_addr, by, ids, '7');
   } else {
     for (let i = 0; i < values.length; i++) {
       const ids: string[] = [];
       for (let j = 0; j < values[i].toNumber(); j++) {
-        ids.push("" + (startIds[i].toNumber() + j));
+        ids.push('' + (startIds[i].toNumber() + j));
       }
       // item itemId: 1 - 6
-      mint(config.item_addr, by, ids, `${i+1}`);
+      mint(targetNetwork, config.item_addr, by, ids, `${i + 1}`);
     }
   }
 }
 
-export async function handleIMXMint(tx: any) {
-  const providerUrl = `https://goerli.infura.io/v3/${getEnv("INFURA_PROJECT_ID")}`;
+export async function handleIMXMint(tx: any, targetNetwork: TargetNetwork) {
+  const providerUrl = `https://${targetNetwork}.infura.io/v3/${getEnv(
+    'INFURA_PROJECT_ID'
+  )}`;
   const provider = new JsonRpcProvider(providerUrl);
   const receipt = await provider.getTransactionReceipt(tx.hash);
   if (receipt.logs.length > 2) {
     // key, item both
-    proceedIMXMint(parseTopics(receipt.logs[1], "KeyMinted"), true);
-    proceedIMXMint(parseTopics(receipt.logs[2], "ItemMinted"), false);
+    proceedIMXMint(
+      targetNetwork,
+      parseTopics(receipt.logs[1], 'KeyMinted'),
+      true
+    );
+    proceedIMXMint(
+      targetNetwork,
+      parseTopics(receipt.logs[2], 'ItemMinted'),
+      false
+    );
   } else {
     // item only
-    proceedIMXMint(parseTopics(receipt.logs[1], "ItemMinted"), false);
+    proceedIMXMint(
+      targetNetwork,
+      parseTopics(receipt.logs[1], 'ItemMinted'),
+      false
+    );
   }
 }
