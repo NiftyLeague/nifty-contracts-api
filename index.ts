@@ -3,12 +3,26 @@ import config from 'config';
 import cors from 'cors';
 import express, { Request, Response } from 'express';
 import path from 'path';
+import fs from 'fs';
+import { Contract } from '@ethersproject/contracts';
+import { JsonRpcProvider } from '@ethersproject/providers';
 
+import { getEnv } from './imx-mint/libs/utils';
 import { CONTRACT_METHODS } from './constants';
 import { resolveDegenMetadata, pipeRequest } from './scripts/helpers';
 import { handleDepositConfirmation } from './scripts/deposit';
 import { handleWithdrawConfirmation } from './scripts/withdraw';
 import { resolveCirculatingSupply } from './scripts/nftl';
+import { handleIMXMint } from './scripts/imx-mint';
+require('dotenv').config();
+
+const NIFTY_BURNING_COMICS_L2_ABI = JSON.parse(
+  fs.readFileSync('./contracts/NiftyBurningComicsL2.abi.json', {
+    encoding: 'utf8',
+  })
+);
+
+const PORT = process.env.PORT || 5000;
 
 const app = express()
   .set('port', config.get('port'))
@@ -102,11 +116,15 @@ app.get(
 );
 
 app.get(
-  '/imx/items/metadata/:item_id',
+  '/imx/items/metadata/:token_id',
   async function (req: Request, res: Response) {
-    const itemId = req.params.item_id;
+    const tokenId = req.params.token_id;
+    const providerUrl = `https://goerli.infura.io/v3/${getEnv('INFURA_PROJECT_ID')}`;
+    const provider = new JsonRpcProvider(providerUrl);
+    const contract = new Contract(getEnv('NIFTY_BURNING_COMICS_L2'), NIFTY_BURNING_COMICS_L2_ABI, provider);
+    const itemId = await contract['itemIdByTokenId'](tokenId);
     pipeRequest(
-      `https://nifty-league.s3.amazonaws.com/imx/items/metadata/${itemId}.json`,
+      `https://nifty-league.s3.amazonaws.com/imx/items/metadata/${itemId.toString()}.json`,
       res
     );
   }
@@ -184,7 +202,7 @@ app.post(
       tx.apiKey === config.get('blocknative.apiKey.comics')
     ) {
       console.log('COMICS WEBHOOK TX:', tx);
-      // TODO: Mint item logic
+      handleIMXMint(tx);
     }
     res.sendStatus(200);
   }
