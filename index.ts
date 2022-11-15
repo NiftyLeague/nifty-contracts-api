@@ -118,9 +118,9 @@ app.get(
   '/imx/items/metadata/:token_id',
   async function (req: Request, res: Response) {
     const tokenId = req.params.token_id;
-    const providerUrl = `https://goerli.infura.io/v3/${getEnv(
-      'INFURA_PROJECT_ID'
-    )}`;
+    const providerUrl = `https://${config.get(
+      'hardhat.defaultNetwork'
+    )}.infura.io/v3/${getEnv('INFURA_PROJECT_ID')}`;
     const provider = new JsonRpcProvider(providerUrl);
     const contract = new Contract(
       getEnv('NIFTY_BURNING_COMICS_L2'),
