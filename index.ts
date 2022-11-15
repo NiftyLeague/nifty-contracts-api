@@ -121,6 +121,7 @@ app.get(
     const providerUrl = `https://${config.get(
       'hardhat.defaultNetwork'
     )}.infura.io/v3/${getEnv('INFURA_PROJECT_ID')}`;
+    console.log('providerUrl', providerUrl);
     const provider = new JsonRpcProvider(providerUrl);
     const contract = new Contract(
       getEnv('NIFTY_BURNING_COMICS_L2'),
