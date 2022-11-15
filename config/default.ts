@@ -2,7 +2,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const config = {
-  host: 'https://api.niftyleague.com',
+  host: {
+    prod: 'https://api.niftyleague.com',
+    staging: 'https://niftyleague-dev.herokuapp.com/',
+  },
   port: process.env.PORT || 5000,
   secret: process.env.BE_API_SECRET,
 
