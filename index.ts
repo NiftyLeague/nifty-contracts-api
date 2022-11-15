@@ -3,11 +3,8 @@ import config from 'config';
 import cors from 'cors';
 import express, { Request, Response } from 'express';
 import path from 'path';
-import fs from 'fs';
-import { Contract } from '@ethersproject/contracts';
-import { JsonRpcProvider } from '@ethersproject/providers';
 
-import { getEnv } from './imx-mint/libs/utils';
+import { getItemIdByTokenId } from './imx-mint/libs/utils';
 import { CONTRACT_METHODS } from './constants';
 import { resolveDegenMetadata, pipeRequest } from './scripts/helpers';
 import { handleDepositConfirmation } from './scripts/deposit';
@@ -16,12 +13,6 @@ import { resolveCirculatingSupply } from './scripts/nftl';
 import { handleIMXMint } from './scripts/imx-mint';
 import { TargetNetwork } from './types';
 require('dotenv').config();
-
-const NIFTY_BURNING_COMICS_L2_ABI = JSON.parse(
-  fs.readFileSync('./contracts/NiftyBurningComicsL2.abi.json', {
-    encoding: 'utf8',
-  })
-);
 
 const app = express()
   .set('port', config.get('port'))
@@ -118,28 +109,19 @@ app.get(
   '/imx/items/metadata/:token_id',
   async function (req: Request, res: Response) {
     const tokenId = req.params.token_id;
-    const providerUrl = `https://${config.get(
-      'hardhat.defaultNetwork'
-    )}.infura.io/v3/${getEnv('INFURA_PROJECT_ID')}`;
-    console.log('providerUrl', providerUrl);
-    const provider = new JsonRpcProvider(providerUrl);
-    const contract = new Contract(
-      getEnv('NIFTY_BURNING_COMICS_L2'),
-      NIFTY_BURNING_COMICS_L2_ABI,
-      provider
-    );
-    const itemId = await contract['itemIdByTokenId'](tokenId);
+    const itemId = await getItemIdByTokenId(tokenId);
     pipeRequest(
-      `https://nifty-league.s3.amazonaws.com/imx/items/metadata/${itemId.toString()}.json`,
+      `https://nifty-league.s3.amazonaws.com/imx/items/metadata/${itemId}.json`,
       res
     );
   }
 );
 
 app.get(
-  '/imx/items/image/:item_id',
+  '/imx/items/image/:token_id',
   async function (req: Request, res: Response) {
-    const itemId = req.params.item_id;
+    const tokenId = req.params.token_id;
+    const itemId = await getItemIdByTokenId(tokenId);
     pipeRequest(
       `https://nifty-league.s3.amazonaws.com/imx/items/images/${itemId}.gif`,
       res
