@@ -6,12 +6,11 @@ export = (network: string): any => {
     // Mainnet Configuration
     case "mainnet":
       return {
-        comics_addr: "",
+        item_addr: env.collectionContractAddress,
         imx_client_config: {
-          public_api_url: "https://api.x.immutable.com/v1",
-          stark_contract_address: "0x5FDCCA53617f4d2b9134B29090C87D01058e27e9",
-          registration_contract_address:
-            "0x72a06bf2a1CE5e39cBA06c0CAb824960B587d64c",
+          public_api_url: env.client.publicApiUrl,
+          stark_contract_address: env.client.starkContractAddress,
+          registration_contract_address: env.client.registrationContractAddress,
           gas_limit: "500000",
         },
         new_collection_metadata: {
@@ -27,8 +26,7 @@ export = (network: string): any => {
       return {
         item_addr: env.collectionContractAddress,
         imx_client_config: {
-          public_api_url: "https://api.sandbox.x.immutable.com/v1",
-          // public_api_url: "https://api.goerli.x.immutable.com/v1",
+          public_api_url: env.client.publicApiUrl,
           stark_contract_address: env.client.starkContractAddress,
           registration_contract_address: env.client.registrationContractAddress,
           gas_limit: "300000",
