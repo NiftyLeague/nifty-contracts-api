@@ -4,7 +4,7 @@ dotenv.config();
 const config = {
   host: {
     mainnet: 'https://api.niftyleague.com',
-    goerli: 'https://niftyleague-dev.herokuapp.com/',
+    goerli: 'https://niftyleague-dev.herokuapp.com',
   },
   port: process.env.PORT || 5000,
   secret: process.env.BE_API_SECRET,
