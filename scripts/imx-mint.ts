@@ -71,19 +71,19 @@ export async function handleIMXMint(tx: any, targetNetwork: TargetNetwork) {
     // key, item both
     proceedIMXMint(
       targetNetwork,
-      parseTopics(receipt.logs[1], 'KeyMinted'),
+      parseTopics(receipt.logs[2], 'KeyMinted'),
       true
     );
     proceedIMXMint(
       targetNetwork,
-      parseTopics(receipt.logs[2], 'ItemMinted'),
+      parseTopics(receipt.logs[3], 'ItemMinted'),
       false
     );
   } else {
     // item only
     proceedIMXMint(
       targetNetwork,
-      parseTopics(receipt.logs[1], 'ItemMinted'),
+      parseTopics(receipt.logs[2], 'ItemMinted'),
       false
     );
   }
