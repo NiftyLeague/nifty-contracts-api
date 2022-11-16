@@ -4,11 +4,15 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import path from 'path';
 
+import { getItemIdByTokenId } from './imx-mint/libs/utils';
 import { CONTRACT_METHODS } from './constants';
 import { resolveDegenMetadata, pipeRequest } from './scripts/helpers';
 import { handleDepositConfirmation } from './scripts/deposit';
 import { handleWithdrawConfirmation } from './scripts/withdraw';
 import { resolveCirculatingSupply } from './scripts/nftl';
+import { handleIMXMint } from './scripts/imx-mint';
+import { TargetNetwork } from './types';
+require('dotenv').config();
 
 const app = express()
   .set('port', config.get('port'))
@@ -102,9 +106,10 @@ app.get(
 );
 
 app.get(
-  '/imx/items/metadata/:item_id',
+  '/imx/items/metadata/:token_id',
   async function (req: Request, res: Response) {
-    const itemId = req.params.item_id;
+    const tokenId = req.params.token_id;
+    const itemId = await getItemIdByTokenId(tokenId);
     pipeRequest(
       `https://nifty-league.s3.amazonaws.com/imx/items/metadata/${itemId}.json`,
       res
@@ -113,9 +118,10 @@ app.get(
 );
 
 app.get(
-  '/imx/items/image/:item_id',
+  '/imx/items/image/:token_id',
   async function (req: Request, res: Response) {
-    const itemId = req.params.item_id;
+    const tokenId = req.params.token_id;
+    const itemId = await getItemIdByTokenId(tokenId);
     pipeRequest(
       `https://nifty-league.s3.amazonaws.com/imx/items/images/${itemId}.gif`,
       res
@@ -130,7 +136,7 @@ app.get(
 app.post(
   `/:network/webhooks/degen/${config.get('blocknative.webhookSecret')}`,
   async function (req: Request, res: Response) {
-    const targetNetwork = req.params.network;
+    const targetNetwork = req.params.network as TargetNetwork;
     const tx = req.body;
     if (
       targetNetwork === 'mainnet' &&
@@ -155,7 +161,7 @@ app.post(
 app.post(
   `/:network/webhooks/p2e/${config.get('blocknative.webhookSecret')}`,
   async function (req: Request, res: Response) {
-    const targetNetwork = req.params.network;
+    const targetNetwork = req.params.network as TargetNetwork;
     const tx = req.body;
     if (
       targetNetwork === 'mainnet' &&
@@ -176,15 +182,15 @@ app.post(
 app.post(
   `/:network/webhooks/comics/${config.get('blocknative.webhookSecret')}`,
   async function (req: Request, res: Response) {
-    const targetNetwork = req.params.network;
+    const targetNetwork = req.params.network as TargetNetwork;
     const tx = req.body;
     if (
       tx.status === 'confirmed' &&
       tx.direction === 'incoming' &&
       tx.apiKey === config.get('blocknative.apiKey.comics')
     ) {
-      console.log('COMICS WEBHOOK TX:', tx);
-      // TODO: Mint item logic
+      console.log('COMICS WEBHOOK TX:', targetNetwork, tx);
+      handleIMXMint(tx, targetNetwork);
     }
     res.sendStatus(200);
   }
