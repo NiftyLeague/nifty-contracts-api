@@ -3,7 +3,7 @@ import fs from 'fs';
 import { JsonRpcProvider } from '@ethersproject/providers';
 
 import { mint } from '../imx-mint/minting/minting';
-import { getEnv } from '../imx-mint/libs/utils';
+import { getEnv, wait } from '../imx-mint/libs/utils';
 import Config from '../imx-mint/minting/config';
 import { TargetNetwork } from '../types';
 
@@ -49,12 +49,24 @@ function proceedIMXMint(
   }
 }
 
+async function getTxReceipt(provider: JsonRpcProvider, tx: any) {
+  while (true) {
+    const receipt = await provider.getTransactionReceipt(tx.hash);
+    if (receipt && receipt.logs) {
+      console.log('TX RECEIPT', receipt);
+      return receipt;
+    }
+    console.log('Waiting for mined block to include your trasaction...');
+    await wait(4000);
+  }
+}
+
 export async function handleIMXMint(tx: any, targetNetwork: TargetNetwork) {
   const providerUrl = `https://${targetNetwork}.infura.io/v3/${getEnv(
     'INFURA_PROJECT_ID'
   )}`;
   const provider = new JsonRpcProvider(providerUrl);
-  const receipt = await provider.getTransactionReceipt(tx.hash);
+  const receipt = await getTxReceipt(provider, tx);
   if (receipt.logs.length > 2) {
     // key, item both
     proceedIMXMint(
