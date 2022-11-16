@@ -67,7 +67,7 @@ export async function handleIMXMint(tx: any, targetNetwork: TargetNetwork) {
   )}`;
   const provider = new JsonRpcProvider(providerUrl);
   const receipt = await getTxReceipt(provider, tx);
-  if (receipt.logs.length > 2) {
+  if (receipt.logs.length > 3) {
     // key, item both
     proceedIMXMint(
       targetNetwork,
