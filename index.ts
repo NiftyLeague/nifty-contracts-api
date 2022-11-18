@@ -10,7 +10,11 @@ import { Wallet } from '@ethersproject/wallet';
 import { getItemIdByTokenId } from './imx-mint/libs/utils';
 import env from './imx-mint/config/client';
 import { CONTRACT_METHODS } from './constants';
-import { resolveDegenMetadata, pipeRequest } from './scripts/helpers';
+import {
+  getItemsRecursive,
+  resolveDegenMetadata,
+  pipeRequest,
+} from './scripts/helpers';
 import { handleDepositConfirmation } from './scripts/deposit';
 import { handleWithdrawConfirmation } from './scripts/withdraw';
 import { resolveCirculatingSupply } from './scripts/nftl';
@@ -115,6 +119,8 @@ app.get(
   async function (req: Request, res: Response) {
     const tokenId = req.params.token_id;
     const itemId = await getItemIdByTokenId(tokenId);
+    console.log('tokenID', tokenId);
+    console.log('itemId', itemId);
     pipeRequest(
       `https://nifty-league.s3.amazonaws.com/imx/items/metadata/${itemId}.json`,
       res
@@ -133,6 +139,26 @@ app.get(
     );
   }
 );
+
+app.get('/imx/items', async function (req: Request, res: Response) {
+  const { cursor } = req.query;
+  const assetsURL = `${env.client.publicApiUrl}/assets?collection=${
+    env.collectionContractAddress
+  }&order_by=updated_at&page_size=200${cursor ? `&cursor=${cursor}` : ''}`;
+  pipeRequest(assetsURL, res);
+});
+
+app.get('/imx/null-items', async function (req: Request, res: Response) {
+  try {
+    const result = await getItemsRecursive();
+    const filtered = result.filter(
+      (item: { metadata: any; name?: string }) => !item.metadata || !item.name
+    );
+    res.send({ total: filtered.length, result: filtered });
+  } catch (e) {
+    res.send(e);
+  }
+});
 
 app.get(
   '/imx/metadata-refresh/:token_id',
