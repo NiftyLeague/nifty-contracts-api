@@ -1,10 +1,14 @@
 import bodyParser from 'body-parser';
 import config from 'config';
 import cors from 'cors';
+import fetch from 'node-fetch';
 import express, { Request, Response } from 'express';
 import path from 'path';
+import { AlchemyProvider } from '@ethersproject/providers';
+import { Wallet } from '@ethersproject/wallet';
 
 import { getItemIdByTokenId } from './imx-mint/libs/utils';
+import env from './imx-mint/config/client';
 import { CONTRACT_METHODS } from './constants';
 import { resolveDegenMetadata, pipeRequest } from './scripts/helpers';
 import { handleDepositConfirmation } from './scripts/deposit';
@@ -12,6 +16,7 @@ import { handleWithdrawConfirmation } from './scripts/withdraw';
 import { resolveCirculatingSupply } from './scripts/nftl';
 import { handleIMXMint } from './scripts/imx-mint';
 import { TargetNetwork } from './types';
+import { generateIMXAuthorisationHeaders } from './imx-mint/libs/sign';
 require('dotenv').config();
 
 const app = express()
@@ -126,6 +131,41 @@ app.get(
       `https://nifty-league.s3.amazonaws.com/imx/items/images/${itemId}.gif`,
       res
     );
+  }
+);
+
+app.get(
+  '/imx/metadata-refresh/:token_id',
+  async function (req: Request, res: Response) {
+    const tokenId = req.params.token_id;
+
+    const privateKey = env.ownerAccountPrivateKey;
+    const provider = new AlchemyProvider(env.ethNetwork, env.alchemyApiKey);
+    const wallet = new Wallet(privateKey);
+    const signer = wallet.connect(provider);
+    const { timestamp, signature } = await generateIMXAuthorisationHeaders(
+      signer
+    );
+
+    const headers = {
+      'x-imx-eth-address': env.ownerAccountPublicKey,
+      'x-imx-eth-signature': signature,
+      'x-imx-eth-timestamp': timestamp,
+    };
+    const body = JSON.stringify({
+      collection_address: env.collectionContractAddress,
+      token_ids: [tokenId],
+    });
+
+    const response = await fetch(
+      `${env.client.publicApiUrl}/metadata-refreshes`,
+      {
+        method: 'POST',
+        headers,
+        body,
+      }
+    );
+    res.send(response);
   }
 );
 
