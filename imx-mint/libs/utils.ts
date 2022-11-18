@@ -56,6 +56,7 @@ export async function getItemIdByTokenId(tokenId: string): Promise<string> {
     NIFTY_BURNING_COMICS_L2_ABI,
     provider
   );
+  console.log('contract', contract);
   const itemId = await contract['itemIdByTokenId'](tokenId);
   return itemId.toString();
 }
