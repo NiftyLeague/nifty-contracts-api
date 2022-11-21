@@ -56,7 +56,22 @@ export async function getItemIdByTokenId(tokenId: string): Promise<string> {
     NIFTY_BURNING_COMICS_L2_ABI,
     provider
   );
-  console.log('contract', contract);
   const itemId = await contract['itemIdByTokenId'](tokenId);
+
+  // fix if itemId is zero
+  if (itemId == 0) {
+    // find the non-zero itemId in the previous tokenIds and replace zero with it
+    let prevTokenId = Number(tokenId);
+    let prevItemId;
+
+    while (true) {
+      prevTokenId -= 1;
+      prevItemId = await contract['itemIdByTokenId'](prevTokenId);
+
+      if (prevItemId != 0) {
+        return prevItemId.toString();
+      }
+    }
+  }
   return itemId.toString();
 }
