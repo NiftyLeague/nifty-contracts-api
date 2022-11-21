@@ -119,8 +119,6 @@ app.get(
   async function (req: Request, res: Response) {
     const tokenId = req.params.token_id;
     const itemId = await getItemIdByTokenId(tokenId);
-    console.log('tokenID', tokenId);
-    console.log('itemId', itemId);
     pipeRequest(
       `https://nifty-league.s3.amazonaws.com/imx/items/metadata/${itemId}.json`,
       res
