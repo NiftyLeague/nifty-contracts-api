@@ -6,6 +6,7 @@ import express, { Request, Response } from 'express';
 import path from 'path';
 import { AlchemyProvider } from '@ethersproject/providers';
 import { Wallet } from '@ethersproject/wallet';
+import groupBy from 'lodash/groupBy';
 
 import { getItemIdByTokenId } from './imx-mint/libs/utils';
 import env from './imx-mint/config/client';
@@ -153,6 +154,30 @@ app.get('/imx/null-items', async function (req: Request, res: Response) {
       (item: { metadata: any; name?: string }) => !item.metadata || !item.name
     );
     res.send({ total: filtered.length, result: filtered });
+  } catch (e) {
+    res.send(e);
+  }
+});
+
+app.get('/imx/items/overview', async function (req: Request, res: Response) {
+  try {
+    const result = await getItemsRecursive();
+    const itemBalances = Object.values(groupBy(result, 'metadata.item_id')).map(
+      group => ({
+        [group[0].metadata.name]: group.length,
+      })
+    );
+    const holderBalances = Object.values(groupBy(result, 'user')).map(
+      group => ({
+        [group[0].user]: group.length,
+      })
+    );
+    res.send({
+      total: result.length,
+      holders: holderBalances.length,
+      balances: Object.values(itemBalances),
+      holder_balances: Object.values(holderBalances),
+    });
   } catch (e) {
     res.send(e);
   }
