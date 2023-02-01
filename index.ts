@@ -13,9 +13,12 @@ import env from './imx-mint/config/client';
 import { CONTRACT_METHODS } from './constants';
 import {
   getItemsRecursive,
+  getMutantsRecursive,
   resolveDegenMetadata,
   pipeRequest,
-} from './scripts/helpers';
+} from './scripts/utils/api';
+import { getTokenIdFromTxReceipt } from './scripts/utils/txReceipt';
+import { handleNameChangeByInput } from './scripts/handleNameChange';
 import { handleDepositConfirmation } from './scripts/deposit';
 import { handleWithdrawConfirmation } from './scripts/withdraw';
 import { resolveCirculatingSupply } from './scripts/nftl';
@@ -36,6 +39,19 @@ app.get('/', function (req: Request, res: Response) {
 app.use(bodyParser.json());
 
 app.use(cors());
+
+app.get('/mutants/all-items', async function (req: Request, res: Response) {
+  try {
+    const result = await getMutantsRecursive();
+    // const filtered = result.filter(
+    //   (item: { metadata: any; name?: string }) => !item.metadata || !item.name
+    // );
+    // res.send({ total: filtered.length, result: filtered });
+    res.send({ total: result.length, result });
+  } catch (e) {
+    res.send(e);
+  }
+});
 
 //////////////////////////////////////////////
 // ------ NFTL
@@ -238,10 +254,10 @@ app.post(
       //   const tokenId = await getTokenIdFromTxReceipt(tx.hash);
       //   await safeGenerateNFT(targetNetwork, tokenId);
       // }
-      // if (tx.input.startsWith(CONTRACT_METHODS.RENAME)) {
-      //   await getTokenIdFromTxReceipt(tx.hash);
-      //   await handleNameChangeByInput(targetNetwork, tx.input);
-      // }
+      if (tx.input.startsWith(CONTRACT_METHODS.RENAME)) {
+        await getTokenIdFromTxReceipt(tx.hash);
+        await handleNameChangeByInput(targetNetwork, tx.input);
+      }
     }
     res.sendStatus(200);
   }

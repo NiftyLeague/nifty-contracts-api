@@ -22,6 +22,7 @@ const config = {
     defaultNetwork: process.env.HARDHAT_NETWORK,
     infura: process.env.INFURA_PROJECT_ID,
     etherscan: process.env.ETHERSCAN_API_KEY,
+    nftContractName: 'NiftyDegen',
   },
 };
 
