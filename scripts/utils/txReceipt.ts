@@ -1,6 +1,6 @@
 import hre from 'hardhat';
 import web3 from 'web3';
-import { sleep } from './helpers';
+import { sleep } from './api';
 
 /**
  * Get Transaction Receipt given tx hash
