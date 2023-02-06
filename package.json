@@ -20,7 +20,7 @@
   "dependencies": {
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
-    "@imtbl/core-sdk": "^1.0.0-beta.3",
+    "@imtbl/core-sdk": "^1.0.1",
     "@imtbl/imlogging": "^1.0.37",
     "@imtbl/imx-sdk": "^1.35.2",
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
