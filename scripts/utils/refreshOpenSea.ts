@@ -1,12 +1,12 @@
-import config from 'config';
 import fetch from 'node-fetch';
 import fs from 'fs';
 import { ContractName, TargetNetwork } from '../../types';
+import { DEGEN_CONTRACT_NAME } from '../../constants';
 
 export default async function refreshOpenSea(
   targetNetwork: TargetNetwork,
   tokenId: string | number,
-  contractName: ContractName = config.get('hardhat.nftContractName')
+  contractName: ContractName = DEGEN_CONTRACT_NAME
 ) {
   const addressPath = `./contracts/${contractName}.${targetNetwork}.address`;
   const address = fs.readFileSync(addressPath).toString();

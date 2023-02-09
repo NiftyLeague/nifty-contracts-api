@@ -1,53 +1,27 @@
 import all from 'it-all';
 import CID from 'cids';
 import config from 'config';
+import ethers, { Contract } from 'ethers';
 import fetch from 'node-fetch';
-import ipfsClient from 'ipfs-http-client';
-import path from 'path';
-import uint8ArrayConcat from 'uint8arrays/concat';
-import uint8ArrayToString from 'uint8arrays/to-string';
+import ipfsClient, { Options, IPFSHTTPClient } from 'ipfs-http-client';
+import { ListOptions } from 'ipfs-core-types/dist/src/root';
+import { concat } from 'uint8arrays/concat';
+import { toString } from 'uint8arrays/to-string';
 
+import { ContractName, TargetNetwork, NFTInfo } from '../../types';
+import getContractFactory from '../utils/getContractFactory';
 import {
   stripIpfsUriPrefix,
-  ensureIpfsUriPrefix,
   makeGatewayURL,
   extractCID,
 } from '../utils/uriHelpers';
-import getContractFactory from '../utils/getContractFactory';
-import refreshOpenSea from '../utils/refreshOpenSea';
-import { uploadToS3 } from '../utils/uploadToS3';
-import { ContractName, TargetNetwork } from '../../types';
-import ethers, { Contract } from 'ethers';
-import { IPFSHTTPClient } from 'ipfs-http-client/dist/src/types';
-
-// ipfs parameters for more deterministic CIDs
-const ipfsOptions = {
-  cidVersion: 1,
-  hashAlg: 'sha2-256',
-  wrapWithDirectory: true,
-};
-
-/**
- * Construct and asynchronously initialize a new Minty instance.
- * @returns {Promise<Minty>} a new instance of Minty, ready to mint NFTs.
- */
-export async function MakeMinty(
-  targetNetwork: TargetNetwork,
-  contractName: ContractName = config.get('hardhat.nftContractName')
-) {
-  const m = new Minty(targetNetwork, contractName);
-  await m.init();
-  return m;
-}
 
 /**
  * Minty is the main object responsible for storing NFT data and interacting with the smart contract.
  * Before constructing, make sure that the contract has been deployed
- *
- * Minty requires async initialization, so the Minty class (and its constructor) are not exported.
- * To make one, use the async {@link MakeMinty} function.
+ * Minty requires async initialization
  */
-class Minty {
+export class Minty {
   targetNetwork: TargetNetwork;
   contractName: ContractName;
   _initialized: boolean;
@@ -70,8 +44,7 @@ class Minty {
       this.contractName
     );
 
-    // create a local IPFS node
-    this.ipfs = ipfsClient.create({
+    const options = {
       protocol: config.get('ipfs.protocol'),
       host: config.get('ipfs.host'),
       port: config.get('ipfs.port'),
@@ -83,93 +56,12 @@ class Minty {
             : config.get('ipfs.authorizationDEV')
         }`,
       },
-    });
+    } as Options;
+
+    // create a local IPFS node
+    this.ipfs = ipfsClient.create(options);
 
     this._initialized = true;
-  }
-
-  //////////////////////////////////////////////
-  // ------ NFT Generation
-  //////////////////////////////////////////////
-
-  /**
-   * Adds NFT metadata and image to IPFS given asset data.
-   *
-   * @param {number} tokenId - the unique ID of the new token
-   * @param {[]} traits - list of character traits from contract
-   * @param {string} filepath - token image filepath
-   * @param {Buffer|Uint8Array} content - a Buffer or UInt8Array of data (e.g. for an image)
-   * @param {number} rarity - number of background rarity 0-3
-   *
-   * @typedef {object} GenerateNFTResult
-   * @property {string} tokenId - the unique ID of the new token
-   * @property {object} metadata - the JSON metadata stored in IPFS and referenced by the token's metadata URI
-   * @property {string} assetURI - an ipfs:// URI for the NFT asset
-   * @property {string} assetGatewayURL - an HTTP gateway URL for the NFT asset
-   *
-   * @returns {Promise<GenerateNFTResult>}
-   */
-  async uploadNFTFromAssetData(tokenId, traits, filePath, content, rarity) {
-    const basename = path.basename(filePath);
-
-    // When you add an object to IPFS with a directory prefix in its path,
-    // IPFS will create a directory structure for you. This is nice, because
-    // it gives us URIs with descriptive filenames in them e.g.
-    // 'ipfs://QmaNZ2FCgvBPqnxtkbToVVbK2Nes6xk5K4Ns6BsmkPucAM/cat-pic.png' instead of
-    // 'ipfs://QmaNZ2FCgvBPqnxtkbToVVbK2Nes6xk5K4Ns6BsmkPucAM'
-    const imgPath = `/${config.get('ipfs.baseDirName')}/${basename}`;
-    const { cid: assetCid } = await this.ipfs.add(
-      { path: imgPath, content },
-      ipfsOptions
-    );
-    console.log('✅ Image pinned to IPFS');
-
-    const imageAsset = await uploadToS3(
-      `${this.targetNetwork}/images/${basename}`,
-      content
-    );
-    console.log('✅ Image uploaded to S3');
-
-    // make the NFT metadata JSON
-    const assetURI = ensureIpfsUriPrefix(assetCid) + imgPath;
-    const metadata = await this.makeNFTMetadata(
-      tokenId,
-      traits,
-      rarity,
-      assetURI
-    );
-
-    await refreshOpenSea(this.targetNetwork, tokenId);
-    console.log('✅ OpenSea force refresh triggered');
-
-    return {
-      tokenId,
-      metadata,
-      assetURI,
-      assetGatewayURL: makeGatewayURL(assetURI),
-    };
-  }
-
-  /**
-   * Update token metadata with new name
-   * @param {string} tokenId
-   * @property {object} metadata
-   *
-   * @typedef {object} NameChangeInfo
-   * @property {object} newMetadata
-   * @returns {Promise<NameChangeInfo>}
-   */
-  async updateTokenName(tokenId: string, metadata) {
-    const name = await this.getName(tokenId);
-    const newMetadata = { ...metadata, name: name || `DEGEN #${tokenId}` };
-    await uploadToS3(
-      `${this.targetNetwork}/metadata/${tokenId}.json`,
-      JSON.stringify(newMetadata, null, 2)
-    );
-    console.log('✅ Metadata uploaded to S3');
-    await refreshOpenSea(this.targetNetwork, tokenId);
-    console.log('✅ OpenSea force refresh triggered');
-    return { newMetadata };
   }
 
   //////////////////////////////////////////////
@@ -235,18 +127,18 @@ class Minty {
       metadataURI,
       metadataGatewayURL,
       ownerAddress,
-      assetURI: null,
+      assetURI: undefined,
       assetGatewayURL: '',
-      assetDataBase64: null,
-      creationInfo: null,
-    };
+      assetDataBase64: '',
+      creationInfo: undefined,
+    } as NFTInfo;
 
     const { fetchAsset, fetchCreationInfo } = opts || {};
     if (metadata.image) {
       nft.assetURI = metadata.image;
       nft.assetGatewayURL = makeGatewayURL(metadata.image);
       if (fetchAsset) {
-        nft.assetDataBase64 = await this.getIPFSBase64(metadata.image);
+        nft.assetDataBase64 = (await this.getIPFSBase64(metadata.image)) || '';
       }
     }
 
@@ -264,7 +156,7 @@ class Minty {
    * metadata URI. Fails if the token does not exist, or if fetching the data fails.
    */
   async getNFTMetadata(tokenId: string) {
-    const metadataURI = await this.contract.tokenURI(tokenId);
+    const metadataURI = await this.contract?.tokenURI(tokenId);
     let metadata;
     try {
       if (metadataURI.startsWith('ipfs')) {
@@ -289,28 +181,8 @@ class Minty {
    * @param {string} tokenId - the id of an existing token
    * @returns {Promise<string>} - the ethereum address of the token owner. Fails if no token with the given id exists.
    */
-  async getTokenOwner(tokenId) {
-    return this.contract.ownerOf(tokenId);
-  }
-
-  /**
-   * Get the traits for a specific token.
-   *
-   * @param {string} tokenId - the id of an existing token
-   * @returns {Promise<string>} - current name of token
-   */
-  async getName(tokenId) {
-    return this.contract.getName(tokenId);
-  }
-
-  /**
-   * Get the name for a specific token.
-   *
-   * @param {string} tokenId - the id of an existing token
-   * @returns {Promise<[number]>} - list of character traits
-   */
-  async getCharacterTraits(tokenId) {
-    return this.contract.getCharacterTraits(tokenId);
+  async getTokenOwner(tokenId: string) {
+    return this.contract?.ownerOf(tokenId);
   }
 
   /**
@@ -325,19 +197,21 @@ class Minty {
    * @returns {Promise<NFTCreationInfo>}
    */
   async getCreationInfo(tokenId: string) {
-    const filter = await this.contract.filters.Transfer(
-      null,
-      null,
-      ethers.BigNumber.from(tokenId)
-    );
+    if (this.contract) {
+      const filter = await this.contract.filters.Transfer(
+        null,
+        null,
+        ethers.BigNumber.from(tokenId)
+      );
 
-    const logs = await this.contract.queryFilter(filter);
-    const blockNumber = logs[0].blockNumber;
-    const creatorAddress = logs[0].args.to;
-    return {
-      blockNumber,
-      creatorAddress,
-    };
+      const logs = await this.contract.queryFilter(filter);
+      const blockNumber = logs[0].blockNumber;
+      const creatorAddress = logs[0].args?.to;
+      return {
+        blockNumber,
+        creatorAddress,
+      };
+    }
   }
 
   //////////////////////////////////////////////
@@ -350,9 +224,9 @@ class Minty {
    * @param {string} cidOrURI - IPFS CID string or `ipfs://<cid>` style URI
    * @returns {Promise<Uint8Array>} - contents of the IPFS object
    */
-  async getIPFS(cidOrURI) {
+  async getIPFS(cidOrURI: string) {
     const cid = stripIpfsUriPrefix(cidOrURI);
-    return uint8ArrayConcat(await all(this.ipfs.cat(cid)));
+    return this.ipfs && concat(await all(this.ipfs?.cat(cid)));
   }
 
   /**
@@ -361,9 +235,9 @@ class Minty {
    * @param {string} cidOrURI - IPFS CID string or `ipfs://<cid>` style URI
    * @returns {Promise<string>} - the contents of the IPFS object as a string
    */
-  async getIPFSString(cidOrURI) {
+  async getIPFSString(cidOrURI: string) {
     const bytes = await this.getIPFS(cidOrURI);
-    return uint8ArrayToString(bytes);
+    return bytes && toString(bytes);
   }
 
   /**
@@ -372,9 +246,9 @@ class Minty {
    * @param {string} cidOrURI - IPFS CID string or `ipfs://<cid>` style URI
    * @returns {Promise<string>} - contents of the IPFS object, encoded to base64
    */
-  async getIPFSBase64(cidOrURI) {
+  async getIPFSBase64(cidOrURI: string) {
     const bytes = await this.getIPFS(cidOrURI);
-    return uint8ArrayToString(bytes, 'base64');
+    return bytes && toString(bytes, 'base64');
   }
 
   /**
@@ -383,9 +257,9 @@ class Minty {
    * @param {string} cidOrURI - IPFS CID string or `ipfs://<cid>` style URI
    * @returns {Promise<string>} - contents of the IPFS object, as a javascript object (or array, etc depending on what was stored). Fails if the content isn't valid JSON.
    */
-  async getIPFSJSON(cidOrURI) {
+  async getIPFSJSON(cidOrURI: string) {
     const str = await this.getIPFSString(cidOrURI);
-    return JSON.parse(str);
+    return str && JSON.parse(str);
   }
 
   //////////////////////////////////////////////
@@ -398,7 +272,7 @@ class Minty {
    * @param {string} cidOrURI - a CID or ipfs:// URI
    * @returns {Promise<void>}
    */
-  async pin(cidOrURI) {
+  async pin(cidOrURI: string) {
     const cid = extractCID(cidOrURI);
     // Check if we've already pinned this CID to avoid a "duplicate pin" error.
     const pinned = await this.isPinned(cid);
@@ -409,7 +283,7 @@ class Minty {
     // Ask the remote service to pin the content.
     // Behind the scenes, this will cause the pinning service to connect to our local IPFS node
     // and fetch the data using Bitswap, IPFS's transfer protocol.
-    await this.ipfs.pin.add(cid);
+    await this.ipfs?.pin.add(cid);
   }
 
   /**
@@ -425,7 +299,8 @@ class Minty {
       // Ask the remote service to unpin the content.
       // Removes pin object matching query allowing it to be garbage collected
       console.log(`Unpinning CID (${cid})`);
-      await this.ipfs.pin.rm(typeof cid === 'string' ? new CID(cid) : cid);
+      // @ts-expect-error
+      await this.ipfs?.pin.rm(typeof cid === 'string' ? new CID(cid) : cid);
     }
   }
 
@@ -436,12 +311,14 @@ class Minty {
    * @returns {Promise<boolean>} - true if the pinning service has already pinned the given cid
    */
   async isPinned(cid: string | CID) {
-    const opts = {
-      cid: [[typeof cid === 'string' ? new CID(cid) : cid]], // ls expects an array of cids
-    };
-    // eslint-disable-next-line no-unused-vars
-    for await (const result of this.ipfs.pin.ls(opts)) {
-      return true;
+    if (this.ipfs) {
+      const opts = {
+        cid: [[typeof cid === 'string' ? new CID(cid) : cid]], // ls expects an array of cids
+      } as ListOptions;
+      // eslint-disable-next-line no-unused-vars
+      for await (const result of this.ipfs?.pin.ls(opts)) {
+        return true;
+      }
     }
     return false;
   }

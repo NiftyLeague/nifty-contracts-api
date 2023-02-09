@@ -12,7 +12,8 @@ export function stripIpfsUriPrefix(cidOrURI: string) {
   return cidOrURI;
 }
 
-export function ensureIpfsUriPrefix(cidOrURI: CID | string) {
+// @ts-expect-error
+export function ensureIpfsUriPrefix(cidOrURI: CID<> | string) {
   let uri = cidOrURI.toString();
   if (!uri.startsWith('ipfs://')) {
     uri = 'ipfs://' + cidOrURI;
@@ -38,7 +39,8 @@ export function makeGatewayURL(ipfsURI: string) {
  * @param {string} cidOrURI - an ipfs:// URI or CID string
  * @returns {CID} a CID for the root of the IPFS path
  */
-export function extractCID(cidOrURI: string) {
+// @ts-expect-error
+export function extractCID(cidOrURI: string): CID<> {
   // remove the ipfs:// prefix, split on '/' and return first path component (root CID)
   const cidString = stripIpfsUriPrefix(cidOrURI).split('/')[0];
   return new CID(cidString);
