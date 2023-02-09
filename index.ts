@@ -13,7 +13,6 @@ import env from './imx-mint/config/client';
 import { CONTRACT_METHODS } from './constants';
 import {
   getItemsRecursive,
-  getMutantsRecursive,
   resolveDegenMetadata,
   pipeRequest,
 } from './scripts/utils/api';
@@ -39,19 +38,6 @@ app.get('/', function (req: Request, res: Response) {
 app.use(bodyParser.json());
 
 app.use(cors());
-
-app.get('/mutants/all-items', async function (req: Request, res: Response) {
-  try {
-    const result = await getMutantsRecursive();
-    // const filtered = result.filter(
-    //   (item: { metadata: any; name?: string }) => !item.metadata || !item.name
-    // );
-    // res.send({ total: filtered.length, result: filtered });
-    res.send({ total: result.length, result });
-  } catch (e) {
-    res.send(e);
-  }
-});
 
 //////////////////////////////////////////////
 // ------ NFTL
