@@ -16,7 +16,6 @@ import {
   resolveDegenMetadata,
   pipeRequest,
 } from './scripts/utils/api';
-import { getTokenIdFromTxReceipt } from './scripts/utils/txReceipt';
 import { handleNameChangeByInput } from './scripts/handleNameChange';
 import { handleDepositConfirmation } from './scripts/deposit';
 import { handleWithdrawConfirmation } from './scripts/withdraw';
@@ -230,18 +229,13 @@ app.post(
     const targetNetwork = req.params.network as TargetNetwork;
     const tx = req.body;
     if (
-      targetNetwork === 'mainnet' &&
+      tx.network === targetNetwork &&
       tx.status === 'confirmed' &&
       tx.direction === 'incoming' &&
       tx.apiKey === config.get('blocknative.apiKey.degens')
     ) {
       console.log('DEGEN WEBHOOK TX:', tx);
-      // if (tx.input.startsWith(CONTRACT_METHODS.PURCHASE)) {
-      //   const tokenId = await getTokenIdFromTxReceipt(tx.hash);
-      //   await safeGenerateNFT(targetNetwork, tokenId);
-      // }
       if (tx.input.startsWith(CONTRACT_METHODS.RENAME)) {
-        await getTokenIdFromTxReceipt(tx.hash);
         await handleNameChangeByInput(targetNetwork, tx.input);
       }
     }

@@ -8,10 +8,6 @@ export const NIFTY_BURNING_COMICS_L2_ABI = JSON.parse(
   })
 );
 
-export function wait(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 export function getEnv(
   name: string,
   defaultValue: string | undefined = undefined
