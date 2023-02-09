@@ -54,32 +54,3 @@ export async function getItemsRecursive(
     throw err;
   }
 }
-
-const MUTANT_CONTRACT = '0x60E4d786628Fea6478F785A6d7e704777c86a7c6';
-
-export async function getMutantsRecursive(
-  startToken = null,
-  result = []
-): Promise<any[]> {
-  const assetsURL = `https://eth-mainnet.g.alchemy.com/v2${
-    process.env.REACT_APP_ALCHEMY_API_KEY
-  }getNFTsForCollection?contractAddress=${MUTANT_CONTRACT}&withMetadata=false${
-    startToken ? `&startToken=${startToken}` : ''
-  }`;
-  try {
-    const response = await fetch(assetsURL, {});
-    const json = await response.json();
-    // add page to result array
-    result = result.concat(json.nfts);
-    // check is this the end
-    if (!json.remaining) {
-      // return result array
-      return result;
-    } else {
-      // or use nextToken and continue processing
-      return getMutantsRecursive(json.nextToken, result);
-    }
-  } catch (err) {
-    throw err;
-  }
-}
