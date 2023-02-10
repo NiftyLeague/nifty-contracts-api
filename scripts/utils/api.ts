@@ -1,18 +1,19 @@
 import fetch from 'node-fetch';
 import https from 'https';
-import env from '../imx-mint/config/client';
+import env from '../../imx-mint/config/client';
+import { Metadata } from '../../types';
 
-export async function fetchMetadata(URI: any) {
+export async function fetchMetadata(URI: any): Promise<Metadata | null> {
   try {
     const response = await fetch(URI, {});
-    if (response.status < 400) return response.json();
+    if (response.status < 400) return response.json() as unknown as Metadata;
     return null;
   } catch (e) {
     return null;
   }
 }
 
-export async function resolveDegenMetadata(req: any) {
+export async function resolveDegenMetadata(req: any): Promise<Metadata | null> {
   const { network, token_id } = req.params;
   const URI = `https://nifty-league.s3.amazonaws.com/degens/${network}/metadata/${token_id}.json`;
   return fetchMetadata(URI);
@@ -31,7 +32,7 @@ export function sleep(ms: any) {
 }
 
 export async function getItemsRecursive(
-  cursor = null,
+  cursor: string | null = null,
   result = []
 ): Promise<any[]> {
   const assetsURL = `${env.client.publicApiUrl}/assets?collection=${
@@ -39,7 +40,11 @@ export async function getItemsRecursive(
   }&order_by=updated_at&page_size=200${cursor ? `&cursor=${cursor}` : ''}`;
   try {
     const response = await fetch(assetsURL, {});
-    const json = await response.json();
+    const json = (await response.json()) as {
+      result: never[];
+      remaining?: boolean;
+      cursor: string | null;
+    };
     // add page to result array
     result = result.concat(json.result);
     // check is this the end
