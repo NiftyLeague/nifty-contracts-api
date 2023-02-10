@@ -1,15 +1,15 @@
-import all from 'it-all';
 import CID from 'cids';
 import config from 'config';
 import ethers, { Contract } from 'ethers';
 import fetch from 'node-fetch';
-import ipfsClient, { Options, IPFSHTTPClient } from 'ipfs-http-client';
+import { create, Options, IPFSHTTPClient } from 'ipfs-http-client';
 import { ListOptions } from 'ipfs-core-types/dist/src/root';
 import { concat } from 'uint8arrays/concat';
 import { toString } from 'uint8arrays/to-string';
 
 import { ContractName, TargetNetwork, NFTInfo } from '../../types';
 import getContractFactory from '../utils/getContractFactory';
+import all from '../utils/it-all';
 import {
   stripIpfsUriPrefix,
   makeGatewayURL,
@@ -59,7 +59,7 @@ export class Minty {
     } as Options;
 
     // create a local IPFS node
-    this.ipfs = ipfsClient.create(options);
+    this.ipfs = create(options);
 
     this._initialized = true;
   }

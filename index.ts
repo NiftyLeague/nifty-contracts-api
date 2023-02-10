@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import config from 'config';
 import cors from 'cors';
@@ -6,24 +7,25 @@ import express, { Request, Response } from 'express';
 import path from 'path';
 import { AlchemyProvider } from '@ethersproject/providers';
 import { Wallet } from '@ethersproject/wallet';
-import groupBy from 'lodash/groupBy';
+import { groupBy } from 'lodash';
 
-import { getItemIdByTokenId } from './imx-mint/libs/utils';
-import env from './imx-mint/config/client';
-import { CONTRACT_METHODS } from './constants';
+dotenv.config();
+
 import {
   getItemsRecursive,
   resolveDegenMetadata,
   pipeRequest,
 } from './scripts/utils/api';
+import { TargetNetwork } from './types';
+import { CONTRACT_METHODS } from './constants';
 import { handleNameChangeByInput } from './scripts/handleNameChange';
 import { handleDepositConfirmation } from './scripts/deposit';
 import { handleWithdrawConfirmation } from './scripts/withdraw';
 import { resolveCirculatingSupply } from './scripts/nftl';
 import { handleIMXMint } from './scripts/imx-mint';
-import { TargetNetwork } from './types';
 import { generateIMXAuthorisationHeaders } from './imx-mint/libs/sign';
-require('dotenv').config();
+import env from './imx-mint/config/client';
+import { getItemIdByTokenId } from './imx-mint/libs/utils';
 
 const app = express()
   .set('port', config.get('port'))

@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import config from 'config';
 import path from 'path';
 import fs from 'fs';
@@ -154,7 +153,7 @@ class Degen extends Minty {
       rarity < 3 ? 'png' : 'mp4'
     }`;
     const url = generateImageURL(traits, rarity, tokenId);
-    console.log('🎮 Unity image url:', chalk.blue(url));
+    console.log('🎮 Unity image url:', url);
     console.log('');
     await downloadImage(url, filePath);
     return filePath;
