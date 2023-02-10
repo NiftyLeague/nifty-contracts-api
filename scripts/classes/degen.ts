@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { AddOptions } from 'ipfs-core-types/dist/src/root';
 
-import { TargetNetwork } from '../../types';
+import { Metadata, TargetNetwork } from '../../types';
 import refreshOpenSea from '../utils/refreshOpenSea';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { ensureIpfsUriPrefix, makeGatewayURL } from '../utils/uriHelpers';
@@ -48,7 +48,7 @@ export async function MakeDegen(targetNetwork: TargetNetwork) {
  */
 class Degen extends Minty {
   //////////////////////////////////////////////
-  // ------ NFT Generation
+  // ------ DEGEN NFT Generation
   //////////////////////////////////////////////
 
   /**
@@ -215,6 +215,10 @@ class Degen extends Minty {
     return metadata;
   }
 
+  //////////////////////////////////////////////
+  // ------ DEGEN NFT Updates
+  //////////////////////////////////////////////
+
   /**
    * Update token metadata with new name
    * @param {string} tokenId
@@ -224,10 +228,49 @@ class Degen extends Minty {
    * @property {object} newMetadata
    * @returns {Promise<NameChangeInfo>}
    */
-  async updateTokenName(tokenId: string, metadata: {}) {
+  async updateTokenName(tokenId: string | number, metadata: {}) {
     const name = await this.getName(tokenId);
     console.log('New Name:', name);
     const newMetadata = { ...metadata, name: name || `DEGEN #${tokenId}` };
+    await uploadToS3(
+      `${this.targetNetwork}/metadata/${tokenId}.json`,
+      JSON.stringify(newMetadata, null, 2),
+      true,
+      DEGENS_S3_BUCKET
+    );
+    console.log('✅ Metadata uploaded to S3');
+    await refreshOpenSea(this.targetNetwork, tokenId);
+    console.log('✅ OpenSea force refresh triggered');
+    return { newMetadata };
+  }
+
+  /**
+   * Update token metadata with new name
+   * @param {string} tokenId
+   * @property {object} metadata
+   *
+   * @typedef {object} NameChangeInfo
+   * @property {object} newMetadata
+   * @returns {Promise<NameChangeInfo>}
+   */
+  async updateTokenTraitCount(tokenId: number, metadata: Metadata) {
+    const allTraits = await this.getCharacterTraits(tokenId);
+    const extraTraits = allTraits.slice(5);
+    const extraTraitCount = extraTraits.filter(t => t > 0).length;
+    console.log('extraTraitCount', extraTraitCount);
+    const newMetadata = { ...metadata };
+    console.log('metadata', metadata);
+    newMetadata.external_url = `https://app.niftyleague.com/degens/${tokenId}`;
+    newMetadata.attributes = [
+      ...newMetadata.attributes.filter(
+        a =>
+          a.trait_type !== 'Extra Trait Count' &&
+          a.trait_type !== 'Generation' &&
+          a.value !== 'Naked Gang'
+      ),
+    ];
+    if (extraTraitCount === 0)
+      newMetadata.attributes.push({ value: 'Naked Gang' });
     await uploadToS3(
       `${this.targetNetwork}/metadata/${tokenId}.json`,
       JSON.stringify(newMetadata, null, 2),
@@ -250,7 +293,7 @@ class Degen extends Minty {
    * @param {string} tokenId - the id of an existing token
    * @returns {Promise<string>} - current name of token
    */
-  async getName(tokenId: string) {
+  async getName(tokenId: string | number): Promise<string> {
     return this.contract?.getName(tokenId);
   }
 
@@ -260,7 +303,7 @@ class Degen extends Minty {
    * @param {number} tokenId - the id of an existing token
    * @returns {Promise<[number]>} - list of character traits
    */
-  async getCharacterTraits(tokenId: number) {
+  async getCharacterTraits(tokenId: number): Promise<number[]> {
     return this.contract?.getCharacterTraits(tokenId);
   }
 }

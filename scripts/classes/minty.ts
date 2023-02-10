@@ -78,7 +78,7 @@ export class Minty {
    * @property {string} metadataURI
    * @returns {Promise<ExistsInfo>}
    */
-  async checkTokenMetadataExists(tokenId: string) {
+  async checkTokenMetadataExists(tokenId: string | number) {
     const { metadata, metadataURI } = await this.getNFTMetadata(tokenId);
     return {
       exists: Boolean(metadata && Object.keys(metadata).length),
@@ -114,7 +114,7 @@ export class Minty {
    * @returns {Promise<NFTInfo>}
    */
   async getNFT(
-    tokenId: string,
+    tokenId: string | number,
     opts: { fetchAsset?: boolean; fetchCreationInfo?: boolean }
   ) {
     const { metadata, metadataURI } = await this.getNFTMetadata(tokenId);
@@ -155,7 +155,7 @@ export class Minty {
    * @returns {Promise<{metadata: object, metadataURI: string}>} - resolves to an object containing the metadata and
    * metadata URI. Fails if the token does not exist, or if fetching the data fails.
    */
-  async getNFTMetadata(tokenId: string) {
+  async getNFTMetadata(tokenId: string | number) {
     const metadataURI = await this.contract?.tokenURI(tokenId);
     let metadata;
     try {
@@ -181,7 +181,7 @@ export class Minty {
    * @param {string} tokenId - the id of an existing token
    * @returns {Promise<string>} - the ethereum address of the token owner. Fails if no token with the given id exists.
    */
-  async getTokenOwner(tokenId: string) {
+  async getTokenOwner(tokenId: string | number) {
     return this.contract?.ownerOf(tokenId);
   }
 
@@ -196,7 +196,7 @@ export class Minty {
    *
    * @returns {Promise<NFTCreationInfo>}
    */
-  async getCreationInfo(tokenId: string) {
+  async getCreationInfo(tokenId: string | number) {
     if (this.contract) {
       const filter = await this.contract.filters.Transfer(
         null,
