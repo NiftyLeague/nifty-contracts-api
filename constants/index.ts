@@ -40,6 +40,7 @@ export const ITEMS_S3_BUCKET = 'imx/items';
 
 export const DEGEN_CONTRACT_NAME = 'NiftyDegen';
 export const COMICS_CONTRACT_NAME = 'NiftyLaunchComics';
+export const ITEMS_CONTRACT_NAME = 'NiftyItemL2';
 
 export const DEGEN_METADATA = {
   description: 'Original collection of your favorite 10k DEGENs 🎮',
