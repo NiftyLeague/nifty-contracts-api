@@ -57,12 +57,7 @@ class Item extends Minty {
       ...ITEMS_METADATA[tokenId - 1],
       image_url: makeGatewayURL(assetURI),
     };
-    await uploadToS3(
-      `metadata/${tokenId}.json`,
-      JSON.stringify(metadata, null, 2),
-      false,
-      ITEMS_S3_BUCKET
-    );
+    await uploadToS3(`metadata/${tokenId}.json`, JSON.stringify(metadata, null, 2), false, ITEMS_S3_BUCKET);
     console.log('✅ Metadata uploaded to S3');
     return metadata;
   }
@@ -81,10 +76,7 @@ class Item extends Minty {
       const basename = path.basename(filePath);
       const imgPath = `/items/${basename}`;
 
-      const { cid: assetCid } = await this.ipfs.add(
-        { path: imgPath, content },
-        ipfsOptions
-      );
+      const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, ipfsOptions);
       console.log('✅ Image pinned to IPFS');
 
       await uploadToS3(`images/${basename}`, content, false, ITEMS_S3_BUCKET);

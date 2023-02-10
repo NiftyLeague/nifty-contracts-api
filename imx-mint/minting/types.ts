@@ -1,4 +1,4 @@
-import { Signer } from "@ethersproject/abstract-signer";
+import { Signer } from '@ethersproject/abstract-signer';
 
 export interface IMXClientConfig {
   public_api_url: string;
