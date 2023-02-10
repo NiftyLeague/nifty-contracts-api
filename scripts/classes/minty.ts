@@ -10,11 +10,7 @@ import { toString } from 'uint8arrays/to-string';
 import { ContractName, TargetNetwork, NFTInfo } from '../../types';
 import getContractFactory from '../utils/getContractFactory';
 import all from '../utils/it-all';
-import {
-  stripIpfsUriPrefix,
-  makeGatewayURL,
-  extractCID,
-} from '../utils/uriHelpers';
+import { stripIpfsUriPrefix, makeGatewayURL, extractCID } from '../utils/uriHelpers';
 
 /**
  * Minty is the main object responsible for storing NFT data and interacting with the smart contract.
@@ -39,10 +35,7 @@ export class Minty {
   async init() {
     if (this._initialized) return;
     // connect to the smart contract using the address and ABI
-    this.contract = await getContractFactory(
-      this.targetNetwork,
-      this.contractName
-    );
+    this.contract = await getContractFactory(this.targetNetwork, this.contractName);
 
     const options = {
       protocol: config.get('ipfs.protocol'),
@@ -51,9 +44,7 @@ export class Minty {
       path: config.get('ipfs.path'),
       headers: {
         authorization: `Basic ${
-          this.targetNetwork === 'mainnet'
-            ? config.get('ipfs.authorizationPROD')
-            : config.get('ipfs.authorizationDEV')
+          this.targetNetwork === 'mainnet' ? config.get('ipfs.authorizationPROD') : config.get('ipfs.authorizationDEV')
         }`,
       },
     } as Options;
@@ -113,10 +104,7 @@ export class Minty {
    * @property {number} creationInfo.blockNumber
    * @returns {Promise<NFTInfo>}
    */
-  async getNFT(
-    tokenId: string | number,
-    opts: { fetchAsset?: boolean; fetchCreationInfo?: boolean }
-  ) {
+  async getNFT(tokenId: string | number, opts: { fetchAsset?: boolean; fetchCreationInfo?: boolean }) {
     const { metadata, metadataURI } = await this.getNFTMetadata(tokenId);
     if (!metadata) return { metadata, metadataURI };
     const ownerAddress = await this.getTokenOwner(tokenId);
@@ -198,11 +186,7 @@ export class Minty {
    */
   async getCreationInfo(tokenId: string | number) {
     if (this.contract) {
-      const filter = await this.contract.filters.Transfer(
-        null,
-        null,
-        ethers.BigNumber.from(tokenId)
-      );
+      const filter = await this.contract.filters.Transfer(null, null, ethers.BigNumber.from(tokenId));
 
       const logs = await this.contract.queryFilter(filter);
       const blockNumber = logs[0].blockNumber;
@@ -299,7 +283,7 @@ export class Minty {
       // Ask the remote service to unpin the content.
       // Removes pin object matching query allowing it to be garbage collected
       console.log(`Unpinning CID (${cid})`);
-      // @ts-expect-error
+      // @ts-expect-error CID issue from package
       await this.ipfs?.pin.rm(typeof cid === 'string' ? new CID(cid) : cid);
     }
   }
@@ -315,7 +299,7 @@ export class Minty {
       const opts = {
         cid: [[typeof cid === 'string' ? new CID(cid) : cid]], // ls expects an array of cids
       } as ListOptions;
-      // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line no-unused-vars, no-unsafe-optional-chaining
       for await (const result of this.ipfs?.pin.ls(opts)) {
         return true;
       }

@@ -59,12 +59,7 @@ class Comic extends Minty {
       description:
         'Nifty League Launch Comics!! 📚  Each comic is burnable for a wearable but you might want to keep a full collection for when you get to the Citadel...',
     };
-    await uploadToS3(
-      `metadata/${tokenId}.json`,
-      JSON.stringify(metadata, null, 2),
-      false,
-      COMICS_S3_BUCKET
-    );
+    await uploadToS3(`metadata/${tokenId}.json`, JSON.stringify(metadata, null, 2), false, COMICS_S3_BUCKET);
     console.log('✅ Metadata uploaded to S3');
     return metadata;
   }
@@ -82,10 +77,7 @@ class Comic extends Minty {
       const content = await fs.promises.readFile(filePath);
       const basename = path.basename(filePath);
       const imgPath = `/nifty-launch-comics/${basename}`;
-      const { cid: assetCid } = await this.ipfs.add(
-        { path: imgPath, content },
-        ipfsOptions
-      );
+      const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, ipfsOptions);
       console.log('✅ Image pinned to IPFS');
 
       await uploadToS3(`images/${basename}`, content, false, COMICS_S3_BUCKET);
