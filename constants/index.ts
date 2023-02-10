@@ -33,6 +33,11 @@ export const CONTRACT_METHODS = {
   RENAME: '0xc39cbef1',
 };
 
+export const S3_BASE_URL = 'https://nifty-league.s3.amazonaws.com';
+export const DEGENS_S3_BUCKET = 'degens';
+export const COMICS_S3_BUCKET = 'imx/comics';
+export const ITEMS_S3_BUCKET = 'imx/items';
+
 export const DEGEN_CONTRACT_NAME = 'NiftyDegen';
 export const COMICS_CONTRACT_NAME = 'NiftyLaunchComics';
 
