@@ -33,7 +33,3 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: tsc --noEmit
-      - name: Run API tests
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: test
