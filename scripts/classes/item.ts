@@ -1,4 +1,3 @@
-import config from 'config';
 import path from 'path';
 import fs from 'fs';
 import { AddOptions } from 'ipfs-core-types/dist/src/root';
@@ -61,7 +60,7 @@ class Item extends Minty {
       `metadata/${tokenId}.json`,
       JSON.stringify(metadata, null, 2),
       false,
-      'imx/items'
+      ITEMS_S3_BUCKET
     );
     console.log('✅ Metadata uploaded to S3');
     return metadata;
@@ -87,7 +86,7 @@ class Item extends Minty {
       );
       console.log('✅ Image pinned to IPFS');
 
-      await uploadToS3(`images/${basename}`, content, false, 'imx/items');
+      await uploadToS3(`images/${basename}`, content, false, ITEMS_S3_BUCKET);
       console.log('✅ Image uploaded to S3');
 
       // make the NFT metadata JSON

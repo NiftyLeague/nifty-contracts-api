@@ -92,7 +92,9 @@ class Degen extends Minty {
 
       const imageAsset = await uploadToS3(
         `${this.targetNetwork}/images/${basename}`,
-        content
+        content,
+        true,
+        DEGENS_S3_BUCKET
       );
       console.log('✅ Image uploaded to S3');
 
@@ -205,7 +207,9 @@ class Degen extends Minty {
     };
     const metaAsset = await uploadToS3(
       `${this.targetNetwork}/metadata/${tokenId}.json`,
-      JSON.stringify(metadata, null, 2)
+      JSON.stringify(metadata, null, 2),
+      true,
+      DEGENS_S3_BUCKET
     );
     console.log('✅ Metadata uploaded to S3');
     return metadata;
