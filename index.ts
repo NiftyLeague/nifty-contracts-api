@@ -17,13 +17,14 @@ import {
   pipeRequest,
 } from './scripts/utils/api';
 import { TargetNetwork } from './types';
+import { CONTRACT_METHODS } from './constants';
 import {
-  CONTRACT_METHODS,
   S3_BASE_URL,
   DEGENS_S3_BUCKET,
   COMICS_S3_BUCKET,
   ITEMS_S3_BUCKET,
-} from './constants';
+} from './constants/aws';
+
 import { handleNameChangeByInput } from './scripts/handleNameChange';
 import { handleDepositConfirmation } from './scripts/deposit';
 import { handleWithdrawConfirmation } from './scripts/withdraw';

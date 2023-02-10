@@ -5,8 +5,9 @@ import { AddOptions } from 'ipfs-core-types/dist/src/root';
 import { TargetNetwork } from '../../types';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { ensureIpfsUriPrefix, makeGatewayURL } from '../utils/uriHelpers';
-import { ITEMS_S3_BUCKET, ITEMS_CONTRACT_NAME } from '../../constants';
-import { ITEMS_METADATA } from '../../constants/items';
+import { ITEMS_CONTRACT_NAME } from '../../constants';
+import { ITEMS_S3_BUCKET } from '../../constants/aws';
+import { ITEMS_METADATA } from '../../constants/itemsMetadata';
 import { Minty } from './minty';
 
 // ipfs parameters for more deterministic CIDs
