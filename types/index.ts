@@ -1,4 +1,4 @@
-export type ContractName = 'NiftyDegen' | 'NiftyLaunchComics';
+export type ContractName = 'NiftyDegen' | 'NiftyLaunchComics' | 'NiftyItemL2';
 
 export type TargetNetwork = 'mainnet' | 'goerli';
 
