@@ -2,7 +2,15 @@ export type ContractName = 'NiftyDegen' | 'NiftyLaunchComics';
 
 export type TargetNetwork = 'mainnet' | 'goerli';
 
-export type Metadata = {};
+export type Attribute = { trait_type: string; value: string };
+
+export type Metadata = {
+  name: string;
+  image: string;
+  description: string;
+  external_url: string;
+  attributes: Attribute[];
+};
 
 export type CreationInfo = { blockNumber: number; creatorAddress: any };
 

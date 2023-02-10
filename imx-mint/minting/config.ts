@@ -1,17 +1,16 @@
-import { getEnv } from "../libs/utils";
-import env from "../config/client";
+import env from '../config/client';
 
-export = (network: string): any => {
+export default (network: string): any => {
   switch (network) {
     // Mainnet Configuration
-    case "mainnet":
+    case 'mainnet':
       return {
         item_addr: env.collectionContractAddress,
         imx_client_config: {
           public_api_url: env.client.publicApiUrl,
           stark_contract_address: env.client.starkContractAddress,
           registration_contract_address: env.client.registrationContractAddress,
-          gas_limit: "500000",
+          gas_limit: '500000',
         },
         new_collection_metadata: {
           name: undefined, // new IMX collection name
@@ -22,17 +21,17 @@ export = (network: string): any => {
         },
       };
     // Goerli Configuration
-    case "goerli":
+    case 'goerli':
       return {
         item_addr: env.collectionContractAddress,
         imx_client_config: {
           public_api_url: env.client.publicApiUrl,
           stark_contract_address: env.client.starkContractAddress,
           registration_contract_address: env.client.registrationContractAddress,
-          gas_limit: "300000",
+          gas_limit: '300000',
         },
         new_collection_metadata: {
-          name: "undefined", // new IMX collection name
+          name: 'undefined', // new IMX collection name
           description: undefined, // new description for the collection
           icon_url: undefined, // new url for the collection icon
           metadata_api_url: undefined, // new API base url to retrieve the tokens metadata (according to the metadata schema)
@@ -41,6 +40,6 @@ export = (network: string): any => {
       };
     // any other network is not supported
     default:
-      throw "unknown network " + network;
+      throw 'unknown network ' + network;
   }
 };
