@@ -6,7 +6,8 @@ import { TargetNetwork } from '../../types';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { ensureIpfsUriPrefix, makeGatewayURL } from '../utils/uriHelpers';
 import refreshOpenSea from '../utils/refreshOpenSea';
-import { COMICS_CONTRACT_NAME, COMICS_S3_BUCKET } from '../../constants';
+import { COMICS_CONTRACT_NAME } from '../../constants';
+import { COMICS_S3_BUCKET } from '../../constants/aws';
 import { Minty } from './minty';
 
 // ipfs parameters for more deterministic CIDs
