@@ -19,7 +19,7 @@ export const uploadToS3 = async (
   fileName: string,
   content: AWS.S3.Body,
   retry = true,
-  baseDirectory = config.get('s3.baseDirectory')
+  baseDirectory: string = ''
 ) => {
   const params = {
     Bucket: config.get('s3.bucket'),
@@ -33,6 +33,6 @@ export const uploadToS3 = async (
     return s3.upload(params).promise();
   } catch (err) {
     console.log(err);
-    if (retry) uploadToS3(fileName, content, false);
+    if (retry) uploadToS3(fileName, content, false, baseDirectory);
   }
 };

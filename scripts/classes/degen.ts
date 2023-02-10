@@ -15,6 +15,7 @@ import {
 import {
   CHARACTER_BACKGROUNDS,
   CHARACTER_TRAIT_TYPES,
+  DEGENS_S3_BUCKET,
   DEGEN_CONTRACT_NAME,
   DEGEN_METADATA,
   TRAIT_VALUE_MAP,
@@ -221,10 +222,13 @@ class Degen extends Minty {
    */
   async updateTokenName(tokenId: string, metadata: {}) {
     const name = await this.getName(tokenId);
+    console.log('New Name:', name);
     const newMetadata = { ...metadata, name: name || `DEGEN #${tokenId}` };
     await uploadToS3(
       `${this.targetNetwork}/metadata/${tokenId}.json`,
-      JSON.stringify(newMetadata, null, 2)
+      JSON.stringify(newMetadata, null, 2),
+      true,
+      DEGENS_S3_BUCKET
     );
     console.log('✅ Metadata uploaded to S3');
     await refreshOpenSea(this.targetNetwork, tokenId);
