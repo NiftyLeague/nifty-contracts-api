@@ -26,8 +26,9 @@ Run `yarn dev` to start up your local API on post 5005 in watchmode
 To run commands locally:
 
 1. Run `yarn` to install packages
-2. Run `npm link` to add the `minty` command to your `$PATH`. This makes it easier to run Minty from anywhere on your computer.
-3. Run a command such as `minty refresh-degen 1`
+2. Run `yarn build` to compile to dist/
+3. Run `npm link` to add the `minty` command to your `$PATH`. This makes it easier to run Minty from anywhere on your computer.
+4. Run a command such as `minty refresh-degen 1`
 
 ## IPFS Quick Start
 

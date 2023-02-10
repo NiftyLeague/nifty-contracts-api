@@ -68,15 +68,17 @@ async function main() {
 
 // ---- DEGENS
 
-const TOTAL_DEGENS = 9905;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TOTAL_DEGENS_TESTNET = 7550;
+const TOTAL_DEGENS = 9905;
+const START_INDEX = 3679; // 1;
 
 async function refreshDegen(tokenId: number) {
   await refreshOpenSea(targetNetwork, tokenId);
 }
 
 async function refreshAllDegens() {
-  for (let i = 1; i <= TOTAL_DEGENS; i++) {
+  for (let i = START_INDEX; i <= TOTAL_DEGENS; i++) {
     await refreshDegen(i);
   }
 }
@@ -86,7 +88,7 @@ async function updateDegenName(tokenId: number) {
 }
 
 async function updateDegensNames() {
-  for (let i = 1; i <= TOTAL_DEGENS; i++) {
+  for (let i = START_INDEX; i <= TOTAL_DEGENS; i++) {
     await updateDegenName(i);
   }
 }
@@ -96,7 +98,7 @@ async function updateDegen(tokenId: number) {
 }
 
 async function updateDegens() {
-  for (let i = 3236; i <= TOTAL_DEGENS; i++) {
+  for (let i = START_INDEX; i <= TOTAL_DEGENS; i++) {
     await updateDegen(i);
   }
 }
