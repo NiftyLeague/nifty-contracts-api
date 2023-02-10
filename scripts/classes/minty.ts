@@ -1,0 +1,325 @@
+import CID from 'cids';
+import config from 'config';
+import ethers, { Contract } from 'ethers';
+import fetch from 'node-fetch';
+import { create, Options, IPFSHTTPClient } from 'ipfs-http-client';
+import { ListOptions } from 'ipfs-core-types/dist/src/root';
+import { concat } from 'uint8arrays/concat';
+import { toString } from 'uint8arrays/to-string';
+
+import { ContractName, TargetNetwork, NFTInfo } from '../../types';
+import getContractFactory from '../utils/getContractFactory';
+import all from '../utils/it-all';
+import {
+  stripIpfsUriPrefix,
+  makeGatewayURL,
+  extractCID,
+} from '../utils/uriHelpers';
+
+/**
+ * Minty is the main object responsible for storing NFT data and interacting with the smart contract.
+ * Before constructing, make sure that the contract has been deployed
+ * Minty requires async initialization
+ */
+export class Minty {
+  targetNetwork: TargetNetwork;
+  contractName: ContractName;
+  _initialized: boolean;
+  contract: Contract | null;
+  ipfs: IPFSHTTPClient | null;
+
+  constructor(targetNetwork: TargetNetwork, contractName: ContractName) {
+    this.targetNetwork = targetNetwork;
+    this.contractName = contractName;
+    this._initialized = false;
+    this.contract = null;
+    this.ipfs = null;
+  }
+
+  async init() {
+    if (this._initialized) return;
+    // connect to the smart contract using the address and ABI
+    this.contract = await getContractFactory(
+      this.targetNetwork,
+      this.contractName
+    );
+
+    const options = {
+      protocol: config.get('ipfs.protocol'),
+      host: config.get('ipfs.host'),
+      port: config.get('ipfs.port'),
+      path: config.get('ipfs.path'),
+      headers: {
+        authorization: `Basic ${
+          this.targetNetwork === 'mainnet'
+            ? config.get('ipfs.authorizationPROD')
+            : config.get('ipfs.authorizationDEV')
+        }`,
+      },
+    } as Options;
+
+    // create a local IPFS node
+    this.ipfs = create(options);
+
+    this._initialized = true;
+  }
+
+  //////////////////////////////////////////////
+  // -------- NFT Retreival
+  //////////////////////////////////////////////
+
+  /**
+   * Check if Metadata exists for tokenId
+   * @param {string} tokenId
+   *
+   * @typedef {object} ExistsInfo
+   * @property {boolean} tokenId
+   * @property {object} metadata
+   * @property {string} metadataURI
+   * @returns {Promise<ExistsInfo>}
+   */
+  async checkTokenMetadataExists(tokenId: string | number) {
+    const { metadata, metadataURI } = await this.getNFTMetadata(tokenId);
+    return {
+      exists: Boolean(metadata && Object.keys(metadata).length),
+      metadata,
+      metadataURI,
+    };
+  }
+
+  /**
+   * Get information about an existing token.
+   * By default, this includes the token id, owner address, metadata, and metadata URI.
+   * To include info about when the token was created and by whom, set `opts.fetchCreationInfo` to true.
+   * To include the full asset data (base64 encoded), set `opts.fetchAsset` to true.
+   *
+   * @param {string} tokenId
+   * @param {object} opts
+   * @param {?boolean} opts.fetchAsset - if true, asset data will be fetched from IPFS and returned in assetData (base64 encoded)
+   * @param {?boolean} opts.fetchCreationInfo - if true, fetch historical info (creator address and block number)
+   *
+   *
+   * @typedef {object} NFTInfo
+   * @property {string} tokenId
+   * @property {string} ownerAddress
+   * @property {object} metadata
+   * @property {string} metadataURI
+   * @property {string} metadataGatewayURI
+   * @property {string} assetURI
+   * @property {string} assetGatewayURL
+   * @property {?string} assetDataBase64
+   * @property {?object} creationInfo
+   * @property {string} creationInfo.creatorAddress
+   * @property {number} creationInfo.blockNumber
+   * @returns {Promise<NFTInfo>}
+   */
+  async getNFT(
+    tokenId: string | number,
+    opts: { fetchAsset?: boolean; fetchCreationInfo?: boolean }
+  ) {
+    const { metadata, metadataURI } = await this.getNFTMetadata(tokenId);
+    if (!metadata) return { metadata, metadataURI };
+    const ownerAddress = await this.getTokenOwner(tokenId);
+    const metadataGatewayURL = makeGatewayURL(metadataURI);
+    const nft = {
+      tokenId,
+      metadata,
+      metadataURI,
+      metadataGatewayURL,
+      ownerAddress,
+      assetURI: undefined,
+      assetGatewayURL: '',
+      assetDataBase64: '',
+      creationInfo: undefined,
+    } as NFTInfo;
+
+    const { fetchAsset, fetchCreationInfo } = opts || {};
+    if (metadata.image) {
+      nft.assetURI = metadata.image;
+      nft.assetGatewayURL = makeGatewayURL(metadata.image);
+      if (fetchAsset) {
+        nft.assetDataBase64 = (await this.getIPFSBase64(metadata.image)) || '';
+      }
+    }
+
+    if (fetchCreationInfo) {
+      nft.creationInfo = await this.getCreationInfo(tokenId);
+    }
+    return nft;
+  }
+
+  /**
+   * Fetch the NFT metadata for a given token id.
+   *
+   * @param tokenId - the id of an existing token
+   * @returns {Promise<{metadata: object, metadataURI: string}>} - resolves to an object containing the metadata and
+   * metadata URI. Fails if the token does not exist, or if fetching the data fails.
+   */
+  async getNFTMetadata(tokenId: string | number) {
+    const metadataURI = await this.contract?.tokenURI(tokenId);
+    let metadata;
+    try {
+      if (metadataURI.startsWith('ipfs')) {
+        metadata = await this.getIPFSJSON(metadataURI);
+      } else {
+        const response = await fetch(metadataURI);
+        if (response.status < 400) metadata = await response.json();
+      }
+    } catch (e) {
+      console.error('Error', e);
+    }
+    return { metadata, metadataURI };
+  }
+
+  //////////////////////////////////////////////
+  // --------- Smart contract interactions
+  //////////////////////////////////////////////
+
+  /**
+   * Get the address that owns the given token id.
+   *
+   * @param {string} tokenId - the id of an existing token
+   * @returns {Promise<string>} - the ethereum address of the token owner. Fails if no token with the given id exists.
+   */
+  async getTokenOwner(tokenId: string | number) {
+    return this.contract?.ownerOf(tokenId);
+  }
+
+  /**
+   * Get historical information about the token.
+   *
+   * @param {string} tokenId - the id of an existing token
+   *
+   * @typedef {object} NFTCreationInfo
+   * @property {number} blockNumber - the block height at which the token was minted
+   * @property {string} creatorAddress - the ethereum address of the token's initial owner
+   *
+   * @returns {Promise<NFTCreationInfo>}
+   */
+  async getCreationInfo(tokenId: string | number) {
+    if (this.contract) {
+      const filter = await this.contract.filters.Transfer(
+        null,
+        null,
+        ethers.BigNumber.from(tokenId)
+      );
+
+      const logs = await this.contract.queryFilter(filter);
+      const blockNumber = logs[0].blockNumber;
+      const creatorAddress = logs[0].args?.to;
+      return {
+        blockNumber,
+        creatorAddress,
+      };
+    }
+  }
+
+  //////////////////////////////////////////////
+  // --------- IPFS helpers
+  //////////////////////////////////////////////
+
+  /**
+   * Get the full contents of the IPFS object identified by the given CID or URI.
+   *
+   * @param {string} cidOrURI - IPFS CID string or `ipfs://<cid>` style URI
+   * @returns {Promise<Uint8Array>} - contents of the IPFS object
+   */
+  async getIPFS(cidOrURI: string) {
+    const cid = stripIpfsUriPrefix(cidOrURI);
+    return this.ipfs && concat(await all(this.ipfs?.cat(cid)));
+  }
+
+  /**
+   * Get the contents of the IPFS object identified by the given CID or URI, and return it as a string.
+   *
+   * @param {string} cidOrURI - IPFS CID string or `ipfs://<cid>` style URI
+   * @returns {Promise<string>} - the contents of the IPFS object as a string
+   */
+  async getIPFSString(cidOrURI: string) {
+    const bytes = await this.getIPFS(cidOrURI);
+    return bytes && toString(bytes);
+  }
+
+  /**
+   * Get the full contents of the IPFS object identified by the given CID or URI, and return it as a base64 encoded string.
+   *
+   * @param {string} cidOrURI - IPFS CID string or `ipfs://<cid>` style URI
+   * @returns {Promise<string>} - contents of the IPFS object, encoded to base64
+   */
+  async getIPFSBase64(cidOrURI: string) {
+    const bytes = await this.getIPFS(cidOrURI);
+    return bytes && toString(bytes, 'base64');
+  }
+
+  /**
+   * Get the contents of the IPFS object identified by the given CID or URI, and parse it as JSON, returning the parsed object.
+   *
+   * @param {string} cidOrURI - IPFS CID string or `ipfs://<cid>` style URI
+   * @returns {Promise<string>} - contents of the IPFS object, as a javascript object (or array, etc depending on what was stored). Fails if the content isn't valid JSON.
+   */
+  async getIPFSJSON(cidOrURI: string) {
+    const str = await this.getIPFSString(cidOrURI);
+    return str && JSON.parse(str);
+  }
+
+  //////////////////////////////////////////////
+  // -------- Pinning to remote services
+  //////////////////////////////////////////////
+
+  /**
+   * Request that the remote pinning service pin the given CID or ipfs URI.
+   *
+   * @param {string} cidOrURI - a CID or ipfs:// URI
+   * @returns {Promise<void>}
+   */
+  async pin(cidOrURI: string) {
+    const cid = extractCID(cidOrURI);
+    // Check if we've already pinned this CID to avoid a "duplicate pin" error.
+    const pinned = await this.isPinned(cid);
+    if (pinned) {
+      console.log(`CID (${cid}) already pinned`);
+      return;
+    }
+    // Ask the remote service to pin the content.
+    // Behind the scenes, this will cause the pinning service to connect to our local IPFS node
+    // and fetch the data using Bitswap, IPFS's transfer protocol.
+    await this.ipfs?.pin.add(cid);
+  }
+
+  /**
+   * Request that the remote pinning service unpin the given CID or ipfs URI.
+   *
+   * @param {string|CID} cid - a CID
+   * @returns {Promise<void>}
+   */
+  async unpin(cid: string | CID) {
+    // Check if we've actually pinned this CID to be removed.
+    const pinned = await this.isPinned(cid);
+    if (pinned) {
+      // Ask the remote service to unpin the content.
+      // Removes pin object matching query allowing it to be garbage collected
+      console.log(`Unpinning CID (${cid})`);
+      // @ts-expect-error
+      await this.ipfs?.pin.rm(typeof cid === 'string' ? new CID(cid) : cid);
+    }
+  }
+
+  /**
+   * Check if a cid is already pinned.
+   *
+   * @param {string|CID} cid
+   * @returns {Promise<boolean>} - true if the pinning service has already pinned the given cid
+   */
+  async isPinned(cid: string | CID) {
+    if (this.ipfs) {
+      const opts = {
+        cid: [[typeof cid === 'string' ? new CID(cid) : cid]], // ls expects an array of cids
+      } as ListOptions;
+      // eslint-disable-next-line no-unused-vars
+      for await (const result of this.ipfs?.pin.ls(opts)) {
+        return true;
+      }
+    }
+    return false;
+  }
+}
