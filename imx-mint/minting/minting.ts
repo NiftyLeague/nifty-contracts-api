@@ -12,10 +12,7 @@ function get_provider(network: string) {
   return new AlchemyProvider(network, getEnv('ALCHEMY_API_KEY'));
 }
 
-function get_wallet_from_private_key(
-  network: string,
-  private_key: string
-): Wallet {
+function get_wallet_from_private_key(network: string, private_key: string): Wallet {
   const provider = get_provider(network);
 
   return new Wallet(private_key, provider);
@@ -33,21 +30,17 @@ function get_wallet(network: string): Wallet {
 function get_imx_client(network: string) {
   const config = Config(network);
 
-  return get_imx_client_from_wallet(
-    get_wallet(network),
-    config.imx_client_config
-  );
+  return get_imx_client_from_wallet(get_wallet(network), config.imx_client_config);
 }
 
 async function get_imx_client_from_wallet(
   wallet: Wallet,
-  imx_client_config: IMXClientConfig
+  imx_client_config: IMXClientConfig,
 ): Promise<ImmutableXClient> {
   return ImmutableXClient.build({
     publicApiUrl: imx_client_config.public_api_url,
     starkContractAddress: imx_client_config.stark_contract_address,
-    registrationContractAddress:
-      imx_client_config.registration_contract_address,
+    registrationContractAddress: imx_client_config.registration_contract_address,
     gasLimit: imx_client_config.gas_limit,
     gasPrice: imx_client_config.gas_price,
     signer: wallet,
@@ -59,7 +52,7 @@ async function mint_L2(
   asset_address: string,
   to: string,
   token_id: string[],
-  blueprint: string
+  blueprint: string,
 ): Promise<ImmutableMethodResults.ImmutableOffchainMintV2Result> {
   const tokens = token_id.map(x => ({ id: x.toString(), blueprint }));
 
@@ -72,20 +65,12 @@ async function mint_L2(
     },
   ]);
 
-  console.log(
-    `Minting of tokenId ${token_id} of collection ${asset_address.toLowerCase()} successful on L2`
-  );
+  console.log(`Minting of tokenId ${token_id} of collection ${asset_address.toLowerCase()} successful on L2`);
 
   return mint_result.results[0];
 }
 
-export async function mint(
-  targetNetwork: TargetNetwork,
-  addr: string,
-  to: string,
-  tokenIds: string[],
-  itemId: string
-) {
+export async function mint(targetNetwork: TargetNetwork, addr: string, to: string, tokenIds: string[], itemId: string) {
   // Get configuration for the network
   const client = await get_imx_client(targetNetwork);
   if (tokenIds.length > 0) {

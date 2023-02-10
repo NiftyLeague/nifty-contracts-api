@@ -8,12 +8,12 @@ import { Contract } from 'ethers';
  */
 export default async function getContractFactory(
   targetNetwork: TargetNetwork,
-  contractName: ContractName
+  contractName: ContractName,
 ): Promise<Contract> {
   const abi = JSON.parse(
     fs.readFileSync(`./contracts/${contractName}.abi.json`, {
       encoding: 'utf8',
-    })
+    }),
   );
   const addressPath = `./contracts/${contractName}.${targetNetwork}.address`;
   const address = fs.readFileSync(addressPath).toString();
