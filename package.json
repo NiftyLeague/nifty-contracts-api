@@ -4,6 +4,9 @@
   "description": "API for Game Account webhooks",
   "repository": "github:NiftyLeague/ContractsAPI.git",
   "main": "dist/index.js",
+  "bin": {
+    "minty": "dist/commander.js"
+  },
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/index.js",
@@ -62,6 +65,7 @@
     "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.50.0",
     "chai": "^4.3.7",
+    "commander": "^10.0.0",
     "concurrently": "^7.5.0",
     "eslint": "^8.33.0",
     "fp-ts": "^2.13.1",
