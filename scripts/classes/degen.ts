@@ -15,11 +15,11 @@ import {
 import {
   CHARACTER_BACKGROUNDS,
   CHARACTER_TRAIT_TYPES,
-  DEGENS_S3_BUCKET,
-  DEGEN_CONTRACT_NAME,
   DEGEN_METADATA,
   TRAIT_VALUE_MAP,
-} from '../../constants';
+} from '../../constants/degenMetadata';
+import { DEGEN_CONTRACT_NAME } from '../../constants';
+import { DEGENS_S3_BUCKET } from '../../constants/aws';
 import { Minty } from './minty';
 
 // ipfs parameters for more deterministic CIDs
