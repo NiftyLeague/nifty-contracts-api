@@ -227,9 +227,7 @@ class Degen extends Minty {
     const allTraits = await this.getCharacterTraits(tokenId);
     const extraTraits = allTraits.slice(5);
     const extraTraitCount = extraTraits.filter(t => t > 0).length;
-    console.log('extraTraitCount', extraTraitCount);
     const newMetadata = { ...metadata };
-    console.log('metadata', metadata);
     newMetadata.external_url = `https://app.niftyleague.com/degens/${tokenId}`;
     newMetadata.attributes = [
       ...newMetadata.attributes.filter(
