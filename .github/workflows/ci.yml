@@ -1,0 +1,35 @@
+name: Validate, build, and test on every push
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.18.1
+          cache: 'yarn'
+      - name: Install dependencies
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install
+      - name: Build
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: build
+      - name: Run prettier
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: format
+      - name: Lint JS files
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: lint
+      - name: Check TypeScript
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: tsc --noEmit

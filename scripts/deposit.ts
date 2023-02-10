@@ -7,7 +7,7 @@ import { API_BASE_URL } from '../constants';
 const BALANCE_MANAGER_ABI = JSON.parse(
   fs.readFileSync('./contracts/BalanceManager.abi.json', {
     encoding: 'utf8',
-  })
+  }),
 );
 
 async function parseInputData(input: any) {
@@ -26,13 +26,10 @@ export async function handleDepositConfirmation(tx: any) {
   });
   console.log('body', body);
   try {
-    const response = await fetch(
-      `${API_BASE_URL}/accounts/deposit?secret=${config.get('secret')}`,
-      {
-        method: 'POST',
-        body,
-      }
-    );
+    const response = await fetch(`${API_BASE_URL}/accounts/deposit?secret=${config.get('secret')}`, {
+      method: 'POST',
+      body,
+    });
     console.log('response', response);
     if (!response.ok) throw new Error(response.statusText);
     return response;

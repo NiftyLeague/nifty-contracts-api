@@ -1,6 +1,6 @@
 import hre from 'hardhat';
 import fs from 'fs';
-import { JsonRpcProvider } from '@ethersproject/providers';
+import { JsonRpcProvider, Log, TransactionResponse } from '@ethersproject/providers';
 
 import { mint } from '../imx-mint/minting/minting';
 import { getEnv } from '../imx-mint/libs/utils';
@@ -11,23 +11,19 @@ import { getTxReceipt } from './utils/txReceipt';
 const NIFTY_BURNING_COMICS_L2 = JSON.parse(
   fs.readFileSync('./contracts/NiftyBurningComicsL2.abi.json', {
     encoding: 'utf8',
-  })
+  }),
 );
 
-function parseTopics(log: any, eventName: string) {
+function parseTopics(log: Log, eventName: string) {
   const iface = new hre.ethers.utils.Interface(NIFTY_BURNING_COMICS_L2);
   const inputData = iface.decodeEventLog(eventName, log.data, log.topics);
   return inputData;
 }
 
-function proceedIMXMint(
-  targetNetwork: TargetNetwork,
-  topics: any,
-  isKey: boolean
-) {
+function proceedIMXMint(targetNetwork: TargetNetwork, topics: any, isKey: boolean) {
   const config = Config(targetNetwork);
   const by = topics[0];
-  const tokenIds = topics[1];
+  // const tokenIds = topics[1];
   const values = topics[2];
   const startIds = topics[3];
 
@@ -50,30 +46,16 @@ function proceedIMXMint(
   }
 }
 
-export async function handleIMXMint(tx: any, targetNetwork: TargetNetwork) {
-  const providerUrl = `https://${targetNetwork}.infura.io/v3/${getEnv(
-    'INFURA_PROJECT_ID'
-  )}`;
+export async function handleIMXMint(tx: TransactionResponse, targetNetwork: TargetNetwork) {
+  const providerUrl = `https://${targetNetwork}.infura.io/v3/${getEnv('INFURA_PROJECT_ID')}`;
   const provider = new JsonRpcProvider(providerUrl);
   const receipt = await getTxReceipt(provider, tx);
   if (receipt.logs.length > 3) {
     // key, item both
-    proceedIMXMint(
-      targetNetwork,
-      parseTopics(receipt.logs[2], 'KeyMinted'),
-      true
-    );
-    proceedIMXMint(
-      targetNetwork,
-      parseTopics(receipt.logs[3], 'ItemMinted'),
-      false
-    );
+    proceedIMXMint(targetNetwork, parseTopics(receipt.logs[2], 'KeyMinted'), true);
+    proceedIMXMint(targetNetwork, parseTopics(receipt.logs[3], 'ItemMinted'), false);
   } else {
     // item only
-    proceedIMXMint(
-      targetNetwork,
-      parseTopics(receipt.logs[2], 'ItemMinted'),
-      false
-    );
+    proceedIMXMint(targetNetwork, parseTopics(receipt.logs[2], 'ItemMinted'), false);
   }
 }
