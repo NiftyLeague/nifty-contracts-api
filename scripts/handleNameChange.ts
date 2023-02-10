@@ -3,19 +3,11 @@ import fs from 'fs';
 import { ethers, BytesLike } from 'ethers';
 import { MakeDegen } from './classes/degen';
 import { TargetNetwork } from '../types';
-import { DEGEN_CONTRACT_NAME } from '../constants';
-
-const colorizeOptions = {
-  pretty: true,
-  colors: {
-    STRING_KEY: 'blue.bold',
-    STRING_LITERAL: 'green',
-  },
-};
+import { COLORIZE_OPTIONS, DEGEN_CONTRACT_NAME } from '../constants';
 
 export async function handleNameChangeById(
   targetNetwork: TargetNetwork,
-  tokenId: string
+  tokenId: string | number
 ) {
   console.log(targetNetwork, tokenId);
   const degen = await MakeDegen(targetNetwork);
@@ -25,7 +17,7 @@ export async function handleNameChangeById(
     const { newMetadata } = await degen.updateTokenName(tokenId, metadata);
     console.log('');
     console.log('Updated NFT Metadata:');
-    console.log(colorize(JSON.stringify(newMetadata), colorizeOptions));
+    console.log(colorize(JSON.stringify(newMetadata), COLORIZE_OPTIONS));
     return { metadata: newMetadata };
   }
 }
