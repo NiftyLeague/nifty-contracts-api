@@ -7,3 +7,15 @@ export const CONTRACT_METHODS = {
   PURCHASE: '0x72c9f580',
   RENAME: '0xc39cbef1',
 };
+
+export const DEGEN_CONTRACT_NAME = 'NiftyDegen';
+export const COMICS_CONTRACT_NAME = 'NiftyLaunchComics';
+export const ITEMS_CONTRACT_NAME = 'NiftyItemL2';
+
+export const COLORIZE_OPTIONS = {
+  pretty: true,
+  colors: {
+    STRING_KEY: 'blue.bold',
+    STRING_LITERAL: 'green',
+  },
+};
