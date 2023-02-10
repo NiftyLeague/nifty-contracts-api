@@ -18,16 +18,16 @@ export async function handleNameChangeById(
   tokenId: string
 ) {
   console.log(targetNetwork, tokenId);
-  const minty = await MakeDegen(targetNetwork);
-  const { exists, metadata } = await minty.checkTokenMetadataExists(tokenId);
-  // if (exists) {
-  //   console.log(`Updating Metadata for token id ${tokenId}:`);
-  //   const { newMetadata } = await minty.updateTokenName(tokenId, metadata);
-  //   console.log('');
-  //   console.log('Updated NFT Metadata:');
-  //   console.log(colorize(JSON.stringify(newMetadata), colorizeOptions));
-  //   return { metadata: newMetadata };
-  // }
+  const degen = await MakeDegen(targetNetwork);
+  const { exists, metadata } = await degen.checkTokenMetadataExists(tokenId);
+  if (exists) {
+    console.log(`Updating Metadata for token id ${tokenId}:`);
+    const { newMetadata } = await degen.updateTokenName(tokenId, metadata);
+    console.log('');
+    console.log('Updated NFT Metadata:');
+    console.log(colorize(JSON.stringify(newMetadata), colorizeOptions));
+    return { metadata: newMetadata };
+  }
 }
 
 async function getIdFromInput(input: BytesLike) {

@@ -17,7 +17,13 @@ import {
   pipeRequest,
 } from './scripts/utils/api';
 import { TargetNetwork } from './types';
-import { CONTRACT_METHODS } from './constants';
+import {
+  CONTRACT_METHODS,
+  S3_BASE_URL,
+  DEGENS_S3_BUCKET,
+  COMICS_S3_BUCKET,
+  ITEMS_S3_BUCKET,
+} from './constants';
 import { handleNameChangeByInput } from './scripts/handleNameChange';
 import { handleDepositConfirmation } from './scripts/deposit';
 import { handleWithdrawConfirmation } from './scripts/withdraw';
@@ -59,7 +65,7 @@ app.get(
   async function (req: Request, res: Response) {
     const { network, token_id } = req.params;
     pipeRequest(
-      `https://nifty-league.s3.amazonaws.com/degens/${network}/metadata/${token_id}.json`,
+      `${S3_BASE_URL}/${DEGENS_S3_BUCKET}/${network}/metadata/${token_id}.json`,
       res
     );
   }
@@ -78,7 +84,7 @@ app.get(
     )?.value;
     const type = background === 'Legendary' || tribe === '???' ? 'mp4' : 'png';
     pipeRequest(
-      `https://nifty-league.s3.amazonaws.com/degens/${network}/images/${token_id}.${type}`,
+      `${S3_BASE_URL}/${DEGENS_S3_BUCKET}/${network}/images/${token_id}.${type}`,
       res
     );
   }
@@ -101,7 +107,7 @@ app.get(
   async function (req: Request, res: Response) {
     const tokenId = req.params.token_id;
     pipeRequest(
-      `https://nifty-league.s3.amazonaws.com/imx/comics/metadata/${tokenId}.json`,
+      `${S3_BASE_URL}/${COMICS_S3_BUCKET}/metadata/${tokenId}.json`,
       res
     );
   }
@@ -112,7 +118,7 @@ app.get(
   async function (req: Request, res: Response) {
     const tokenId = req.params.token_id;
     pipeRequest(
-      `https://nifty-league.s3.amazonaws.com/imx/comics/images/${tokenId}.png`,
+      `${S3_BASE_URL}/${COMICS_S3_BUCKET}/images/${tokenId}.png`,
       res
     );
   }
@@ -124,7 +130,7 @@ app.get(
     const tokenId = req.params.token_id;
     const itemId = await getItemIdByTokenId(tokenId);
     pipeRequest(
-      `https://nifty-league.s3.amazonaws.com/imx/items/metadata/${itemId}.json`,
+      `${S3_BASE_URL}/${ITEMS_S3_BUCKET}/metadata/${itemId}.json`,
       res
     );
   }
@@ -135,10 +141,7 @@ app.get(
   async function (req: Request, res: Response) {
     const tokenId = req.params.token_id;
     const itemId = await getItemIdByTokenId(tokenId);
-    pipeRequest(
-      `https://nifty-league.s3.amazonaws.com/imx/items/images/${itemId}.gif`,
-      res
-    );
+    pipeRequest(`${S3_BASE_URL}/${ITEMS_S3_BUCKET}/images/${itemId}.gif`, res);
   }
 );
 
