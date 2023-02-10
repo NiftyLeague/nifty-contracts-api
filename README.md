@@ -6,7 +6,7 @@
 
 ### Requirements
 
-You need node.js (lts/fermium) and npm installed. If you want to do a Heroku deployment, download and install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) and run `heroku login` locally.
+You need node.js (lts/gallium) and npm installed. If you want to do a Heroku deployment, download and install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) and run `heroku login` locally.
 
 ## Setup
 
@@ -19,6 +19,6 @@ You need node.js (lts/fermium) and npm installed. If you want to do a Heroku dep
 
 ## Quick Start
 
-Run `npm run start` to start up your local API on post 5000
+Run `npm run start` to start up your local API on post 5005
 
 ---

@@ -1,9 +1,8 @@
 import colorize from 'json-colorizer';
 import fs from 'fs';
-import { ethers } from 'hardhat';
+import { ethers, BytesLike } from 'ethers';
 import { MakeDegen } from './classes/degen';
 import { TargetNetwork } from '../types';
-import { BytesLike } from 'ethers';
 import { DEGEN_CONTRACT_NAME } from '../constants';
 
 const colorizeOptions = {
