@@ -3,9 +3,10 @@ import fs from 'fs';
 import { JsonRpcProvider } from '@ethersproject/providers';
 
 import { mint } from '../imx-mint/minting/minting';
-import { getEnv, wait } from '../imx-mint/libs/utils';
+import { getEnv } from '../imx-mint/libs/utils';
 import Config from '../imx-mint/minting/config';
 import { TargetNetwork } from '../types';
+import { getTxReceipt } from './utils/txReceipt';
 
 const NIFTY_BURNING_COMICS_L2 = JSON.parse(
   fs.readFileSync('./contracts/NiftyBurningComicsL2.abi.json', {
@@ -46,18 +47,6 @@ function proceedIMXMint(
       // item itemId: 1 - 6
       mint(targetNetwork, config.item_addr, by, ids, `${i + 1}`);
     }
-  }
-}
-
-async function getTxReceipt(provider: JsonRpcProvider, tx: any) {
-  while (true) {
-    const receipt = await provider.getTransactionReceipt(tx.hash);
-    if (receipt && receipt.logs) {
-      console.log('TX RECEIPT', receipt);
-      return receipt;
-    }
-    console.log('Waiting for mined block to include your trasaction...');
-    await wait(4000);
   }
 }
 

@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import config from 'config';
 import cors from 'cors';
@@ -6,23 +7,32 @@ import express, { Request, Response } from 'express';
 import path from 'path';
 import { AlchemyProvider } from '@ethersproject/providers';
 import { Wallet } from '@ethersproject/wallet';
-import groupBy from 'lodash/groupBy';
+import { groupBy } from 'lodash';
 
-import { getItemIdByTokenId } from './imx-mint/libs/utils';
-import env from './imx-mint/config/client';
-import { CONTRACT_METHODS } from './constants';
+dotenv.config();
+
 import {
   getItemsRecursive,
   resolveDegenMetadata,
   pipeRequest,
-} from './scripts/helpers';
+} from './scripts/utils/api';
+import { TargetNetwork } from './types';
+import { CONTRACT_METHODS } from './constants';
+import {
+  S3_BASE_URL,
+  DEGENS_S3_BUCKET,
+  COMICS_S3_BUCKET,
+  ITEMS_S3_BUCKET,
+} from './constants/aws';
+
+import { handleNameChangeByInput } from './scripts/handleNameChange';
 import { handleDepositConfirmation } from './scripts/deposit';
 import { handleWithdrawConfirmation } from './scripts/withdraw';
 import { resolveCirculatingSupply } from './scripts/nftl';
 import { handleIMXMint } from './scripts/imx-mint';
-import { TargetNetwork } from './types';
 import { generateIMXAuthorisationHeaders } from './imx-mint/libs/sign';
-require('dotenv').config();
+import env from './imx-mint/config/client';
+import { getItemIdByTokenId } from './imx-mint/libs/utils';
 
 const app = express()
   .set('port', config.get('port'))
@@ -56,7 +66,7 @@ app.get(
   async function (req: Request, res: Response) {
     const { network, token_id } = req.params;
     pipeRequest(
-      `https://nifty-league.s3.amazonaws.com/degens/${network}/metadata/${token_id}.json`,
+      `${S3_BASE_URL}/${DEGENS_S3_BUCKET}/${network}/metadata/${token_id}.json`,
       res
     );
   }
@@ -75,7 +85,7 @@ app.get(
     )?.value;
     const type = background === 'Legendary' || tribe === '???' ? 'mp4' : 'png';
     pipeRequest(
-      `https://nifty-league.s3.amazonaws.com/degens/${network}/images/${token_id}.${type}`,
+      `${S3_BASE_URL}/${DEGENS_S3_BUCKET}/${network}/images/${token_id}.${type}`,
       res
     );
   }
@@ -98,7 +108,7 @@ app.get(
   async function (req: Request, res: Response) {
     const tokenId = req.params.token_id;
     pipeRequest(
-      `https://nifty-league.s3.amazonaws.com/imx/comics/metadata/${tokenId}.json`,
+      `${S3_BASE_URL}/${COMICS_S3_BUCKET}/metadata/${tokenId}.json`,
       res
     );
   }
@@ -109,7 +119,7 @@ app.get(
   async function (req: Request, res: Response) {
     const tokenId = req.params.token_id;
     pipeRequest(
-      `https://nifty-league.s3.amazonaws.com/imx/comics/images/${tokenId}.png`,
+      `${S3_BASE_URL}/${COMICS_S3_BUCKET}/images/${tokenId}.png`,
       res
     );
   }
@@ -121,7 +131,7 @@ app.get(
     const tokenId = req.params.token_id;
     const itemId = await getItemIdByTokenId(tokenId);
     pipeRequest(
-      `https://nifty-league.s3.amazonaws.com/imx/items/metadata/${itemId}.json`,
+      `${S3_BASE_URL}/${ITEMS_S3_BUCKET}/metadata/${itemId}.json`,
       res
     );
   }
@@ -132,10 +142,7 @@ app.get(
   async function (req: Request, res: Response) {
     const tokenId = req.params.token_id;
     const itemId = await getItemIdByTokenId(tokenId);
-    pipeRequest(
-      `https://nifty-league.s3.amazonaws.com/imx/items/images/${itemId}.gif`,
-      res
-    );
+    pipeRequest(`${S3_BASE_URL}/${ITEMS_S3_BUCKET}/images/${itemId}.gif`, res);
   }
 );
 
@@ -228,20 +235,15 @@ app.post(
     const targetNetwork = req.params.network as TargetNetwork;
     const tx = req.body;
     if (
-      targetNetwork === 'mainnet' &&
+      tx.network === targetNetwork &&
       tx.status === 'confirmed' &&
       tx.direction === 'incoming' &&
       tx.apiKey === config.get('blocknative.apiKey.degens')
     ) {
       console.log('DEGEN WEBHOOK TX:', tx);
-      // if (tx.input.startsWith(CONTRACT_METHODS.PURCHASE)) {
-      //   const tokenId = await getTokenIdFromTxReceipt(tx.hash);
-      //   await safeGenerateNFT(targetNetwork, tokenId);
-      // }
-      // if (tx.input.startsWith(CONTRACT_METHODS.RENAME)) {
-      //   await getTokenIdFromTxReceipt(tx.hash);
-      //   await handleNameChangeByInput(targetNetwork, tx.input);
-      // }
+      if (tx.input.startsWith(CONTRACT_METHODS.RENAME)) {
+        await handleNameChangeByInput(targetNetwork, tx.input);
+      }
     }
     res.sendStatus(200);
   }
