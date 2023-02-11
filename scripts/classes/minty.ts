@@ -6,6 +6,7 @@ import { create, Options, IPFSHTTPClient } from 'ipfs-http-client';
 import { ListOptions } from 'ipfs-core-types/dist/src/root';
 import { concat } from 'uint8arrays/concat';
 import { toString } from 'uint8arrays/to-string';
+import pinataSDK from '@pinata/sdk';
 
 import { ContractName, TargetNetwork, NFTInfo } from '../../types';
 import getContractFactory from '../utils/getContractFactory';
@@ -14,6 +15,11 @@ import { uploadToS3 } from '../utils/uploadToS3';
 import all from '../utils/it-all';
 import { stripIpfsUriPrefix, makeGatewayURL, extractCID, ensureIpfsUriPrefix } from '../utils/uriHelpers';
 import { IPFS_OPTIONS } from '../../constants';
+
+const pinata = new pinataSDK({
+  pinataApiKey: process.env.PINATA_API_KEY,
+  pinataSecretApiKey: process.env.PINATAT_API_SECRET,
+});
 
 /**
  * Minty is the main object responsible for storing NFT data and interacting with the smart contract.
@@ -276,7 +282,13 @@ export class Minty {
   async pinImage(imgPath: string, content: Buffer | Uint8Array) {
     if (this.ipfs) {
       const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, IPFS_OPTIONS);
-      console.log('✅ Image pinned to IPFS');
+      console.log('✅ Image pinned to Infura IPFS');
+      const options = {
+        pinataMetadata: { name: imgPath },
+        // pinataOptions: IPFS_OPTIONS,
+      };
+      await pinata.pinByHash(assetCid.toString(), options);
+      console.log('✅ Image pinned to Pinata IPFS');
       const assetURI = ensureIpfsUriPrefix(assetCid) + imgPath;
       return {
         assetCid,
