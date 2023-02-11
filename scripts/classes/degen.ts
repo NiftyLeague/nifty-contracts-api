@@ -2,7 +2,6 @@ import path from 'path';
 import fs from 'fs';
 
 import { Metadata, NFTInfo, TargetNetwork } from '../../types';
-import refreshOpenSea from '../utils/refreshOpenSea';
 import { ensureIpfsUriPrefix, makeGatewayURL } from '../utils/uriHelpers';
 import { downloadImage, generateImageURL, raritySelector } from '../utils/imageGenerator';
 import {
@@ -80,9 +79,7 @@ class Degen extends Minty {
       // make the NFT metadata JSON
       const assetURI = ensureIpfsUriPrefix(assetCid) + imgPath;
       const metadata = await this.makeNFTMetadata(tokenId, traits, rarity, assetURI);
-
-      await refreshOpenSea(this.targetNetwork, tokenId);
-      console.log('✅ OpenSea force refresh triggered');
+      await this.refreshOpenSea(tokenId);
 
       return {
         tokenId,
@@ -213,8 +210,7 @@ class Degen extends Minty {
     const s3Path = `${this.targetNetwork}/images/${tokenId}.mp4`;
     await this.uploadToS3(s3Path, content, DEGENS_S3_BUCKET);
     const metadata = await this.makeNewHydraMetadata(tokenId);
-    await refreshOpenSea(this.targetNetwork, tokenId);
-    console.log('✅ OpenSea force refresh triggered');
+    await this.refreshOpenSea(tokenId);
     return {
       tokenId,
       metadata,
@@ -239,8 +235,7 @@ class Degen extends Minty {
     const newMetadata = { ...metadata, name: name || `DEGEN #${tokenId}` };
     const s3Path = `${this.targetNetwork}/metadata/${tokenId}.json`;
     await this.uploadToS3(s3Path, JSON.stringify(newMetadata, null, 2), DEGENS_S3_BUCKET);
-    await refreshOpenSea(this.targetNetwork, tokenId);
-    console.log('✅ OpenSea force refresh triggered');
+    await this.refreshOpenSea(tokenId);
     return { newMetadata };
   }
 
@@ -267,8 +262,7 @@ class Degen extends Minty {
     if (extraTraitCount === 0) newMetadata.attributes.push({ value: 'Naked Gang' });
     const s3Path = `${this.targetNetwork}/metadata/${tokenId}.json`;
     await this.uploadToS3(s3Path, JSON.stringify(newMetadata, null, 2), DEGENS_S3_BUCKET);
-    await refreshOpenSea(this.targetNetwork, tokenId);
-    console.log('✅ OpenSea force refresh triggered');
+    await this.refreshOpenSea(tokenId);
     return { newMetadata };
   }
 
@@ -318,8 +312,7 @@ class Degen extends Minty {
     };
     const s3Path = `${this.targetNetwork}/metadata/${tokenId}.json`;
     await this.uploadToS3(s3Path, JSON.stringify(newMetadata, null, 2), DEGENS_S3_BUCKET);
-    await refreshOpenSea(this.targetNetwork, tokenId);
-    console.log('✅ OpenSea force refresh triggered');
+    await this.refreshOpenSea(tokenId);
     return { newMetadata };
   }
 
