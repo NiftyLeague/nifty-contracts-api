@@ -3,7 +3,6 @@ import fs from 'fs';
 
 import { TargetNetwork } from '../../types';
 import { ensureIpfsUriPrefix, makeGatewayURL } from '../utils/uriHelpers';
-import refreshOpenSea from '../utils/refreshOpenSea';
 import { COMICS_CONTRACT_NAME, IPFS_OPTIONS } from '../../constants';
 import { COMICS_S3_BUCKET } from '../../constants/aws';
 import { Minty } from './minty';
@@ -71,12 +70,10 @@ class Comic extends Minty {
       console.log('✅ Image pinned to IPFS');
       await this.uploadToS3(`images/${basename}`, content, COMICS_S3_BUCKET);
 
-      // make the NFT metadata JSON
+      // make the Comic NFT metadata
       const assetURI = ensureIpfsUriPrefix(assetCid) + imgPath;
       const metadata = await this.makeComicMetadata(tokenId, assetURI);
-
-      await refreshOpenSea(this.targetNetwork, tokenId, this.contractName);
-      console.log('✅ OpenSea force refresh triggered');
+      await this.refreshOpenSea(tokenId);
 
       return {
         tokenId,
