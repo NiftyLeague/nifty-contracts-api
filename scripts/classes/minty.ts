@@ -9,6 +9,7 @@ import { toString } from 'uint8arrays/to-string';
 
 import { ContractName, TargetNetwork, NFTInfo } from '../../types';
 import getContractFactory from '../utils/getContractFactory';
+import { uploadToS3 } from '../utils/uploadToS3';
 import all from '../utils/it-all';
 import { stripIpfsUriPrefix, makeGatewayURL, extractCID } from '../utils/uriHelpers';
 
@@ -250,8 +251,13 @@ export class Minty {
   }
 
   //////////////////////////////////////////////
-  // -------- Pinning to remote services
+  // -------- Remote services
   //////////////////////////////////////////////
+
+  async uploadToS3(s3Path: string, content: Buffer | Uint8Array | string, bucket: string) {
+    await uploadToS3(s3Path, content, true, bucket);
+    console.log(`✅ Content uploaded to S3 ${bucket}/${s3Path}`);
+  }
 
   /**
    * Request that the remote pinning service pin the given CID or ipfs URI.

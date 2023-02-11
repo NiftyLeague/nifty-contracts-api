@@ -2,7 +2,6 @@ import path from 'path';
 import fs from 'fs';
 
 import { TargetNetwork } from '../../types';
-import { uploadToS3 } from '../utils/uploadToS3';
 import { ensureIpfsUriPrefix, makeGatewayURL } from '../utils/uriHelpers';
 import refreshOpenSea from '../utils/refreshOpenSea';
 import { COMICS_CONTRACT_NAME, IPFS_OPTIONS } from '../../constants';
@@ -51,8 +50,7 @@ class Comic extends Minty {
       description:
         'Nifty League Launch Comics!! 📚  Each comic is burnable for a wearable but you might want to keep a full collection for when you get to the Citadel...',
     };
-    await uploadToS3(`metadata/${tokenId}.json`, JSON.stringify(metadata, null, 2), false, COMICS_S3_BUCKET);
-    console.log('✅ Metadata uploaded to S3');
+    await this.uploadToS3(`metadata/${tokenId}.json`, JSON.stringify(metadata, null, 2), COMICS_S3_BUCKET);
     return metadata;
   }
 
@@ -71,9 +69,7 @@ class Comic extends Minty {
       const imgPath = `/nifty-launch-comics/${basename}`;
       const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, IPFS_OPTIONS);
       console.log('✅ Image pinned to IPFS');
-
-      await uploadToS3(`images/${basename}`, content, false, COMICS_S3_BUCKET);
-      console.log('✅ Image uploaded to S3');
+      await this.uploadToS3(`images/${basename}`, content, COMICS_S3_BUCKET);
 
       // make the NFT metadata JSON
       const assetURI = ensureIpfsUriPrefix(assetCid) + imgPath;
