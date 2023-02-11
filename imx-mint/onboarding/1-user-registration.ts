@@ -1,15 +1,15 @@
-import { AlchemyProvider } from "@ethersproject/providers";
-import { Wallet } from "@ethersproject/wallet";
-import { ImLogger, WinstonLogger } from "@imtbl/imlogging";
-import { ImmutableXClient } from "@imtbl/imx-sdk";
+import { AlchemyProvider } from '@ethersproject/providers';
+import { Wallet } from '@ethersproject/wallet';
+import { ImLogger, WinstonLogger } from '@imtbl/imlogging';
+import { ImmutableXClient } from '@imtbl/imx-sdk';
 
-import env from "../config/client";
-import { loggerConfig } from "../config/logging";
+import env from '../config/client';
+import { loggerConfig } from '../config/logging';
 
 const provider = new AlchemyProvider(env.ethNetwork, env.alchemyApiKey);
 const log: ImLogger = new WinstonLogger(loggerConfig);
 
-const component = "[IMX-USER-REGISTRATION]";
+const component = '[IMX-USER-REGISTRATION]';
 
 (async (): Promise<void> => {
   const privateKey = env.ownerAccountPrivateKey;
@@ -19,7 +19,7 @@ const component = "[IMX-USER-REGISTRATION]";
     signer: new Wallet(privateKey).connect(provider),
   });
 
-  log.info(component, "Registering user...");
+  log.info(component, 'Registering user...');
 
   let existingUser;
   let newUser;
@@ -41,12 +41,12 @@ const component = "[IMX-USER-REGISTRATION]";
   }
 
   if (existingUser) {
-    log.info(component, "User already exists", user.address);
+    log.info(component, 'User already exists', user.address);
   } else {
-    log.info(component, "User has been created", user.address);
+    log.info(component, 'User has been created', user.address);
   }
   console.log(JSON.stringify({ newUser, existingUser }, null, 2));
-})().catch((e) => {
+})().catch(e => {
   log.error(component, e);
   process.exit(1);
 });

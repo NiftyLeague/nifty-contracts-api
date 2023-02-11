@@ -1,11 +1,7 @@
 import { AlchemyProvider } from '@ethersproject/providers';
 import { Wallet } from '@ethersproject/wallet';
 import { ImLogger, WinstonLogger } from '@imtbl/imlogging';
-import {
-  AddMetadataSchemaToCollectionParams,
-  ImmutableXClient,
-  MetadataTypes,
-} from '@imtbl/imx-sdk';
+import { AddMetadataSchemaToCollectionParams, ImmutableXClient, MetadataTypes } from '@imtbl/imx-sdk';
 
 import env from '../config/client';
 import { loggerConfig } from '../config/logging';
@@ -28,11 +24,7 @@ const component = '[IMX-ADD-COLLECTION-METADATA-SCHEMA]';
     enableDebug: true,
   });
 
-  log.info(
-    component,
-    'Adding metadata schema to collection',
-    collectionContractAddress,
-  );
+  log.info(component, 'Adding metadata schema to collection', collectionContractAddress);
 
   /**
    * Edit your values here
@@ -57,16 +49,9 @@ const component = '[IMX-ADD-COLLECTION-METADATA-SCHEMA]';
     ],
   };
 
-  const collection = await user.addMetadataSchemaToCollection(
-    collectionContractAddress,
-    params,
-  );
+  const collection = await user.addMetadataSchemaToCollection(collectionContractAddress, params);
 
-  log.info(
-    component,
-    'Added metadata schema to collection',
-    collectionContractAddress,
-  );
+  log.info(component, 'Added metadata schema to collection', collectionContractAddress);
   console.log(JSON.stringify(collection, null, 2));
 })().catch(e => {
   log.error(component, e);

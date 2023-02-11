@@ -11,19 +11,10 @@ import { groupBy } from 'lodash';
 
 dotenv.config();
 
-import {
-  getItemsRecursive,
-  resolveDegenMetadata,
-  pipeRequest,
-} from './scripts/utils/api';
+import { getItemsRecursive, resolveDegenMetadata, pipeRequest } from './scripts/utils/api';
 import { TargetNetwork } from './types';
 import { CONTRACT_METHODS } from './constants';
-import {
-  S3_BASE_URL,
-  DEGENS_S3_BUCKET,
-  COMICS_S3_BUCKET,
-  ITEMS_S3_BUCKET,
-} from './constants/aws';
+import { S3_BASE_URL, DEGENS_S3_BUCKET, COMICS_S3_BUCKET, ITEMS_S3_BUCKET } from './constants/aws';
 
 import { handleNameChangeByInput } from './scripts/handleNameChange';
 import { handleDepositConfirmation } from './scripts/deposit';
@@ -61,90 +52,48 @@ app.get('/NFTL/supply', async function (req: Request, res: Response) {
 // ------ METADATA
 //////////////////////////////////////////////
 
-app.get(
-  '/:network/degen/metadata/:token_id',
-  async function (req: Request, res: Response) {
-    const { network, token_id } = req.params;
-    pipeRequest(
-      `${S3_BASE_URL}/${DEGENS_S3_BUCKET}/${network}/metadata/${token_id}.json`,
-      res
-    );
-  }
-);
+app.get('/:network/degen/metadata/:token_id', async function (req: Request, res: Response) {
+  const { network, token_id } = req.params;
+  pipeRequest(`${S3_BASE_URL}/${DEGENS_S3_BUCKET}/${network}/metadata/${token_id}.json`, res);
+});
 
-app.get(
-  '/:network/degen/image/:token_id',
-  async function (req: Request, res: Response) {
-    const { network, token_id } = req.params;
-    const metadata = await resolveDegenMetadata(req);
-    const background = metadata?.attributes?.find(
-      (a: any) => a.trait_type === 'Background'
-    )?.value;
-    const tribe = metadata?.attributes?.find(
-      (a: any) => a.trait_type === 'Tribe'
-    )?.value;
-    const type = background === 'Legendary' || tribe === '???' ? 'mp4' : 'png';
-    pipeRequest(
-      `${S3_BASE_URL}/${DEGENS_S3_BUCKET}/${network}/images/${token_id}.${type}`,
-      res
-    );
-  }
-);
+app.get('/:network/degen/image/:token_id', async function (req: Request, res: Response) {
+  const { network, token_id } = req.params;
+  const metadata = await resolveDegenMetadata(req);
+  const background = metadata?.attributes?.find((a: any) => a.trait_type === 'Background')?.value;
+  const tribe = metadata?.attributes?.find((a: any) => a.trait_type === 'Tribe')?.value;
+  const type = background === 'Legendary' || tribe === '???' ? 'mp4' : 'png';
+  pipeRequest(`${S3_BASE_URL}/${DEGENS_S3_BUCKET}/${network}/images/${token_id}.${type}`, res);
+});
 
-app.get(
-  '/:network/degen/:token_id/background',
-  async function (req: Request, res: Response) {
-    const metadata = await resolveDegenMetadata(req);
-    const background = metadata?.attributes?.find(
-      (a: any) => a.trait_type === 'Background'
-    );
-    if (background) res.send(background.value);
-    else res.sendStatus(404);
-  }
-);
+app.get('/:network/degen/:token_id/background', async function (req: Request, res: Response) {
+  const metadata = await resolveDegenMetadata(req);
+  const background = metadata?.attributes?.find((a: any) => a.trait_type === 'Background');
+  if (background) res.send(background.value);
+  else res.sendStatus(404);
+});
 
-app.get(
-  '/imx/comics/metadata/:token_id',
-  async function (req: Request, res: Response) {
-    const tokenId = req.params.token_id;
-    pipeRequest(
-      `${S3_BASE_URL}/${COMICS_S3_BUCKET}/metadata/${tokenId}.json`,
-      res
-    );
-  }
-);
+app.get('/imx/comics/metadata/:token_id', async function (req: Request, res: Response) {
+  const tokenId = req.params.token_id;
+  pipeRequest(`${S3_BASE_URL}/${COMICS_S3_BUCKET}/metadata/${tokenId}.json`, res);
+});
 
-app.get(
-  '/imx/comics/image/:token_id',
-  async function (req: Request, res: Response) {
-    const tokenId = req.params.token_id;
-    pipeRequest(
-      `${S3_BASE_URL}/${COMICS_S3_BUCKET}/images/${tokenId}.png`,
-      res
-    );
-  }
-);
+app.get('/imx/comics/image/:token_id', async function (req: Request, res: Response) {
+  const tokenId = req.params.token_id;
+  pipeRequest(`${S3_BASE_URL}/${COMICS_S3_BUCKET}/images/${tokenId}.png`, res);
+});
 
-app.get(
-  '/imx/items/metadata/:token_id',
-  async function (req: Request, res: Response) {
-    const tokenId = req.params.token_id;
-    const itemId = await getItemIdByTokenId(tokenId);
-    pipeRequest(
-      `${S3_BASE_URL}/${ITEMS_S3_BUCKET}/metadata/${itemId}.json`,
-      res
-    );
-  }
-);
+app.get('/imx/items/metadata/:token_id', async function (req: Request, res: Response) {
+  const tokenId = req.params.token_id;
+  const itemId = await getItemIdByTokenId(tokenId);
+  pipeRequest(`${S3_BASE_URL}/${ITEMS_S3_BUCKET}/metadata/${itemId}.json`, res);
+});
 
-app.get(
-  '/imx/items/image/:token_id',
-  async function (req: Request, res: Response) {
-    const tokenId = req.params.token_id;
-    const itemId = await getItemIdByTokenId(tokenId);
-    pipeRequest(`${S3_BASE_URL}/${ITEMS_S3_BUCKET}/images/${itemId}.gif`, res);
-  }
-);
+app.get('/imx/items/image/:token_id', async function (req: Request, res: Response) {
+  const tokenId = req.params.token_id;
+  const itemId = await getItemIdByTokenId(tokenId);
+  pipeRequest(`${S3_BASE_URL}/${ITEMS_S3_BUCKET}/images/${itemId}.gif`, res);
+});
 
 app.get('/imx/items', async function (req: Request, res: Response) {
   const { cursor } = req.query;
@@ -157,9 +106,7 @@ app.get('/imx/items', async function (req: Request, res: Response) {
 app.get('/imx/null-items', async function (req: Request, res: Response) {
   try {
     const result = await getItemsRecursive();
-    const filtered = result.filter(
-      (item: { metadata: any; name?: string }) => !item.metadata || !item.name
-    );
+    const filtered = result.filter((item: { metadata: any; name?: string }) => !item.metadata || !item.name);
     res.send({ total: filtered.length, result: filtered });
   } catch (e) {
     res.send(e);
@@ -169,16 +116,12 @@ app.get('/imx/null-items', async function (req: Request, res: Response) {
 app.get('/imx/items/overview', async function (req: Request, res: Response) {
   try {
     const result = await getItemsRecursive();
-    const itemBalances = Object.values(groupBy(result, 'metadata.item_id')).map(
-      group => ({
-        [group[0].metadata.name]: group.length,
-      })
-    );
-    const holderBalances = Object.values(groupBy(result, 'user')).map(
-      group => ({
-        [group[0].user]: group.length,
-      })
-    );
+    const itemBalances = Object.values(groupBy(result, 'metadata.item_id')).map(group => ({
+      [group[0].metadata.name]: group.length,
+    }));
+    const holderBalances = Object.values(groupBy(result, 'user')).map(group => ({
+      [group[0].user]: group.length,
+    }));
     res.send({
       total: result.length,
       holders: holderBalances.length,
@@ -190,40 +133,32 @@ app.get('/imx/items/overview', async function (req: Request, res: Response) {
   }
 });
 
-app.get(
-  '/imx/metadata-refresh/:token_id',
-  async function (req: Request, res: Response) {
-    const tokenId = req.params.token_id;
+app.get('/imx/metadata-refresh/:token_id', async function (req: Request, res: Response) {
+  const tokenId = req.params.token_id;
 
-    const privateKey = env.ownerAccountPrivateKey;
-    const provider = new AlchemyProvider(env.ethNetwork, env.alchemyApiKey);
-    const wallet = new Wallet(privateKey);
-    const signer = wallet.connect(provider);
-    const { timestamp, signature } = await generateIMXAuthorisationHeaders(
-      signer
-    );
+  const privateKey = env.ownerAccountPrivateKey;
+  const provider = new AlchemyProvider(env.ethNetwork, env.alchemyApiKey);
+  const wallet = new Wallet(privateKey);
+  const signer = wallet.connect(provider);
+  const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
 
-    const headers = {
-      'x-imx-eth-address': env.ownerAccountPublicKey,
-      'x-imx-eth-signature': signature,
-      'x-imx-eth-timestamp': timestamp,
-    };
-    const body = JSON.stringify({
-      collection_address: env.collectionContractAddress,
-      token_ids: [tokenId],
-    });
+  const headers = {
+    'x-imx-eth-address': env.ownerAccountPublicKey,
+    'x-imx-eth-signature': signature,
+    'x-imx-eth-timestamp': timestamp,
+  };
+  const body = JSON.stringify({
+    collection_address: env.collectionContractAddress,
+    token_ids: [tokenId],
+  });
 
-    const response = await fetch(
-      `${env.client.publicApiUrl}/metadata-refreshes`,
-      {
-        method: 'POST',
-        headers,
-        body,
-      }
-    );
-    res.send(response);
-  }
-);
+  const response = await fetch(`${env.client.publicApiUrl}/metadata-refreshes`, {
+    method: 'POST',
+    headers,
+    body,
+  });
+  res.send(response);
+});
 
 //////////////////////////////////////////////
 // ------ WEBHOOKS
@@ -246,7 +181,7 @@ app.post(
       }
     }
     res.sendStatus(200);
-  }
+  },
 );
 
 app.post(
@@ -261,13 +196,11 @@ app.post(
       tx.apiKey === config.get('blocknative.apiKey.p2e')
     ) {
       console.log('P2E WEBHOOK TX:', tx);
-      if (tx.input.startsWith(CONTRACT_METHODS.DEPOSIT))
-        await handleDepositConfirmation(tx);
-      if (tx.input.startsWith(CONTRACT_METHODS.WITHDRAW))
-        await handleWithdrawConfirmation(tx);
+      if (tx.input.startsWith(CONTRACT_METHODS.DEPOSIT)) await handleDepositConfirmation(tx);
+      if (tx.input.startsWith(CONTRACT_METHODS.WITHDRAW)) await handleWithdrawConfirmation(tx);
     }
     res.sendStatus(200);
-  }
+  },
 );
 
 app.post(
@@ -284,7 +217,7 @@ app.post(
       handleIMXMint(tx, targetNetwork);
     }
     res.sendStatus(200);
-  }
+  },
 );
 
 app.listen(app.get('port'), function () {
