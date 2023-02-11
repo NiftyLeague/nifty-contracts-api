@@ -15,14 +15,14 @@ export type Metadata = {
 export type CreationInfo = { blockNumber: number; creatorAddress: any };
 
 export type NFTInfo = {
-  tokenId: string;
+  tokenId: string | number;
   metadata: Metadata;
-  metadataURI: string;
-  metadataGatewayURL: string;
-  ownerAddress: string;
+  metadataURI?: string;
+  metadataGatewayURL?: string;
+  ownerAddress?: string;
   assetURI?: string;
   assetGatewayURL?: string;
-  assetDataBase64: string;
+  assetDataBase64?: string;
   creationInfo?: CreationInfo;
 };
 
