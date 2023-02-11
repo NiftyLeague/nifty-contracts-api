@@ -5,13 +5,10 @@ import { JsonRpcProvider } from '@ethersproject/providers';
 export const NIFTY_BURNING_COMICS_L2_ABI = JSON.parse(
   fs.readFileSync('./contracts/NiftyBurningComicsL2.abi.json', {
     encoding: 'utf8',
-  })
+  }),
 );
 
-export function getEnv(
-  name: string,
-  defaultValue: string | undefined = undefined
-): string {
+export function getEnv(name: string, defaultValue: string | undefined = undefined): string {
   const value = process.env[name];
 
   if (value !== undefined) {
@@ -31,10 +28,7 @@ export function requireEnvironmentVariable(key: string): string {
   return value;
 }
 
-export function validateString<T extends string>(
-  val: string,
-  validValues: readonly string[]
-): T {
+export function validateString<T extends string>(val: string, validValues: readonly string[]): T {
   const res = validValues.indexOf(val);
   if (res < 0) {
     throw Error(`${val} is not one of ${validValues}`);
@@ -43,15 +37,9 @@ export function validateString<T extends string>(
 }
 
 export async function getItemIdByTokenId(tokenId: string): Promise<string> {
-  const providerUrl = `https://${getEnv(
-    'HARDHAT_NETWORK'
-  )}.infura.io/v3/${getEnv('INFURA_PROJECT_ID')}`;
+  const providerUrl = `https://${getEnv('HARDHAT_NETWORK')}.infura.io/v3/${getEnv('INFURA_PROJECT_ID')}`;
   const provider = new JsonRpcProvider(providerUrl);
-  const contract = new Contract(
-    getEnv('NIFTY_BURNING_COMICS_L2'),
-    NIFTY_BURNING_COMICS_L2_ABI,
-    provider
-  );
+  const contract = new Contract(getEnv('NIFTY_BURNING_COMICS_L2'), NIFTY_BURNING_COMICS_L2_ABI, provider);
   const itemId = await contract['itemIdByTokenId'](tokenId);
 
   // fix if itemId is zero
@@ -60,6 +48,7 @@ export async function getItemIdByTokenId(tokenId: string): Promise<string> {
     let prevTokenId = Number(tokenId);
     let prevItemId;
 
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       prevTokenId -= 1;
       prevItemId = await contract['itemIdByTokenId'](prevTokenId);

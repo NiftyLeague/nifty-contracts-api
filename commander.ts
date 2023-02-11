@@ -43,23 +43,14 @@ async function main() {
     .description('"rename" all degens from contract to metadata')
     .action(updateDegensNames);
 
-  program
-    .command('update-degen <token-id>')
-    .description('"update" nft metadata')
-    .action(updateDegen);
+  program.command('update-degen <token-id>').description('"update" nft metadata').action(updateDegen);
 
-  program
-    .command('update-degens')
-    .description('"update" all degens metadata')
-    .action(updateDegens);
+  program.command('update-degens').description('"update" all degens metadata').action(updateDegens);
 
   program
     .command('get-degen <token-id>')
     .description('get info about an NFT using its token ID')
-    .option(
-      '-c, --creation-info',
-      'include the creator address and block number the NFT was minted'
-    )
+    .option('-c, --creation-info', 'include the creator address and block number the NFT was minted')
     .action(getDegen);
 
   // The hardhat and getconfig modules both expect to be running from the root directory of the project,
@@ -77,15 +68,17 @@ async function main() {
 
 // ---- DEGENS
 
-const TOTAL_DEGENS = 9905;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TOTAL_DEGENS_TESTNET = 7550;
+const TOTAL_DEGENS = 9905;
+const START_INDEX = 3679; // 1;
 
 async function refreshDegen(tokenId: number) {
   await refreshOpenSea(targetNetwork, tokenId);
 }
 
 async function refreshAllDegens() {
-  for (let i = 1; i <= TOTAL_DEGENS; i++) {
+  for (let i = START_INDEX; i <= TOTAL_DEGENS; i++) {
     await refreshDegen(i);
   }
 }
@@ -95,7 +88,7 @@ async function updateDegenName(tokenId: number) {
 }
 
 async function updateDegensNames() {
-  for (let i = 1; i <= TOTAL_DEGENS; i++) {
+  for (let i = START_INDEX; i <= TOTAL_DEGENS; i++) {
     await updateDegenName(i);
   }
 }
@@ -105,7 +98,7 @@ async function updateDegen(tokenId: number) {
 }
 
 async function updateDegens() {
-  for (let i = 1; i <= TOTAL_DEGENS_TESTNET; i++) {
+  for (let i = START_INDEX; i <= TOTAL_DEGENS; i++) {
     await updateDegen(i);
   }
 }
@@ -120,10 +113,7 @@ async function getDegen(tokenId: number, options: { creationInfo: any }) {
     ['Owner Address:', chalk.yellow(nft.ownerAddress)],
   ];
   if (nft.creationInfo) {
-    output.push([
-      'Creator Address:',
-      chalk.yellow(nft.creationInfo.creatorAddress),
-    ]);
+    output.push(['Creator Address:', chalk.yellow(nft.creationInfo.creatorAddress)]);
     output.push(['Block Number:', `${nft.creationInfo?.blockNumber}`]);
   }
   output.push(['Metadata Address:', chalk.blue(nft.metadataURI)]);
