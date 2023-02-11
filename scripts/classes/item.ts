@@ -2,7 +2,6 @@ import path from 'path';
 import fs from 'fs';
 
 import { TargetNetwork } from '../../types';
-import { uploadToS3 } from '../utils/uploadToS3';
 import { ensureIpfsUriPrefix, makeGatewayURL } from '../utils/uriHelpers';
 import { IPFS_OPTIONS, ITEMS_CONTRACT_NAME } from '../../constants';
 import { ITEMS_S3_BUCKET } from '../../constants/aws';
@@ -49,8 +48,7 @@ class Item extends Minty {
       ...ITEMS_METADATA[tokenId - 1],
       image_url: makeGatewayURL(assetURI),
     };
-    await uploadToS3(`metadata/${tokenId}.json`, JSON.stringify(metadata, null, 2), false, ITEMS_S3_BUCKET);
-    console.log('✅ Metadata uploaded to S3');
+    await this.uploadToS3(`metadata/${tokenId}.json`, JSON.stringify(metadata, null, 2), ITEMS_S3_BUCKET);
     return metadata;
   }
 
@@ -70,9 +68,7 @@ class Item extends Minty {
 
       const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, IPFS_OPTIONS);
       console.log('✅ Image pinned to IPFS');
-
-      await uploadToS3(`images/${basename}`, content, false, ITEMS_S3_BUCKET);
-      console.log('✅ Image uploaded to S3');
+      await this.uploadToS3(`images/${basename}`, content, ITEMS_S3_BUCKET);
 
       // make the NFT metadata JSON
       const assetURI = ensureIpfsUriPrefix(assetCid) + imgPath;
