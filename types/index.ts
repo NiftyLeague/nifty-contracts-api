@@ -1,3 +1,5 @@
+import { BytesLike } from 'ethers';
+
 export type ContractName = 'NiftyDegen' | 'NiftyLaunchComics' | 'NiftyItemL2';
 
 export type TargetNetwork = 'mainnet' | 'goerli';
@@ -14,7 +16,7 @@ export type Metadata = {
   attributes: Attribute[];
 };
 
-export type CreationInfo = { blockNumber: number; creatorAddress: any };
+export type CreationInfo = { blockNumber: number; creatorAddress: string };
 
 export type NFTInfo = {
   tokenId: string | number;
@@ -32,7 +34,7 @@ export type InternalTransactions = {
   type: string;
   from: string;
   to: string;
-  input: string;
+  input: BytesLike;
   gas: number;
   gasUsed: number;
   value: string;

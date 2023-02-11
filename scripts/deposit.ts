@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import fs from 'fs';
 import hre from 'hardhat';
 import { API_BASE_URL } from '../constants';
+import { BytesLike } from 'ethers';
 
 const BALANCE_MANAGER_ABI = JSON.parse(
   fs.readFileSync('./contracts/BalanceManager.abi.json', {
@@ -10,7 +11,7 @@ const BALANCE_MANAGER_ABI = JSON.parse(
   }),
 );
 
-async function parseInputData(input: any) {
+async function parseInputData(input: BytesLike) {
   const iface = new hre.ethers.utils.Interface(BALANCE_MANAGER_ABI);
   const inputData = await iface.decodeFunctionData('deposit', input);
   return hre.ethers.utils.formatEther(inputData[0]);

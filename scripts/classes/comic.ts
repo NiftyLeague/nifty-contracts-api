@@ -57,17 +57,20 @@ class Comic extends Minty {
    *
    * @param {number} tokenId - the unique ID of the new token
    *
+   * @typedef {object} GenerateNFTResult
+   * @property {string} tokenId - the unique ID of the new token
+   * @property {object} metadata - the JSON metadata stored in IPFS and referenced by the token's metadata URI
+   * @property {string} assetURI - an ipfs:// URI for the NFT asset
+   * @property {string} assetGatewayURL - an HTTP gateway URL for the NFT asset
+   *
    * @returns {Promise<GenerateNFTResult>}
    */
   async generateComic(tokenId: number) {
     const filePath = `./public/images/comics/${tokenId}.png`;
     const content = await fs.promises.readFile(filePath);
     const basename = path.basename(filePath);
-    const imgPath = `/nifty-launch-comics/${basename}`;
-    const { assetURI, assetGatewayURL } = await this.pinImage(imgPath, content);
+    const { assetURI, assetGatewayURL } = await this.pinImage(`/nifty-launch-comics/${basename}`, content);
     await this.uploadToS3(`images/${basename}`, content, COMICS_S3_BUCKET);
-
-    // make the Comic NFT metadata
     const metadata = await this.makeComicMetadata(tokenId, assetGatewayURL);
     await this.refreshOpenSea(tokenId);
 
