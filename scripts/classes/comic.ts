@@ -1,21 +1,10 @@
 import path from 'path';
 import fs from 'fs';
-import { AddOptions } from 'ipfs-core-types/dist/src/root';
 
 import { TargetNetwork } from '../../types';
-import { uploadToS3 } from '../utils/uploadToS3';
-import { ensureIpfsUriPrefix, makeGatewayURL } from '../utils/uriHelpers';
-import refreshOpenSea from '../utils/refreshOpenSea';
 import { COMICS_CONTRACT_NAME } from '../../constants';
 import { COMICS_S3_BUCKET } from '../../constants/aws';
 import { Minty } from './minty';
-
-// ipfs parameters for more deterministic CIDs
-const ipfsOptions = {
-  cidVersion: 1,
-  hashAlg: 'sha2-256',
-  wrapWithDirectory: true,
-} as AddOptions;
 
 /**
  * Construct and asynchronously initialize a new Minty instance.
@@ -43,7 +32,7 @@ class Comic extends Minty {
    * Helper to construct metadata JSON for comic NFTs
    *
    * @param {number} tokenId - the unique ID of the new token
-   * @param {string} assetURI - IPFS URI for the NFT asset
+   * @param {string} assetGatewayURL - IPFS Gateway URL for the NFT asset
    *
    * @typedef {object} CreateMetadataResult
    * @property {string} name - optional name to set in NFT metadata
@@ -52,15 +41,14 @@ class Comic extends Minty {
    *
    * @returns {Promise<CreateMetadataResult>}
    */
-  async makeComicMetadata(tokenId: number, assetURI: string) {
+  async makeComicMetadata(tokenId: number, assetGatewayURL: string) {
     const metadata = {
       name: `COMIC #${tokenId}`,
-      image: ensureIpfsUriPrefix(assetURI),
+      image: assetGatewayURL,
       description:
         'Nifty League Launch Comics!! 📚  Each comic is burnable for a wearable but you might want to keep a full collection for when you get to the Citadel...',
     };
-    await uploadToS3(`metadata/${tokenId}.json`, JSON.stringify(metadata, null, 2), false, COMICS_S3_BUCKET);
-    console.log('✅ Metadata uploaded to S3');
+    await this.uploadToS3(`metadata/${tokenId}.json`, JSON.stringify(metadata, null, 2), COMICS_S3_BUCKET);
     return metadata;
   }
 
@@ -69,34 +57,28 @@ class Comic extends Minty {
    *
    * @param {number} tokenId - the unique ID of the new token
    *
+   * @typedef {object} GenerateNFTResult
+   * @property {string} tokenId - the unique ID of the new token
+   * @property {object} metadata - the JSON metadata stored in IPFS and referenced by the token's metadata URI
+   * @property {string} assetURI - an ipfs:// URI for the NFT asset
+   * @property {string} assetGatewayURL - an HTTP gateway URL for the NFT asset
+   *
    * @returns {Promise<GenerateNFTResult>}
    */
   async generateComic(tokenId: number) {
-    if (this.ipfs) {
-      const filePath = `./public/images/comics/${tokenId}.png`;
-      const content = await fs.promises.readFile(filePath);
-      const basename = path.basename(filePath);
-      const imgPath = `/nifty-launch-comics/${basename}`;
-      const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, ipfsOptions);
-      console.log('✅ Image pinned to IPFS');
+    const filePath = `./public/images/comics/${tokenId}.png`;
+    const content = await fs.promises.readFile(filePath);
+    const basename = path.basename(filePath);
+    const { assetURI, assetGatewayURL } = await this.pinImage(`/nifty-launch-comics/${basename}`, content);
+    await this.uploadToS3(`images/${basename}`, content, COMICS_S3_BUCKET);
+    const metadata = await this.makeComicMetadata(tokenId, assetGatewayURL);
+    await this.refreshOpenSea(tokenId);
 
-      await uploadToS3(`images/${basename}`, content, false, COMICS_S3_BUCKET);
-      console.log('✅ Image uploaded to S3');
-
-      // make the NFT metadata JSON
-      const assetURI = ensureIpfsUriPrefix(assetCid) + imgPath;
-      const metadata = await this.makeComicMetadata(tokenId, assetURI);
-
-      await refreshOpenSea(this.targetNetwork, tokenId, this.contractName);
-      console.log('✅ OpenSea force refresh triggered');
-
-      return {
-        tokenId,
-        metadata,
-        assetURI,
-        assetGatewayURL: makeGatewayURL(assetURI),
-      };
-    }
-    return null;
+    return {
+      tokenId,
+      metadata,
+      assetURI,
+      assetGatewayURL,
+    };
   }
 }
