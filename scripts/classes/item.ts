@@ -56,14 +56,19 @@ class Item extends Minty {
    *
    * @param {number} tokenId - the unique ID of the new token
    *
+   * @typedef {object} GenerateNFTResult
+   * @property {string} tokenId - the unique ID of the new token
+   * @property {object} metadata - the JSON metadata stored in IPFS and referenced by the token's metadata URI
+   * @property {string} assetURI - an ipfs:// URI for the NFT asset
+   * @property {string} assetGatewayURL - an HTTP gateway URL for the NFT asset
+   *
    * @returns {Promise<GenerateNFTResult>}
    */
   async generateItem(tokenId: number) {
     const filePath = `./public/images/items/${tokenId}.gif`;
     const content = await fs.promises.readFile(filePath);
     const basename = path.basename(filePath);
-    const imgPath = `/items/${basename}`;
-    const { assetURI, assetGatewayURL } = await this.pinImage(imgPath, content);
+    const { assetURI, assetGatewayURL } = await this.pinImage(`/items/${basename}`, content);
     await this.uploadToS3(`images/${basename}`, content, ITEMS_S3_BUCKET);
     const metadata = await this.makeItemMetadata(tokenId, assetGatewayURL);
 

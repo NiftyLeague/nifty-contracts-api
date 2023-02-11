@@ -12,7 +12,7 @@ import { groupBy } from 'lodash';
 dotenv.config();
 
 import { getItemsRecursive, resolveDegenMetadata, pipeRequest } from './scripts/utils/api';
-import { TargetNetwork } from './types';
+import { Attribute, Metadata, TargetNetwork } from './types';
 import { CONTRACT_METHODS } from './constants';
 import { S3_BASE_URL, DEGENS_S3_BUCKET, COMICS_S3_BUCKET, ITEMS_S3_BUCKET } from './constants/aws';
 
@@ -61,15 +61,15 @@ app.get('/:network/degen/metadata/:token_id', async function (req: Request, res:
 app.get('/:network/degen/image/:token_id', async function (req: Request, res: Response) {
   const { network, token_id } = req.params;
   const metadata = await resolveDegenMetadata(req);
-  const background = metadata?.attributes?.find((a: any) => a.trait_type === 'Background')?.value;
-  const tribe = metadata?.attributes?.find((a: any) => a.trait_type === 'Tribe')?.value;
+  const background = metadata?.attributes?.find((a: Attribute) => a.trait_type === 'Background')?.value;
+  const tribe = metadata?.attributes?.find((a: Attribute) => a.trait_type === 'Tribe')?.value;
   const type = background === 'Legendary' || tribe === '???' ? 'mp4' : 'png';
   pipeRequest(`${S3_BASE_URL}/${DEGENS_S3_BUCKET}/${network}/images/${token_id}.${type}`, res);
 });
 
 app.get('/:network/degen/:token_id/background', async function (req: Request, res: Response) {
   const metadata = await resolveDegenMetadata(req);
-  const background = metadata?.attributes?.find((a: any) => a.trait_type === 'Background');
+  const background = metadata?.attributes?.find((a: Attribute) => a.trait_type === 'Background');
   if (background) res.send(background.value);
   else res.sendStatus(404);
 });
@@ -107,7 +107,7 @@ app.get('/imx/items', async function (req: Request, res: Response) {
 app.get('/imx/null-items', async function (req: Request, res: Response) {
   try {
     const result = await getItemsRecursive();
-    const filtered = result.filter((item: { metadata: any; name?: string }) => !item.metadata || !item.name);
+    const filtered = result.filter((item: { metadata: Metadata; name?: string }) => !item.metadata || !item.name);
     res.send({ total: filtered.length, result: filtered });
   } catch (e) {
     res.send(e);
