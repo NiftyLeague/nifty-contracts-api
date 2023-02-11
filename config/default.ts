@@ -39,7 +39,6 @@ const config = {
   ipfs: {
     authorizationDEV: process.env.INFURA_AUTHORIZATION_DEV,
     authorizationPROD: process.env.INFURA_AUTHORIZATION_PROD,
-    baseDirName: 'nifty-league',
     // Can use http for local IPFS node
     protocol: 'https',
     // For local IPFS nodes you can set this to http://localhost:5001

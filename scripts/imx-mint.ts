@@ -1,6 +1,7 @@
 import hre from 'hardhat';
 import fs from 'fs';
 import { JsonRpcProvider, Log, TransactionResponse } from '@ethersproject/providers';
+import { Result } from '@ethersproject/abi';
 
 import { mint } from '../imx-mint/minting/minting';
 import { getEnv } from '../imx-mint/libs/utils';
@@ -20,7 +21,7 @@ function parseTopics(log: Log, eventName: string) {
   return inputData;
 }
 
-function proceedIMXMint(targetNetwork: TargetNetwork, topics: any, isKey: boolean) {
+function proceedIMXMint(targetNetwork: TargetNetwork, topics: Result, isKey: boolean) {
   const config = Config(targetNetwork);
   const by = topics[0];
   // const tokenIds = topics[1];
