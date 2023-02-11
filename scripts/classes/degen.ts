@@ -1,6 +1,5 @@
 import path from 'path';
 import fs from 'fs';
-import { AddOptions } from 'ipfs-core-types/dist/src/root';
 
 import { Metadata, NFTInfo, TargetNetwork } from '../../types';
 import refreshOpenSea from '../utils/refreshOpenSea';
@@ -13,17 +12,10 @@ import {
   DEGEN_METADATA,
   TRAIT_VALUE_MAP,
 } from '../../constants/degenMetadata';
-import { DEGEN_CONTRACT_NAME } from '../../constants';
+import { DEGEN_CONTRACT_NAME, IPFS_OPTIONS } from '../../constants';
 import { DEGENS_S3_BUCKET } from '../../constants/aws';
 import { Minty } from './minty';
 import { UNHATCHED_METADATA } from '../../constants/hydra';
-
-// ipfs parameters for more deterministic CIDs
-const ipfsOptions = {
-  cidVersion: 1,
-  hashAlg: 'sha2-256',
-  wrapWithDirectory: true,
-} as AddOptions;
 
 /**
  * Construct and asynchronously initialize a new Minty instance.
@@ -80,7 +72,7 @@ class Degen extends Minty {
     // 'ipfs://QmaNZ2FCgvBPqnxtkbToVVbK2Nes6xk5K4Ns6BsmkPucAM'
     const imgPath = `/nifty-degens/${basename}`;
     if (this.ipfs) {
-      const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, ipfsOptions);
+      const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, IPFS_OPTIONS);
       console.log('✅ Image pinned to IPFS');
 
       const s3Path = `${this.targetNetwork}/images/${basename}`;
@@ -236,7 +228,7 @@ class Degen extends Minty {
     const basename = path.basename(filePath);
     const imgPath = `/nifty-degens/${basename}`;
     if (this.ipfs) {
-      const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, ipfsOptions);
+      const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, IPFS_OPTIONS);
       console.log('✅ Image pinned to IPFS');
 
       const s3Path = `${this.targetNetwork}/images/${tokenId}.mp4`;
@@ -338,6 +330,19 @@ class Degen extends Minty {
   async updateHydra(tokenId: string | number, metadata: Metadata) {
     // TODO: Grab Hydra metadata file from local and upload
     const newMetadata = { ...metadata };
+    newMetadata.name = (await this.contract?.getName(tokenId)) || `HYDRA #${tokenId}`;
+    newMetadata.attributes = [
+      ...newMetadata.attributes.filter(a => a.trait_type === 'Background'),
+      {
+        trait_type: 'Tribe',
+        value: 'Hydra',
+      },
+      {
+        trait_type: 'Hydra',
+        value: 'unhatched',
+      },
+    ];
+
     const filePath = `${this.targetNetwork}/metadata/${tokenId}.json`;
     // await uploadToS3(
     //   `${this.targetNetwork}/metadata/${tokenId}.json`,
