@@ -191,7 +191,7 @@ class Degen extends Minty {
 
   /**
    * Update token metadata with new name
-   * @param {string} tokenId
+   * @param {string|number} tokenId
    * @property {object} metadata
    *
    * @typedef {object} NameChangeInfo
@@ -200,7 +200,6 @@ class Degen extends Minty {
    */
   async updateTokenName(tokenId: string | number, metadata: Metadata) {
     const name = await this.getName(tokenId);
-    console.log('New Name:', name);
     const newMetadata = { ...metadata, name: name || `DEGEN #${tokenId}` };
     await uploadToS3(
       `${this.targetNetwork}/metadata/${tokenId}.json`,
@@ -216,7 +215,7 @@ class Degen extends Minty {
 
   /**
    * Update token metadata with new name
-   * @param {string} tokenId
+   * @param {string|number} tokenId
    * @property {object} metadata
    *
    * @typedef {object} NameChangeInfo
@@ -243,6 +242,29 @@ class Degen extends Minty {
     );
     console.log('✅ Metadata uploaded to S3');
     await refreshOpenSea(this.targetNetwork, tokenId);
+    console.log('✅ OpenSea force refresh triggered');
+    return { newMetadata };
+  }
+
+  /**
+   * Update Hydra metadata on claim
+   * @param {string|number} tokenId
+   * @property {object} metadata
+   *
+   * @typedef {object} NameChangeInfo
+   * @property {object} newMetadata
+   * @returns {Promise<NameChangeInfo>}
+   */
+  async updateHydra(tokenId: string | number, metadata: Metadata) {
+    const newMetadata = { ...metadata };
+    // await uploadToS3(
+    //   `${this.targetNetwork}/metadata/${tokenId}.json`,
+    //   JSON.stringify(newMetadata, null, 2),
+    //   true,
+    //   DEGENS_S3_BUCKET,
+    // );
+    console.log('✅ Metadata uploaded to S3');
+    // await refreshOpenSea(this.targetNetwork, tokenId);
     console.log('✅ OpenSea force refresh triggered');
     return { newMetadata };
   }

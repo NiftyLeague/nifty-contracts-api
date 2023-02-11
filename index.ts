@@ -17,6 +17,7 @@ import { CONTRACT_METHODS } from './constants';
 import { S3_BASE_URL, DEGENS_S3_BUCKET, COMICS_S3_BUCKET, ITEMS_S3_BUCKET } from './constants/aws';
 
 import { handleNameChangeByInput } from './scripts/handleNameChange';
+import { handleHydraRefresh } from './scripts/hydraRefresh';
 import { handleDepositConfirmation } from './scripts/deposit';
 import { handleWithdrawConfirmation } from './scripts/withdraw';
 import { resolveCirculatingSupply } from './scripts/nftl';
@@ -172,12 +173,15 @@ app.post(
     if (
       tx.network === targetNetwork &&
       tx.status === 'confirmed' &&
-      tx.direction === 'incoming' &&
       tx.apiKey === config.get('blocknative.apiKey.degens')
     ) {
-      console.log('DEGEN WEBHOOK TX:', tx);
       if (tx.input.startsWith(CONTRACT_METHODS.RENAME)) {
+        console.log('DEGEN RENAME WEBHOOK TX:', tx);
         await handleNameChangeByInput(targetNetwork, tx.input);
+      }
+      if (tx.input.startsWith(CONTRACT_METHODS.HYDRA_CLAIM)) {
+        console.log('HYDRA CLAIM WEBHOOK TX:', tx);
+        await handleHydraRefresh(targetNetwork, tx);
       }
     }
     res.sendStatus(200);
@@ -219,6 +223,8 @@ app.post(
     res.sendStatus(200);
   },
 );
+
+//////////////////////////////////////////////
 
 app.listen(app.get('port'), function () {
   console.log('Node app is running on port', app.get('port'));
