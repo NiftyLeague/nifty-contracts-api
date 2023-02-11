@@ -15,18 +15,12 @@ const mimeTypes = {
   '.json': 'application/json',
 };
 
-export const uploadToS3 = async (
-  fileName: string,
-  content: AWS.S3.Body,
-  retry = true,
-  baseDirectory: string = ''
-) => {
+export const uploadToS3 = async (fileName: string, content: AWS.S3.Body, retry = true, baseDirectory = '') => {
   const params = {
     Bucket: config.get('s3.bucket'),
     Key: `${baseDirectory}/${fileName}`,
     Body: content,
-    ContentType:
-      mimeTypes[path.extname(fileName) as ExtType] || 'application/json',
+    ContentType: mimeTypes[path.extname(fileName) as ExtType] || 'application/json',
     ACL: 'public-read',
   } as AWS.S3.PutObjectRequest;
   try {

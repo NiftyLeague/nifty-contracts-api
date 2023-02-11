@@ -5,10 +5,7 @@ import { MakeDegen } from './classes/degen';
 import { TargetNetwork } from '../types';
 import { COLORIZE_OPTIONS, DEGEN_CONTRACT_NAME } from '../constants';
 
-export async function handleNameChangeById(
-  targetNetwork: TargetNetwork,
-  tokenId: string | number
-) {
+export async function handleNameChangeById(targetNetwork: TargetNetwork, tokenId: string | number) {
   console.log(targetNetwork, tokenId);
   const degen = await MakeDegen(targetNetwork);
   const { exists, metadata } = await degen.checkTokenMetadataExists(tokenId);
@@ -26,7 +23,7 @@ async function getIdFromInput(input: BytesLike) {
   const abi = JSON.parse(
     fs.readFileSync(`./contracts/${DEGEN_CONTRACT_NAME}.abi.json`, {
       encoding: 'utf8',
-    })
+    }),
   );
   const iface = new ethers.utils.Interface(abi);
   const inputData = await iface.decodeFunctionData('changeName', input);
@@ -34,10 +31,7 @@ async function getIdFromInput(input: BytesLike) {
   return tokenId;
 }
 
-export async function handleNameChangeByInput(
-  targetNetwork: TargetNetwork,
-  input: BytesLike
-) {
+export async function handleNameChangeByInput(targetNetwork: TargetNetwork, input: BytesLike) {
   const tokenId = await getIdFromInput(input);
   return handleNameChangeById(targetNetwork, tokenId);
 }

@@ -6,14 +6,7 @@ import config from 'config';
  * Returns random background option based on probabilities
  */
 export function raritySelector(tokenId: number) {
-  const backgroundOptions = [
-    ...Array(90).fill(0),
-    ...Array(6).fill(1),
-    2,
-    2,
-    2,
-    3,
-  ];
+  const backgroundOptions = [...Array(90).fill(0), ...Array(6).fill(1), 2, 2, 2, 3];
   const idx = Math.floor(Math.random() * backgroundOptions.length);
   return Math.min(backgroundOptions[idx], tokenId > 3 ? 3 : 1);
 }
@@ -23,11 +16,7 @@ export function raritySelector(tokenId: number) {
  * @param {} traits - list of character traits from contract
  * @param {number} rarity - number of background rarity 0-3
  */
-export function generateImageURL(
-  traits: number[],
-  rarity: number,
-  token: number
-) {
+export function generateImageURL(traits: number[], rarity: number, token: number) {
   const traitArray = [
     ['Tribe', traits[0]],
     ['Skin Color', traits[1]],
