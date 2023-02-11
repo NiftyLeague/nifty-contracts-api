@@ -37,13 +37,9 @@ class Degen extends Minty {
   //////////////////////////////////////////////
 
   /**
-   * Adds NFT metadata and image to IPFS given asset data.
+   * Generate NFT from tokenId, uploading to local IPFS
    *
    * @param {number} tokenId - the unique ID of the new token
-   * @param {[]} traits - list of character traits from contract
-   * @param {string} filepath - token image filepath
-   * @param {Buffer|Uint8Array} content - a Buffer or UInt8Array of data (e.g. for an image)
-   * @param {number} rarity - number of background rarity 0-3
    *
    * @typedef {object} GenerateNFTResult
    * @property {string} tokenId - the unique ID of the new token
@@ -53,16 +49,14 @@ class Degen extends Minty {
    *
    * @returns {Promise<GenerateNFTResult>}
    */
-  async uploadNFTFromAssetData(
-    tokenId: number,
-    traits: number[],
-    filePath: string,
-    content: Buffer | Uint8Array,
-    rarity: number,
-  ) {
+  async generateNFT(tokenId: number) {
+    const traits = await this.getCharacterTraits(tokenId);
+    const rarity = raritySelector(tokenId);
+    const filePath = await this.generateImage(tokenId, traits, rarity);
+    const content = await fs.promises.readFile(filePath);
+    // Upload NFT asset from file
     const basename = path.basename(filePath);
-    const imgPath = `/nifty-degens/${basename}`;
-    const { assetURI, assetGatewayURL } = await this.pinImage(imgPath, content);
+    const { assetURI, assetGatewayURL } = await this.pinImage(`/nifty-degens/${basename}`, content);
     await this.uploadToS3(`${this.targetNetwork}/images/${basename}`, content, DEGENS_S3_BUCKET);
     const metadata = await this.makeNFTMetadata(tokenId, traits, rarity, assetGatewayURL);
     await this.refreshOpenSea(tokenId);
@@ -73,22 +67,6 @@ class Degen extends Minty {
       assetURI,
       assetGatewayURL,
     };
-  }
-
-  /**
-   * Generate NFT from tokenId, uploading to local IPFS
-   *
-   * @param {number} tokenId - the unique ID of the new token
-   *
-   * @returns {Promise<GenerateNFTResult>}
-   */
-  async generateNFT(tokenId: number) {
-    const traits = await this.getCharacterTraits(tokenId);
-    const rarity = raritySelector(tokenId);
-    const filePath = await this.generateImage(tokenId, traits, rarity);
-    const content = await fs.promises.readFile(filePath);
-    // Cleanup the local file
-    return this.uploadNFTFromAssetData(tokenId, traits, filePath, content, rarity);
   }
 
   /**
@@ -279,8 +257,7 @@ class Degen extends Minty {
     const filePath = `./public/images/hydra/${tokenId}.${rarity === 'Legendary' ? 'mp4' : 'png'}`;
     const content = await fs.promises.readFile(filePath);
     const basename = path.basename(filePath);
-    const imgPath = `/nifty-degens/${basename}`;
-    const { assetGatewayURL } = await this.pinImage(imgPath, content);
+    const { assetGatewayURL } = await this.pinImage(`/nifty-degens/${basename}`, content);
     await this.uploadToS3(`${this.targetNetwork}/images/${basename}`, content, DEGENS_S3_BUCKET);
     image = assetGatewayURL;
     // generate new metadata & upload to S3
