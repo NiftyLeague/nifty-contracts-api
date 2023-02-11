@@ -1,21 +1,13 @@
 import path from 'path';
 import fs from 'fs';
-import { AddOptions } from 'ipfs-core-types/dist/src/root';
 
 import { TargetNetwork } from '../../types';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { ensureIpfsUriPrefix, makeGatewayURL } from '../utils/uriHelpers';
-import { ITEMS_CONTRACT_NAME } from '../../constants';
+import { IPFS_OPTIONS, ITEMS_CONTRACT_NAME } from '../../constants';
 import { ITEMS_S3_BUCKET } from '../../constants/aws';
 import { ITEMS_METADATA } from '../../constants/itemsMetadata';
 import { Minty } from './minty';
-
-// ipfs parameters for more deterministic CIDs
-const ipfsOptions = {
-  cidVersion: 1,
-  hashAlg: 'sha2-256',
-  wrapWithDirectory: true,
-} as AddOptions;
 
 /**
  * Construct and asynchronously initialize a new Minty instance.
@@ -76,7 +68,7 @@ class Item extends Minty {
       const basename = path.basename(filePath);
       const imgPath = `/items/${basename}`;
 
-      const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, ipfsOptions);
+      const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, IPFS_OPTIONS);
       console.log('✅ Image pinned to IPFS');
 
       await uploadToS3(`images/${basename}`, content, false, ITEMS_S3_BUCKET);

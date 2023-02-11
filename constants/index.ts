@@ -1,3 +1,5 @@
+import { AddOptions } from 'ipfs-core-types/dist/src/root';
+
 export const API_BASE_URL = 'https://odgwhiwhzb.execute-api.us-east-1.amazonaws.com/prod';
 
 export const CONTRACT_METHODS = {
@@ -20,3 +22,10 @@ export const COLORIZE_OPTIONS = {
     STRING_LITERAL: 'green',
   },
 };
+
+// ipfs parameters for more deterministic CIDs
+export const IPFS_OPTIONS = {
+  cidVersion: 1,
+  hashAlg: 'sha2-256',
+  wrapWithDirectory: true,
+} as AddOptions;
