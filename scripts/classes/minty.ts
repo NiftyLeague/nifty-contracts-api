@@ -104,9 +104,12 @@ export class Minty {
    * @property {number} creationInfo.blockNumber
    * @returns {Promise<NFTInfo>}
    */
-  async getNFT(tokenId: string | number, opts: { fetchAsset?: boolean; fetchCreationInfo?: boolean }) {
+  async getNFT(
+    tokenId: string | number,
+    opts: { fetchAsset?: boolean; fetchCreationInfo?: boolean },
+  ): Promise<NFTInfo> {
     const { metadata, metadataURI } = await this.getNFTMetadata(tokenId);
-    if (!metadata) return { metadata, metadataURI };
+    if (!metadata) return { tokenId, metadata, metadataURI };
     const ownerAddress = await this.getTokenOwner(tokenId);
     const metadataGatewayURL = makeGatewayURL(metadataURI);
     const nft = {
