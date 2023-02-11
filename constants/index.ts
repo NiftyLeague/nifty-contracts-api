@@ -5,11 +5,13 @@ export const CONTRACT_METHODS = {
   WITHDRAW: '0xfe55892d',
   PURCHASE: '0x72c9f580',
   RENAME: '0xc39cbef1',
+  HYDRA_CLAIM: '0xb76b6d37',
 };
 
 export const DEGEN_CONTRACT_NAME = 'NiftyDegen';
 export const COMICS_CONTRACT_NAME = 'NiftyLaunchComics';
 export const ITEMS_CONTRACT_NAME = 'NiftyItemL2';
+export const HYDRA_CLAIM_CONTRACT_NAME = 'HydraDistributor';
 
 export const COLORIZE_OPTIONS = {
   pretty: true,

@@ -25,3 +25,26 @@ export type NFTInfo = {
   assetDataBase64: string;
   creationInfo?: CreationInfo;
 };
+
+export type InternalTransactions = {
+  type: string;
+  from: string;
+  to: string;
+  input: string;
+  gas: number;
+  gasUsed: number;
+  value: string;
+  contractCall?: {
+    contractType: string;
+    contractAddress: string;
+    methodName: string;
+    params: {
+      _from: string;
+      _to: string;
+      _tokenId: string;
+      _data: string;
+    };
+    contractAlias: string;
+    contractName: string;
+  };
+};
