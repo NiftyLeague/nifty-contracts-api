@@ -53,6 +53,9 @@ async function main() {
     .option('-c, --creation-info', 'include the creator address and block number the NFT was minted')
     .action(getDegen);
 
+  program.command('create-hydra <token-id>').description('"create" image and metadata for hydra').action(generateHydra);
+  program.command('create-hydras').description('"create" image and metadata for all hydra').action(generateHydras);
+
   // The hardhat and getconfig modules both expect to be running from the root directory of the project,
   // so we change the current directory to the parent dir of this script file to make things work
   // even if you call minty from elsewhere
@@ -71,7 +74,8 @@ async function main() {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TOTAL_DEGENS_TESTNET = 7550;
 const TOTAL_DEGENS = 9905;
-const START_INDEX = 3679; // 1;
+const START_INDEX = 1755;
+// const START_INDEX = 8869; // 1;
 
 async function refreshDegen(tokenId: number) {
   await refreshOpenSea(targetNetwork, tokenId);
@@ -98,8 +102,34 @@ async function updateDegen(tokenId: number) {
 }
 
 async function updateDegens() {
-  for (let i = START_INDEX; i <= TOTAL_DEGENS; i++) {
+  for (let i = START_INDEX; i <= TOTAL_DEGENS_TESTNET; i++) {
     await updateDegen(i);
+  }
+}
+
+async function generateHydra(tokenId: number) {
+  const minty = await MakeDegen(targetNetwork);
+  const { exists } = await minty.checkTokenMetadataExists(tokenId);
+  if (exists) {
+    console.log(`Metadata already exists for token id ${tokenId}`);
+  } else {
+    console.log(`Generating asset and metadata for token id ${tokenId}:`);
+    const nft = (await minty.generateHydra(tokenId)) as NFTInfo;
+    console.log('');
+    alignOutput([
+      ['Token ID:', chalk.green(`${nft.tokenId}`)],
+      ['Asset Address:', chalk.blue(nft.assetURI || '')],
+      ['Asset Gateway URL:', chalk.blue(nft.assetGatewayURL || '')],
+    ]);
+    console.log('NFT Metadata:');
+    console.log(colorize(JSON.stringify(nft.metadata), COLORIZE_OPTIONS));
+  }
+  return;
+}
+
+async function generateHydras() {
+  for (let i = 9901; i <= 9998; i++) {
+    await generateHydra(i);
   }
 }
 
@@ -109,15 +139,15 @@ async function getDegen(tokenId: number, options: { creationInfo: any }) {
   const nft = (await minty.getNFT(tokenId, { fetchCreationInfo })) as NFTInfo;
 
   const output = [
-    ['Token ID:', chalk.green(nft.tokenId)],
-    ['Owner Address:', chalk.yellow(nft.ownerAddress)],
+    ['Token ID:', chalk.green(`${nft.tokenId}`)],
+    ['Owner Address:', chalk.yellow(nft.ownerAddress || '')],
   ];
   if (nft.creationInfo) {
     output.push(['Creator Address:', chalk.yellow(nft.creationInfo.creatorAddress)]);
     output.push(['Block Number:', `${nft.creationInfo?.blockNumber}`]);
   }
-  output.push(['Metadata Address:', chalk.blue(nft.metadataURI)]);
-  output.push(['Metadata Gateway URL:', chalk.blue(nft.metadataGatewayURL)]);
+  output.push(['Metadata Address:', chalk.blue(nft.metadataURI || '')]);
+  output.push(['Metadata Gateway URL:', chalk.blue(nft.metadataGatewayURL || '')]);
   output.push(['Asset Address:', chalk.blue(nft.assetURI || 'N/A')]);
   output.push(['Asset Gateway URL:', chalk.blue(nft.assetGatewayURL || 'N/A')]);
   alignOutput(output);
