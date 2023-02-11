@@ -1,0 +1,424 @@
+import { DEGEN_METADATA } from './degenMetadata';
+import { Attribute, Rarity } from '../types';
+
+export enum HydraClan {
+  b = 'battalion',
+  n = 'naked',
+  o = 'outlier',
+  r = 'royalty',
+  s = 'shadowclan',
+  t = 'traditionalist',
+}
+
+export const HYDRA_EGG_IPFS = 'ipfs://bafybeicawvt3acmrrenmesvflib73xbfihexncseybcljuruwtr44hzca4/nifty-degens/egg.mp4';
+
+export const UNHATCHED_METADATA = {
+  name: 'HYDRA',
+  image: HYDRA_EGG_IPFS,
+  ...DEGEN_METADATA,
+  attributes: [
+    {
+      trait_type: 'Background',
+      value: '???',
+    },
+    {
+      trait_type: 'Tribe',
+      value: 'Hydra',
+    },
+    {
+      trait_type: 'Hydra',
+      value: 'unhatched',
+    },
+  ],
+};
+
+export const HYDRA_ATTRIBUTES: { [tokenId: string]: { rarity: Rarity; attributes: Attribute[] } } = {
+  9901: {
+    rarity: 'Meta',
+    attributes: [],
+  },
+  9902: {
+    rarity: 'Common',
+    attributes: [],
+  },
+  9903: {
+    rarity: 'Common',
+    attributes: [],
+  },
+  9904: {
+    rarity: 'Rare',
+    attributes: [],
+  },
+  9905: {
+    rarity: 'Common',
+    attributes: [],
+  },
+  9906: {
+    rarity: '???',
+    attributes: [],
+  },
+  9907: {
+    rarity: '???',
+    attributes: [],
+  },
+  9908: {
+    rarity: '???',
+    attributes: [],
+  },
+  9909: {
+    rarity: '???',
+    attributes: [],
+  },
+  9910: {
+    rarity: '???',
+    attributes: [],
+  },
+  9911: {
+    rarity: '???',
+    attributes: [],
+  },
+  9912: {
+    rarity: '???',
+    attributes: [],
+  },
+  9913: {
+    rarity: '???',
+    attributes: [],
+  },
+  9914: {
+    rarity: '???',
+    attributes: [],
+  },
+  9915: {
+    rarity: '???',
+    attributes: [],
+  },
+  9916: {
+    rarity: '???',
+    attributes: [],
+  },
+  9917: {
+    rarity: '???',
+    attributes: [],
+  },
+  9918: {
+    rarity: '???',
+    attributes: [],
+  },
+  9919: {
+    rarity: '???',
+    attributes: [],
+  },
+  9920: {
+    rarity: '???',
+    attributes: [],
+  },
+  9921: {
+    rarity: '???',
+    attributes: [],
+  },
+  9922: {
+    rarity: '???',
+    attributes: [],
+  },
+  9923: {
+    rarity: '???',
+    attributes: [],
+  },
+  9924: {
+    rarity: '???',
+    attributes: [],
+  },
+  9925: {
+    rarity: '???',
+    attributes: [],
+  },
+  9926: {
+    rarity: '???',
+    attributes: [],
+  },
+  9927: {
+    rarity: '???',
+    attributes: [],
+  },
+  9928: {
+    rarity: '???',
+    attributes: [],
+  },
+  9929: {
+    rarity: '???',
+    attributes: [],
+  },
+  9930: {
+    rarity: '???',
+    attributes: [],
+  },
+  9931: {
+    rarity: '???',
+    attributes: [],
+  },
+  9932: {
+    rarity: '???',
+    attributes: [],
+  },
+  9933: {
+    rarity: '???',
+    attributes: [],
+  },
+  9934: {
+    rarity: '???',
+    attributes: [],
+  },
+  9935: {
+    rarity: '???',
+    attributes: [],
+  },
+  9936: {
+    rarity: '???',
+    attributes: [],
+  },
+  9937: {
+    rarity: '???',
+    attributes: [],
+  },
+  9938: {
+    rarity: '???',
+    attributes: [],
+  },
+  9939: {
+    rarity: '???',
+    attributes: [],
+  },
+  9940: {
+    rarity: '???',
+    attributes: [],
+  },
+  9941: {
+    rarity: '???',
+    attributes: [],
+  },
+  9943: {
+    rarity: '???',
+    attributes: [],
+  },
+  9944: {
+    rarity: '???',
+    attributes: [],
+  },
+  9945: {
+    rarity: '???',
+    attributes: [],
+  },
+  9946: {
+    rarity: '???',
+    attributes: [],
+  },
+  9947: {
+    rarity: '???',
+    attributes: [],
+  },
+  9948: {
+    rarity: '???',
+    attributes: [],
+  },
+  9949: {
+    rarity: '???',
+    attributes: [],
+  },
+  9950: {
+    rarity: '???',
+    attributes: [],
+  },
+  9951: {
+    rarity: '???',
+    attributes: [],
+  },
+  9952: {
+    rarity: '???',
+    attributes: [],
+  },
+  9953: {
+    rarity: '???',
+    attributes: [],
+  },
+  9954: {
+    rarity: '???',
+    attributes: [],
+  },
+  9955: {
+    rarity: '???',
+    attributes: [],
+  },
+  9956: {
+    rarity: '???',
+    attributes: [],
+  },
+  9957: {
+    rarity: '???',
+    attributes: [],
+  },
+  9958: {
+    rarity: '???',
+    attributes: [],
+  },
+  9959: {
+    rarity: '???',
+    attributes: [],
+  },
+  9960: {
+    rarity: '???',
+    attributes: [],
+  },
+  9961: {
+    rarity: '???',
+    attributes: [],
+  },
+  9962: {
+    rarity: '???',
+    attributes: [],
+  },
+  9963: {
+    rarity: '???',
+    attributes: [],
+  },
+  9964: {
+    rarity: '???',
+    attributes: [],
+  },
+  9965: {
+    rarity: '???',
+    attributes: [],
+  },
+  9966: {
+    rarity: '???',
+    attributes: [],
+  },
+  9967: {
+    rarity: '???',
+    attributes: [],
+  },
+  9968: {
+    rarity: '???',
+    attributes: [],
+  },
+  9969: {
+    rarity: '???',
+    attributes: [],
+  },
+  9970: {
+    rarity: '???',
+    attributes: [],
+  },
+  9971: {
+    rarity: '???',
+    attributes: [],
+  },
+  9972: {
+    rarity: '???',
+    attributes: [],
+  },
+  9973: {
+    rarity: '???',
+    attributes: [],
+  },
+  9974: {
+    rarity: '???',
+    attributes: [],
+  },
+  9975: {
+    rarity: '???',
+    attributes: [],
+  },
+  9976: {
+    rarity: '???',
+    attributes: [],
+  },
+  9977: {
+    rarity: '???',
+    attributes: [],
+  },
+  9978: {
+    rarity: '???',
+    attributes: [],
+  },
+  9979: {
+    rarity: '???',
+    attributes: [],
+  },
+  9980: {
+    rarity: '???',
+    attributes: [],
+  },
+  9981: {
+    rarity: '???',
+    attributes: [],
+  },
+  9982: {
+    rarity: '???',
+    attributes: [],
+  },
+  9983: {
+    rarity: '???',
+    attributes: [],
+  },
+  9984: {
+    rarity: '???',
+    attributes: [],
+  },
+  9985: {
+    rarity: '???',
+    attributes: [],
+  },
+  9986: {
+    rarity: '???',
+    attributes: [],
+  },
+  9987: {
+    rarity: '???',
+    attributes: [],
+  },
+  9988: {
+    rarity: '???',
+    attributes: [],
+  },
+  9989: {
+    rarity: '???',
+    attributes: [],
+  },
+  9990: {
+    rarity: '???',
+    attributes: [],
+  },
+  9991: {
+    rarity: '???',
+    attributes: [],
+  },
+  9992: {
+    rarity: '???',
+    attributes: [],
+  },
+  9993: {
+    rarity: '???',
+    attributes: [],
+  },
+  9994: {
+    rarity: '???',
+    attributes: [],
+  },
+  9995: {
+    rarity: '???',
+    attributes: [],
+  },
+  9996: {
+    rarity: '???',
+    attributes: [],
+  },
+  9997: {
+    rarity: '???',
+    attributes: [],
+  },
+  9998: {
+    rarity: '???',
+    attributes: [],
+  },
+};

@@ -2,6 +2,8 @@ export type ContractName = 'NiftyDegen' | 'NiftyLaunchComics' | 'NiftyItemL2';
 
 export type TargetNetwork = 'mainnet' | 'goerli';
 
+export type Rarity = '???' | 'Common' | 'Rare' | 'Meta' | 'Legendary' | 'Mythic';
+
 export type Attribute = { trait_type?: string; value: string };
 
 export type Metadata = {

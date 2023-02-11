@@ -6,10 +6,10 @@ import { MakeDegen } from './classes/degen';
 export async function handleHydraRefreshById(targetNetwork: TargetNetwork, tokenId: string) {
   console.log(targetNetwork, tokenId);
   const minty = await MakeDegen(targetNetwork);
-  const { exists, metadata } = await minty.checkTokenMetadataExists(tokenId);
+  const { exists } = await minty.checkTokenMetadataExists(tokenId);
   if (exists) {
     console.log(`Updating Metadata for token id ${tokenId}:`);
-    const { newMetadata } = await minty.updateHydra(tokenId, metadata);
+    const { newMetadata } = await minty.updateHydra(tokenId);
     console.log('');
     console.log('Updated Hydra Metadata:');
     console.log(colorize(JSON.stringify(newMetadata), COLORIZE_OPTIONS));
