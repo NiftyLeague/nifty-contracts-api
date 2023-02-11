@@ -7,16 +7,16 @@ import { NFTInfo, TargetNetwork } from './types';
 
 import { Command } from 'commander';
 import chalk from 'chalk';
-import config from 'config';
 import colorize from 'json-colorizer';
+import config from 'config';
 import path from 'path';
 
-import alignOutput from './scripts/utils/alignOutput';
+import { COLORIZE_OPTIONS } from './constants';
 import { handleNameChangeById } from './scripts/handleNameChange';
+import { MakeDegen } from './scripts/classes/degen';
+import alignOutput from './scripts/utils/alignOutput';
 import handleTraitCount from './scripts/handleTraitCount';
 import refreshOpenSea from './scripts/utils/refreshOpenSea';
-import { COLORIZE_OPTIONS } from './constants';
-import { MakeDegen } from './scripts/classes/degen';
 
 const targetNetwork = config.get('hardhat.defaultNetwork') as TargetNetwork;
 
@@ -109,9 +109,14 @@ async function updateDegens() {
 
 async function generateHydra(tokenId: number) {
   const minty = await MakeDegen(targetNetwork);
-  const { exists } = await minty.checkTokenMetadataExists(tokenId);
+  const { exists, metadata } = await minty.checkTokenMetadataExists(tokenId);
   if (exists) {
     console.log(`Metadata already exists for token id ${tokenId}`);
+    console.log(`Updating Metadata for token id ${tokenId}:`);
+    const { newMetadata } = await minty.updateHydra(tokenId, metadata);
+    console.log('');
+    console.log('Updated Hydra Metadata:');
+    console.log(colorize(JSON.stringify(newMetadata), COLORIZE_OPTIONS));
   } else {
     console.log(`Generating asset and metadata for token id ${tokenId}:`);
     const nft = (await minty.generateHydra(tokenId)) as NFTInfo;

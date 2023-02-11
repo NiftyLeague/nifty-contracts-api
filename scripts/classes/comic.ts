@@ -1,21 +1,13 @@
 import path from 'path';
 import fs from 'fs';
-import { AddOptions } from 'ipfs-core-types/dist/src/root';
 
 import { TargetNetwork } from '../../types';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { ensureIpfsUriPrefix, makeGatewayURL } from '../utils/uriHelpers';
 import refreshOpenSea from '../utils/refreshOpenSea';
-import { COMICS_CONTRACT_NAME } from '../../constants';
+import { COMICS_CONTRACT_NAME, IPFS_OPTIONS } from '../../constants';
 import { COMICS_S3_BUCKET } from '../../constants/aws';
 import { Minty } from './minty';
-
-// ipfs parameters for more deterministic CIDs
-const ipfsOptions = {
-  cidVersion: 1,
-  hashAlg: 'sha2-256',
-  wrapWithDirectory: true,
-} as AddOptions;
 
 /**
  * Construct and asynchronously initialize a new Minty instance.
@@ -77,7 +69,7 @@ class Comic extends Minty {
       const content = await fs.promises.readFile(filePath);
       const basename = path.basename(filePath);
       const imgPath = `/nifty-launch-comics/${basename}`;
-      const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, ipfsOptions);
+      const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, IPFS_OPTIONS);
       console.log('✅ Image pinned to IPFS');
 
       await uploadToS3(`images/${basename}`, content, false, COMICS_S3_BUCKET);

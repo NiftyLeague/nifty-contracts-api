@@ -1,12 +1,12 @@
 import { DEGEN_METADATA } from './degenMetadata';
 
 export enum HydraClan {
-  r = 'royalty',
   b = 'battalion',
-  o = 'outlier',
-  t = 'traditionalist',
   n = 'naked',
+  o = 'outlier',
+  r = 'royalty',
   s = 'shadowclan',
+  t = 'traditionalist',
 }
 
 export const UNHATCHED_METADATA = {
