@@ -19,7 +19,6 @@ const component = '[IMX-CREATE-COLLECTION]';
 
   const wallet = new Wallet(privateKey);
   const signer = wallet.connect(provider);
-  const ownerPublicKey = wallet.publicKey;
 
   const user = await ImmutableXClient.build({
     ...env.client,
