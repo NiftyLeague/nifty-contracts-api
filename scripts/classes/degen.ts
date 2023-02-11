@@ -15,7 +15,7 @@ import {
 import { DEGEN_CONTRACT_NAME, IPFS_OPTIONS } from '../../constants';
 import { DEGENS_S3_BUCKET } from '../../constants/aws';
 import { Minty } from './minty';
-import { UNHATCHED_METADATA } from '../../constants/hydra';
+import { HYDRA_ATTRIBUTES, HYDRA_EGG_IPFS, UNHATCHED_METADATA } from '../../constants/hydraMetadata';
 
 /**
  * Construct and asynchronously initialize a new Minty instance.
@@ -77,7 +77,7 @@ class Degen extends Minty {
 
       const s3Path = `${this.targetNetwork}/images/${basename}`;
       await uploadToS3(s3Path, content, true, DEGENS_S3_BUCKET);
-      console.log(`✅ Metadata uploaded to S3 ${DEGENS_S3_BUCKET}/${s3Path}`);
+      console.log(`✅ Image uploaded to S3 ${DEGENS_S3_BUCKET}/${s3Path}`);
 
       // make the NFT metadata JSON
       const assetURI = ensureIpfsUriPrefix(assetCid) + imgPath;
@@ -179,7 +179,6 @@ class Degen extends Minty {
    * Helper to construct metadata JSON for character NFTs
    *
    * @param {number} tokenId - the unique ID of the new token
-   * @param {string} assetURI - IPFS URI for the NFT asset
    *
    * @typedef {object} CreateMetadataResult
    * @property {string} name - optional name to set in NFT metadata
@@ -191,10 +190,10 @@ class Degen extends Minty {
    *
    * @returns {Promise<CreateMetadataResult>}
    */
-  async makeHydraMetadata(tokenId: number, assetURI: string) {
+  async makeNewHydraMetadata(tokenId: number) {
     const metadata = {
-      name: (await this.contract?.getName(tokenId)) || `HYDRA #${tokenId}`,
-      image: ensureIpfsUriPrefix(assetURI),
+      name: `HYDRA #${tokenId}`,
+      image: UNHATCHED_METADATA.image,
       description: UNHATCHED_METADATA.description,
       external_url: `${UNHATCHED_METADATA.externalURL}/${tokenId}`,
       attributes: UNHATCHED_METADATA.attributes,
@@ -206,54 +205,7 @@ class Degen extends Minty {
   }
 
   /**
-   * Adds NFT metadata and image to IPFS given asset data.
-   *
-   * @param {number} tokenId - the unique ID of the new token
-   * @param {string} filepath - token image filepath
-   * @param {Buffer|Uint8Array} content - a Buffer or UInt8Array of data (e.g. for an image)
-   *
-   * @typedef {object} GenerateNFTResult
-   * @property {string} tokenId - the unique ID of the new token
-   * @property {object} metadata - the JSON metadata stored in IPFS and referenced by the token's metadata URI
-   * @property {string} assetURI - an ipfs:// URI for the NFT asset
-   * @property {string} assetGatewayURL - an HTTP gateway URL for the NFT asset
-   *
-   * @returns {Promise<GenerateNFTResult>}
-   */
-  async uploadHydraFromAssetData(
-    tokenId: number,
-    filePath: string,
-    content: Buffer | Uint8Array,
-  ): Promise<NFTInfo | null> {
-    const basename = path.basename(filePath);
-    const imgPath = `/nifty-degens/${basename}`;
-    if (this.ipfs) {
-      const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, IPFS_OPTIONS);
-      console.log('✅ Image pinned to IPFS');
-
-      const s3Path = `${this.targetNetwork}/images/${tokenId}.mp4`;
-      await uploadToS3(s3Path, content, true, DEGENS_S3_BUCKET);
-      console.log(`✅ Metadata uploaded to S3 ${DEGENS_S3_BUCKET}/${s3Path}`);
-
-      // make the NFT metadata JSON
-      const assetURI = ensureIpfsUriPrefix(assetCid) + imgPath;
-      const metadata = await this.makeHydraMetadata(tokenId, assetURI);
-
-      await refreshOpenSea(this.targetNetwork, tokenId);
-      console.log('✅ OpenSea force refresh triggered');
-
-      return {
-        tokenId,
-        metadata,
-        assetURI,
-        assetGatewayURL: makeGatewayURL(assetURI),
-      };
-    }
-    return null;
-  }
-
-  /**
-   * Generate NFT from tokenId, uploading to local IPFS
+   * Generate new Hydra from tokenId, uploading to S3
    *
    * @param {number} tokenId - the unique ID of the new token
    *
@@ -262,7 +214,16 @@ class Degen extends Minty {
   async generateHydra(tokenId: number): Promise<NFTInfo | null> {
     const filePath = './public/images/hydra/egg.mp4';
     const content = await fs.promises.readFile(filePath);
-    return this.uploadHydraFromAssetData(tokenId, filePath, content);
+    const s3Path = `${this.targetNetwork}/images/${tokenId}.mp4`;
+    await uploadToS3(s3Path, content, true, DEGENS_S3_BUCKET);
+    console.log(`✅ Hydra image uploaded to S3 ${DEGENS_S3_BUCKET}/${s3Path}`);
+    const metadata = await this.makeNewHydraMetadata(tokenId);
+    await refreshOpenSea(this.targetNetwork, tokenId);
+    console.log('✅ OpenSea force refresh triggered');
+    return {
+      tokenId,
+      metadata,
+    };
   }
 
   //////////////////////////////////////////////
@@ -327,32 +288,47 @@ class Degen extends Minty {
    * @property {object} newMetadata
    * @returns {Promise<NameChangeInfo>}
    */
-  async updateHydra(tokenId: string | number, metadata: Metadata) {
-    // TODO: Grab Hydra metadata file from local and upload
-    const newMetadata = { ...metadata };
-    newMetadata.name = (await this.contract?.getName(tokenId)) || `HYDRA #${tokenId}`;
-    newMetadata.attributes = [
-      ...newMetadata.attributes.filter(a => a.trait_type === 'Background'),
-      {
-        trait_type: 'Tribe',
-        value: 'Hydra',
-      },
-      {
-        trait_type: 'Hydra',
-        value: 'unhatched',
-      },
-    ];
-
+  async updateHydra(tokenId: string | number) {
+    const hydra = HYDRA_ATTRIBUTES[tokenId];
+    const { rarity, attributes } = hydra;
+    // upload image to IPFS & S3
+    let image = HYDRA_EGG_IPFS;
+    if (this.ipfs) {
+      const filePath = `./public/images/hydra/${tokenId}.${rarity === 'Legendary' ? 'mp4' : 'png'}`;
+      const content = await fs.promises.readFile(filePath);
+      const basename = path.basename(filePath);
+      const imgPath = `/nifty-degens/${basename}`;
+      const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, IPFS_OPTIONS);
+      console.log('✅ Image pinned to IPFS');
+      const s3Path = `${this.targetNetwork}/images/${basename}`;
+      await uploadToS3(s3Path, content, true, DEGENS_S3_BUCKET);
+      console.log(`✅ Image uploaded to S3 ${DEGENS_S3_BUCKET}/${s3Path}`);
+      const assetURI = ensureIpfsUriPrefix(assetCid) + imgPath;
+      image = ensureIpfsUriPrefix(assetURI);
+    }
+    // generate new metadata & upload to S3
+    const newMetadata = {
+      name: (await this.contract?.getName(tokenId)) || `HYDRA #${tokenId}`,
+      image: image,
+      description: UNHATCHED_METADATA.description,
+      external_url: `${UNHATCHED_METADATA.externalURL}/${tokenId}`,
+      attributes: [
+        {
+          trait_type: 'Background',
+          value: rarity,
+        },
+        {
+          trait_type: 'Tribe',
+          value: 'Hydra',
+        },
+        ...attributes,
+      ],
+    };
     const filePath = `${this.targetNetwork}/metadata/${tokenId}.json`;
-    // await uploadToS3(
-    //   `${this.targetNetwork}/metadata/${tokenId}.json`,
-    //   JSON.stringify(newMetadata, null, 2),
-    //   true,
-    //   DEGENS_S3_BUCKET,
-    // );
+    await uploadToS3(filePath, JSON.stringify(newMetadata, null, 2), true, DEGENS_S3_BUCKET);
     console.log(`✅ Metadata uploaded to S3 ${DEGENS_S3_BUCKET}/${filePath}`);
-    // await refreshOpenSea(this.targetNetwork, tokenId);
-    // console.log('✅ OpenSea force refresh triggered');
+    await refreshOpenSea(this.targetNetwork, tokenId);
+    console.log('✅ OpenSea force refresh triggered');
     return { newMetadata };
   }
 
