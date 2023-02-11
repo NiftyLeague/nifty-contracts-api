@@ -12,7 +12,8 @@ import getContractFactory from '../utils/getContractFactory';
 import refreshOpenSea from '../utils/refreshOpenSea';
 import { uploadToS3 } from '../utils/uploadToS3';
 import all from '../utils/it-all';
-import { stripIpfsUriPrefix, makeGatewayURL, extractCID } from '../utils/uriHelpers';
+import { stripIpfsUriPrefix, makeGatewayURL, extractCID, ensureIpfsUriPrefix } from '../utils/uriHelpers';
+import { IPFS_OPTIONS } from '../../constants';
 
 /**
  * Minty is the main object responsible for storing NFT data and interacting with the smart contract.
@@ -263,6 +264,31 @@ export class Minty {
   async refreshOpenSea(tokenId: string | number) {
     await refreshOpenSea(this.targetNetwork, tokenId, this.contractName);
     console.log('✅ OpenSea force refresh triggered');
+  }
+
+  /**
+   * When you add an object to IPFS with a directory prefix in its path,
+   * IPFS will create a directory structure for you. This is nice, because
+   * it gives us URIs with descriptive filenames in them e.g.
+   * 'ipfs://QmaNZ2FCgvBPqnxtkbToVVbK2Nes6xk5K4Ns6BsmkPucAM/cat-pic.png' instead of
+   * 'ipfs://QmaNZ2FCgvBPqnxtkbToVVbK2Nes6xk5K4Ns6BsmkPucAM'
+   */
+  async pinImage(imgPath: string, content: Buffer | Uint8Array) {
+    if (this.ipfs) {
+      const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, IPFS_OPTIONS);
+      console.log('✅ Image pinned to IPFS');
+      const assetURI = ensureIpfsUriPrefix(assetCid) + imgPath;
+      return {
+        assetCid,
+        assetURI,
+        assetGatewayURL: makeGatewayURL(assetURI),
+      };
+    }
+    return {
+      assetCid: undefined,
+      assetURI: '',
+      assetGatewayURL: '',
+    };
   }
 
   /**

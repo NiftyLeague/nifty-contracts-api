@@ -2,8 +2,7 @@ import path from 'path';
 import fs from 'fs';
 
 import { TargetNetwork } from '../../types';
-import { ensureIpfsUriPrefix, makeGatewayURL } from '../utils/uriHelpers';
-import { COMICS_CONTRACT_NAME, IPFS_OPTIONS } from '../../constants';
+import { COMICS_CONTRACT_NAME } from '../../constants';
 import { COMICS_S3_BUCKET } from '../../constants/aws';
 import { Minty } from './minty';
 
@@ -33,7 +32,7 @@ class Comic extends Minty {
    * Helper to construct metadata JSON for comic NFTs
    *
    * @param {number} tokenId - the unique ID of the new token
-   * @param {string} assetURI - IPFS URI for the NFT asset
+   * @param {string} assetGatewayURL - IPFS Gateway URL for the NFT asset
    *
    * @typedef {object} CreateMetadataResult
    * @property {string} name - optional name to set in NFT metadata
@@ -42,10 +41,10 @@ class Comic extends Minty {
    *
    * @returns {Promise<CreateMetadataResult>}
    */
-  async makeComicMetadata(tokenId: number, assetURI: string) {
+  async makeComicMetadata(tokenId: number, assetGatewayURL: string) {
     const metadata = {
       name: `COMIC #${tokenId}`,
-      image: ensureIpfsUriPrefix(assetURI),
+      image: assetGatewayURL,
       description:
         'Nifty League Launch Comics!! 📚  Each comic is burnable for a wearable but you might want to keep a full collection for when you get to the Citadel...',
     };
@@ -61,27 +60,22 @@ class Comic extends Minty {
    * @returns {Promise<GenerateNFTResult>}
    */
   async generateComic(tokenId: number) {
-    if (this.ipfs) {
-      const filePath = `./public/images/comics/${tokenId}.png`;
-      const content = await fs.promises.readFile(filePath);
-      const basename = path.basename(filePath);
-      const imgPath = `/nifty-launch-comics/${basename}`;
-      const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, IPFS_OPTIONS);
-      console.log('✅ Image pinned to IPFS');
-      await this.uploadToS3(`images/${basename}`, content, COMICS_S3_BUCKET);
+    const filePath = `./public/images/comics/${tokenId}.png`;
+    const content = await fs.promises.readFile(filePath);
+    const basename = path.basename(filePath);
+    const imgPath = `/nifty-launch-comics/${basename}`;
+    const { assetURI, assetGatewayURL } = await this.pinImage(imgPath, content);
+    await this.uploadToS3(`images/${basename}`, content, COMICS_S3_BUCKET);
 
-      // make the Comic NFT metadata
-      const assetURI = ensureIpfsUriPrefix(assetCid) + imgPath;
-      const metadata = await this.makeComicMetadata(tokenId, assetURI);
-      await this.refreshOpenSea(tokenId);
+    // make the Comic NFT metadata
+    const metadata = await this.makeComicMetadata(tokenId, assetGatewayURL);
+    await this.refreshOpenSea(tokenId);
 
-      return {
-        tokenId,
-        metadata,
-        assetURI,
-        assetGatewayURL: makeGatewayURL(assetURI),
-      };
-    }
-    return null;
+    return {
+      tokenId,
+      metadata,
+      assetURI,
+      assetGatewayURL,
+    };
   }
 }
