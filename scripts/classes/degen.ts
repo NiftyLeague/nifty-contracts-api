@@ -200,7 +200,8 @@ class Degen extends Minty {
    */
   async updateTokenName(tokenId: string | number, metadata: Metadata) {
     const name = await this.getName(tokenId);
-    const newMetadata = { ...metadata, name: name || `DEGEN #${tokenId}` };
+    const newMetadata = { ...metadata };
+    newMetadata.name = name || `DEGEN #${tokenId}`;
     await this.uploadToS3(
       `${this.targetNetwork}/metadata/${tokenId}.json`,
       JSON.stringify(newMetadata, null, 2),

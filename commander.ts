@@ -91,7 +91,7 @@ async function updateDegenName(tokenId: number) {
 }
 
 async function updateDegensNames() {
-  for (let i = START_INDEX; i <= TOTAL_DEGENS; i++) {
+  for (let i = START_INDEX; i <= 9900; i++) {
     await updateDegenName(i);
   }
 }
