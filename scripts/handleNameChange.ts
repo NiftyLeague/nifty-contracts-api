@@ -6,7 +6,6 @@ import { TargetNetwork } from '../types';
 import { COLORIZE_OPTIONS, DEGEN_CONTRACT_NAME } from '../constants';
 
 export async function handleNameChangeById(targetNetwork: TargetNetwork, tokenId: string | number) {
-  console.log(targetNetwork, tokenId);
   const degen = await MakeDegen(targetNetwork);
   const { exists, metadata } = await degen.checkTokenMetadataExists(tokenId);
   if (exists) {
