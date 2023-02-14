@@ -7,7 +7,7 @@ export const CONTRACT_METHODS = {
   WITHDRAW: '0xfe55892d',
   PURCHASE: '0x72c9f580',
   RENAME: '0xc39cbef1',
-  HYDRA_CLAIM: '0xb76b6d37',
+  HYDRA_CLAIM: '0xb741465f',
 };
 
 export const DEGEN_CONTRACT_NAME = 'NiftyDegen';
