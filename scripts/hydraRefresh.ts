@@ -5,6 +5,7 @@ import { MakeDegen } from './classes/degen';
 
 export async function handleHydraRefreshById(targetNetwork: TargetNetwork, tokenId: string) {
   console.log(targetNetwork, tokenId);
+  if (parseInt(tokenId) < 9901) return;
   const minty = await MakeDegen(targetNetwork);
   const { exists } = await minty.checkTokenMetadataExists(tokenId);
   if (exists) {
