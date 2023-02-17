@@ -40,11 +40,11 @@
       },
       {
         "trait_type": "Left Item",
-        "value": "Hoplon Shield"
+        "value": "Gold Aspis Shield"
       },
       {
         "trait_type": "Right Item",
-        "value": "Doru Spear"
+        "value": "Gold Doru Spear"
       }
     ]
   },
@@ -150,7 +150,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Doru Spear"
+        "value": "Anvil"
       }
     ]
   },
@@ -188,10 +188,6 @@
       {
         "trait_type": "Eyewear",
         "value": "Black Shades"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Diamond"
       }
     ]
   },
@@ -257,10 +253,6 @@
       {
         "trait_type": "Left Item",
         "value": "Boombox"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Anvil"
       }
     ]
   },
@@ -306,6 +298,10 @@
       {
         "trait_type": "Left Item",
         "value": "Goldsmith's Hammer"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Anvil"
       }
     ]
   },
@@ -371,7 +367,7 @@
       },
       {
         "trait_type": "Eye Color",
-        "value": "Cherry Soda"
+        "value": "White"
       },
       {
         "trait_type": "Pupil Color",
@@ -388,10 +384,6 @@
       {
         "trait_type": "Footwear",
         "value": "Yellow Basic Shoes"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Anvil"
       }
     ]
   },
@@ -433,6 +425,10 @@
       {
         "trait_type": "Left Item",
         "value": "Knife"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Toxotai Bow"
       }
     ]
   },
@@ -474,6 +470,10 @@
       {
         "trait_type": "Left Item",
         "value": "Snake"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Vihuela Guitar"
       }
     ]
   },
@@ -490,7 +490,7 @@
       },
       {
         "trait_type": "Eye Color",
-        "value": "White"
+        "value": "Sparky Blue"
       },
       {
         "trait_type": "Pupil Color",
@@ -522,7 +522,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Toxotai Bow"
+        "value": "Wine Glass"
       }
     ]
   },
@@ -539,7 +539,7 @@
       },
       {
         "trait_type": "Eye Color",
-        "value": "White"
+        "value": "Primrose Path"
       },
       {
         "trait_type": "Pupil Color",
@@ -571,7 +571,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Vihuela Guitar"
+        "value": "Carrot"
       }
     ]
   },
@@ -620,7 +620,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Wine Glass"
+        "value": "Tennis Racket"
       }
     ]
   },
@@ -665,7 +665,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Carrot"
+        "value": "Soda"
       }
     ]
   },
@@ -682,7 +682,7 @@
       },
       {
         "trait_type": "Eye Color",
-        "value": "White"
+        "value": "Primrose Path"
       },
       {
         "trait_type": "Pupil Color",
@@ -693,8 +693,12 @@
         "value": "Shadowclan Robe"
       },
       {
+        "trait_type": "Hat",
+        "value": "Medium Buck Horns"
+      },
+      {
         "trait_type": "Right Item",
-        "value": "Tennis Racket"
+        "value": "Enchanted Wooden Dagger"
       }
     ]
   },
@@ -739,7 +743,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Soda"
+        "value": "Drumsticks"
       }
     ]
   },
@@ -792,7 +796,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Enchanted Wooden Dagger"
+        "value": "Cane"
       }
     ]
   },
@@ -845,7 +849,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Drumsticks"
+        "value": "Handcuffs"
       }
     ]
   },
@@ -886,7 +890,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Cane"
+        "value": "Cauldron"
       }
     ]
   },
@@ -927,7 +931,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Handcuffs"
+        "value": "Bottle"
       }
     ]
   },
@@ -973,10 +977,6 @@
       {
         "trait_type": "Left Item",
         "value": "Red/Yellow Skateboard"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Cauldron"
       }
     ]
   },
@@ -1005,11 +1005,7 @@
       },
       {
         "trait_type": "Left Item",
-        "value": "Book"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Bottle"
+        "value": "Buddhism Book"
       }
     ]
   },
@@ -1038,7 +1034,7 @@
       },
       {
         "trait_type": "Top",
-        "value": "Checkered Longsleeve Button-Up"
+        "value": "Green/White Gingham Button-Up"
       },
       {
         "trait_type": "Bottom",
@@ -1051,6 +1047,10 @@
       {
         "trait_type": "Left Item",
         "value": "Wood Plane"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Ruler"
       }
     ]
   },
@@ -1096,6 +1096,10 @@
       {
         "trait_type": "Left Item",
         "value": "Legendary Bronze Shield"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Legendary Bronze Trident"
       }
     ]
   },
@@ -1120,7 +1124,7 @@
       },
       {
         "trait_type": "Top",
-        "value": "Beige Collared T-Shirt"
+        "value": "Tan Collared T-Shirt"
       },
       {
         "trait_type": "Outerwear",
@@ -1144,7 +1148,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Ruler"
+        "value": "Chisel"
       }
     ]
   },
@@ -1198,10 +1202,6 @@
       {
         "trait_type": "Neckwear",
         "value": "Yellow Bowtie"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Legendary Bronze Trident"
       }
     ]
   },
@@ -1226,7 +1226,7 @@
       },
       {
         "trait_type": "Top",
-        "value": "White T-Shirt"
+        "value": "White Longline T-Shirt"
       },
       {
         "trait_type": "Outerwear",
@@ -1255,10 +1255,6 @@
       {
         "trait_type": "Neckwear",
         "value": "Thick Red Scarf"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Chisel"
       }
     ]
   },
@@ -1304,11 +1300,15 @@
       {
         "trait_type": "Left Item",
         "value": "Gold Pelte Shield"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Gold Javelin"
       }
     ]
   },
   "9929": {
-    "rarity": "Common",
+    "rarity": "Rare",
     "attributes": [
       {
         "trait_type": "Hydra",
@@ -1316,7 +1316,7 @@
       },
       {
         "trait_type": "Skin Color",
-        "value": "Pimrose Path"
+        "value": "Icy Brook"
       },
       {
         "trait_type": "Eye Color",
@@ -1328,27 +1328,27 @@
       },
       {
         "trait_type": "Outerwear",
-        "value": "Silver Cuirass"
+        "value": "Tan Toga"
       },
       {
-        "trait_type": "Bottom",
-        "value": "Silver Greaves"
+        "trait_type": "Back",
+        "value": "Wings"
       },
       {
         "trait_type": "Footwear",
-        "value": "Silver Sabatons"
+        "value": "Yelllow Basic Shoes"
       },
       {
         "trait_type": "Hat",
-        "value": "Silver Peltast Corinthian"
+        "value": "Gold Ornis Corinthian"
       },
       {
-        "trait_type": "Hands",
-        "value": "Silver Gauntlets"
+        "trait_type": "Wrist",
+        "value": "Brown Wristband"
       },
       {
         "trait_type": "Left Item",
-        "value": "Silver Pelte Shield"
+        "value": "Ornis Javelin"
       }
     ]
   },
@@ -1390,10 +1390,6 @@
       {
         "trait_type": "Hat",
         "value": "Space Helmet"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Gold Javelin"
       }
     ]
   },
@@ -1410,7 +1406,7 @@
       },
       {
         "trait_type": "Eye Color",
-        "value": "White"
+        "value": "Sparky Blue"
       },
       {
         "trait_type": "Pupil Color",
@@ -1418,7 +1414,7 @@
       },
       {
         "trait_type": "Top",
-        "value": "White T-Shirt"
+        "value": "White Longline T-Shirt"
       },
       {
         "trait_type": "Outerwear",
@@ -1435,10 +1431,6 @@
       {
         "trait_type": "Hat",
         "value": "Red Headband"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Silver Javelin"
       }
     ]
   },
@@ -1463,7 +1455,7 @@
       },
       {
         "trait_type": "Top",
-        "value": "Blue/White Striped T-Shirt"
+        "value": "Blue/White Striped Longline  T-Shirt"
       },
       {
         "trait_type": "Bottom",
@@ -1480,6 +1472,10 @@
       {
         "trait_type": "Left Item",
         "value": "Spyglass"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Helm"
       }
     ]
   },
@@ -1533,7 +1529,7 @@
       },
       {
         "trait_type": "Eye Color",
-        "value": "Primrose Path"
+        "value": "White"
       },
       {
         "trait_type": "Pupil Color",
@@ -1549,7 +1545,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Helm"
+        "value": "Gold Trident"
       }
     ]
   },
@@ -1587,6 +1583,10 @@
       {
         "trait_type": "Hat",
         "value": "Yellow Construction Helmet"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Pick Axe"
       }
     ]
   },
@@ -1608,10 +1608,6 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Gold Trident"
       }
     ]
   },
@@ -1661,10 +1657,6 @@
       {
         "trait_type": "Left Item",
         "value": "Red/Yellow Skateboard"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Pick Axe"
       }
     ]
   },
@@ -1693,7 +1685,7 @@
       },
       {
         "trait_type": "Top",
-        "value": "Yellow/White Striped T-Shirt"
+        "value": "Yellow/White Striped Longline T-Shirt"
       },
       {
         "trait_type": "Bottom",
@@ -1735,6 +1727,10 @@
       {
         "trait_type": "Hat",
         "value": "Brown Demon Horns"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Red Demon Trident"
       }
     ]
   },
@@ -1813,10 +1809,6 @@
       {
         "trait_type": "Wrist",
         "value": "Black Studded Cuff"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Red Demon Trident"
       }
     ]
   },
@@ -1844,16 +1836,28 @@
         "value": "Blonde Flow"
       },
       {
-        "trait_type": "Top",
-        "value": "Gray Waistcoat"
-      },
-      {
         "trait_type": "Outerwear",
         "value": "Silver Chain Mail"
       },
       {
+        "trait_type": "Bottom",
+        "value": "Gray Pants"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Brown Eye Pad"
+      },
+      {
+        "trait_type": "Hands",
+        "value": "Brown Leather Gloves"
+      },
+      {
         "trait_type": "Left Item",
         "value": "Knife"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Toxotai Bow"
       }
     ]
   },
@@ -1893,8 +1897,16 @@
         "value": "Bronze Peltast Corinthian"
       },
       {
+        "trait_type": "Hands",
+        "value": "Bronze Gauntlets"
+      },
+      {
         "trait_type": "Left Item",
-        "value": "Pelte Shield"
+        "value": "Bronze Pelte Shield"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Javelin"
       }
     ]
   },
@@ -1923,19 +1935,19 @@
       },
       {
         "trait_type": "Top",
-        "value": "Tie Dye Shirt"
+        "value": "Longline Tie Dye T-Shirt"
       },
       {
         "trait_type": "Bottom",
         "value": "White Boxers"
       },
       {
-        "trait_type": "Eyewear",
-        "value": "Glasses"
+        "trait_type": "Hat",
+        "value": "Red/Pink Striped Bandana"
       },
       {
-        "trait_type": "Right Item",
-        "value": "Toxotai Bow"
+        "trait_type": "Eyewear",
+        "value": "Glasses"
       }
     ]
   },
@@ -1964,11 +1976,11 @@
       },
       {
         "trait_type": "Hat",
-        "value": "Small Horns"
+        "value": "Small Fawn Horns"
       },
       {
         "trait_type": "Right Item",
-        "value": "Javelin"
+        "value": "Enchanted Ice Dagger"
       }
     ]
   },
@@ -2022,6 +2034,10 @@
       {
         "trait_type": "Neckwear",
         "value": "Prince's Amulet"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Golden Trident"
       }
     ]
   },
@@ -2090,6 +2106,21 @@
         "value": "River Styx"
       },
       {
+        "trait_type": "Top",
+        "value": "Red/Black Gingham Button-Up"
+      },
+      {
+        "value": "Laptop Bag"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Dark Blue Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
         "trait_type": "Hat",
         "value": "Dark Gray Beanie"
       },
@@ -2099,7 +2130,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Golden Trident"
+        "value": "Cardboard Coffee Cup"
       }
     ]
   },
@@ -2116,7 +2147,7 @@
       },
       {
         "trait_type": "Eye Color",
-        "value": "White"
+        "value": "Cherry Soda"
       },
       {
         "trait_type": "Pupil Color",
@@ -2127,8 +2158,12 @@
         "value": "Shadowclan Robe"
       },
       {
-        "trait_type": "Belt",
-        "value": "Long Curled Horns"
+        "trait_type": "Hat",
+        "value": "Long Antelope Horns"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Enchanted Fire Dagger"
       }
     ]
   },
@@ -2150,6 +2185,22 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Beige Frayed Jorts"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Brown Basic"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Grapes"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Sickel"
       }
     ]
   },
@@ -2219,7 +2270,7 @@
       },
       {
         "trait_type": "Bottom",
-        "value": "Blue Fustanella"
+        "value": "Silver Tassets"
       },
       {
         "trait_type": "Footwear",
@@ -2230,12 +2281,16 @@
         "value": "Silver Hoplite Corinthian"
       },
       {
-        "trait_type": "Wrist",
-        "value": "Pink/Blue Sweatband"
+        "trait_type": "Hands",
+        "value": "Silver Gauntlets"
       },
       {
         "trait_type": "Left Item",
-        "value": "Hoplon Shield"
+        "value": "Silver Aspis Shield"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Doru Spear"
       }
     ]
   },
@@ -2261,6 +2316,42 @@
       {
         "trait_type": "Hair",
         "value": "Dark Gray Curly"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Dark Brown Longsleeve Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Leather Cuirass"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Dark Brown Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Brown Basic Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Yellow Bycocket Hat"
+      },
+      {
+        "trait_type": "Wrist",
+        "value": "Brown Leather Cuffs"
+      },
+      {
+        "trait_type": "Hands",
+        "value": "Brown Leather Gloves"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Arrow"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Toxotai Bow"
       }
     ]
   },
@@ -2284,8 +2375,24 @@
         "value": "River Styx"
       },
       {
-        "trait_type": "Right Item",
-        "value": "Doru Spear"
+        "trait_type": "Outerwear",
+        "value": "White Toga"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Brown Leather"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Small Fawn Horns"
+      },
+      {
+        "trait_type": "Wrist",
+        "value": "Gold Bracelet"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Flute"
       }
     ]
   },
@@ -2302,7 +2409,7 @@
       },
       {
         "trait_type": "Eye Color",
-        "value": "Primrose Path"
+        "value": "White"
       },
       {
         "trait_type": "Pupil Color",
@@ -2311,6 +2418,22 @@
       {
         "trait_type": "Hair",
         "value": "Black Messy"
+      },
+      {
+        "trait_type": "Beard",
+        "value": "Black Scraggly Beard"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Tan Torn Vest"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Dark Gray Torn Shorts"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Mug-O-Coins"
       }
     ]
   },
@@ -2338,8 +2461,24 @@
         "value": "Blonde Mohawk"
       },
       {
+        "trait_type": "Outerwear",
+        "value": "Space Marine Armor"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Dark Blue Pants"
+      },
+      {
         "trait_type": "Footwear",
         "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Brown Basic"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Space Gun"
       }
     ]
   },
@@ -2377,6 +2516,10 @@
       {
         "trait_type": "Left Item",
         "value": "Poop"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Poop"
       }
     ]
   },
@@ -2402,6 +2545,18 @@
       {
         "trait_type": "Hair",
         "value": "Brown Pulled-Back"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Tan Collared Longsleeve Button-Up"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Brown Suspenders"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Dark Blue Pants"
       },
       {
         "trait_type": "Footwear",
@@ -2430,7 +2585,7 @@
       },
       {
         "trait_type": "Outerwear",
-        "value": "Diamond Cuirass"
+        "value": "Diamond Special Forces Cuirass"
       },
       {
         "trait_type": "Back",
@@ -2454,7 +2609,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Poop"
+        "value": "Diamond Special Forces Trident"
       }
     ]
   },
@@ -2478,8 +2633,24 @@
         "value": "River Styx"
       },
       {
+        "trait_type": "Top",
+        "value": "Blue T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Dark Gray Longline Longsleeve Open Button-Up"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Dark Blue Track Pants"
+      },
+      {
         "trait_type": "Hat",
         "value": "Dark Gray Beanie"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Scooter"
       }
     ]
   },
@@ -2507,8 +2678,24 @@
         "value": "Brown Pulled-Back"
       },
       {
+        "trait_type": "Top",
+        "value": "White Collared Longsleeve Button-Up"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Brown Open Jacket"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Brown Pants"
+      },
+      {
         "trait_type": "Footwear",
         "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Brown Basic"
       },
       {
         "trait_type": "Eyewear",
@@ -2516,7 +2703,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Diamond Special Forces Trident"
+        "value": "Dice"
       }
     ]
   },
@@ -2544,8 +2731,28 @@
         "value": "Brown Quiff"
       },
       {
+        "trait_type": "Outerwear",
+        "value": "Puff Sleeve Top"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Dark Blue Pants"
+      },
+      {
         "trait_type": "Footwear",
-        "value": "Red Basic Shoes"
+        "value": "Brown Work Boots"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Brown Basic"
+      },
+      {
+        "trait_type": "Neckwear",
+        "value": "White Puff"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Skull"
       }
     ]
   },
@@ -2571,6 +2778,18 @@
       {
         "trait_type": "Hair",
         "value": "Brown Pulled-Back"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White Collared Longsleeve Button-Up"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Dark Blue Closed Dinner Jacket"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Dark Blue Pants"
       },
       {
         "trait_type": "Footwear",
@@ -2607,7 +2826,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Skull"
+        "value": "Golden Seed Piece"
       }
     ]
   },
@@ -2632,7 +2851,7 @@
       },
       {
         "trait_type": "Outerwear",
-        "value": "Silver Cuirass"
+        "value": "Silver Special Forces Cuirass"
       },
       {
         "trait_type": "Back",
@@ -2657,6 +2876,10 @@
       {
         "trait_type": "Hands",
         "value": "Silver Gauntlets"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Fire Special Forces Trident"
       }
     ]
   },
@@ -2685,7 +2908,7 @@
       },
       {
         "trait_type": "Top",
-        "value": "Beige Longsleeve Button-Up"
+        "value": "Tan Longsleeve Button-Up"
       },
       {
         "trait_type": "Outerwear",
@@ -2713,7 +2936,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Golden Seed Piece"
+        "value": "Artist Palette"
       }
     ]
   },
@@ -2741,12 +2964,23 @@
         "value": "Black Flow"
       },
       {
+        "value": "Black T-Shirt"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Black Jeans"
+      },
+      {
         "trait_type": "Footwear",
         "value": "Black Basic Shoes"
       },
       {
-        "trait_type": "Right Item",
-        "value": "Fire Special Forces Gauntlet"
+        "trait_type": "Wrist",
+        "value": "Black/White Sweatband"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Flying V Electric Guitar"
       }
     ]
   },
@@ -2774,8 +3008,19 @@
         "value": "White Horseshoe"
       },
       {
-        "trait_type": "Right Item",
-        "value": "Artist Palette"
+        "trait_type": "Beard",
+        "value": "White Long Beard"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Tan Toga"
+      },
+      {
+        "value": "Brown Sandals"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Book on Philosophy"
       }
     ]
   },
@@ -2820,11 +3065,23 @@
         "value": "River Styx"
       },
       {
+        "trait_type": "Top",
+        "value": "Green T-Shirt"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Dark Blue Pants"
+      },
+      {
         "trait_type": "Footwear",
         "value": "Black Basic Shoes"
       },
       {
         "trait_type": "Left Item",
+        "value": "Diamond"
+      },
+      {
+        "trait_type": "Right Item",
         "value": "Diamond"
       }
     ]
@@ -2849,12 +3106,39 @@
         "value": "River Styx"
       },
       {
+        "trait_type": "Top",
+        "value": "Tan Torn T-Shirt"
+      },
+      {
         "trait_type": "Back",
         "value": "Arrows"
       },
       {
+        "trait_type": "Bottom",
+        "value": "Torn Dark Green Pants"
+      },
+      {
         "trait_type": "Footwear",
         "value": "Brown Mummy Shoes"
+      },
+      {
+        "value": "Dark Green"
+      },
+      {
+        "trait_type": "Hands",
+        "value": "Pink Gloves"
+      },
+      {
+        "trait_type": "Neckwear",
+        "value": "Red Scarf"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Knife"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Toxotai Bow"
       }
     ]
   },
@@ -2876,10 +3160,6 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Diamond"
       }
     ]
   },
@@ -2901,6 +3181,22 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Dark Brown Waistcoat"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Brown Pants"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Bowl of Olives"
       }
     ]
   },
@@ -2924,8 +3220,16 @@
         "value": "River Styx"
       },
       {
+        "trait_type": "Top",
+        "value": "NL T-Shirt"
+      },
+      {
         "trait_type": "Print",
         "value": "Nifty"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "NL Pants"
       },
       {
         "trait_type": "Footwear",
@@ -2938,6 +3242,14 @@
       {
         "trait_type": "Eyewear",
         "value": "Black Shades"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "NL Cellphone"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Nifty Mug"
       }
     ]
   },
@@ -2959,6 +3271,14 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "White Toga"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Hanging Bass Drum"
       }
     ]
   },
@@ -2982,8 +3302,16 @@
         "value": "River Styx"
       },
       {
+        "trait_type": "Outerwear",
+        "value": "Green Cuirass"
+      },
+      {
         "trait_type": "Back",
         "value": "Wings"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Green Metal Underpants"
       },
       {
         "trait_type": "Footwear",
@@ -2991,7 +3319,7 @@
       },
       {
         "trait_type": "Hat",
-        "value": "Toxotai Helmet"
+        "value": "Bronze Ornis Corinthian"
       },
       {
         "trait_type": "Wrist",
@@ -2999,11 +3327,7 @@
       },
       {
         "trait_type": "Left Item",
-        "value": "Wooden Spear"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Nifty Mug"
+        "value": "Ornis Javelin"
       }
     ]
   },
@@ -3070,6 +3394,10 @@
       {
         "trait_type": "Left Item",
         "value": "Square Ruler"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Blueprints"
       }
     ]
   },
@@ -3124,15 +3452,11 @@
       {
         "trait_type": "Left Item",
         "value": "Baker's Tray"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Blueprints"
       }
     ]
   },
   "9981": {
-    "rarity": "Rare",
+    "rarity": "Common",
     "attributes": [
       {
         "trait_type": "Hydra",
@@ -3140,7 +3464,7 @@
       },
       {
         "trait_type": "Skin Color",
-        "value": "Icy Brook"
+        "value": "Pimrose Path"
       },
       {
         "trait_type": "Eye Color",
@@ -3151,24 +3475,32 @@
         "value": "River Styx"
       },
       {
-        "trait_type": "Back",
-        "value": "Wings"
+        "trait_type": "Outerwear",
+        "value": "Silver Cuirass"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Silver Greaves"
       },
       {
         "trait_type": "Footwear",
-        "value": "Yelllow Basic Shoes"
+        "value": "Silver Sabatons"
       },
       {
         "trait_type": "Hat",
-        "value": "Toxotai Helmet"
+        "value": "Silver Peltast Corinthian"
       },
       {
-        "trait_type": "Wrist",
-        "value": "Brown Wristband"
+        "trait_type": "Hands",
+        "value": "Silver Gauntlets"
       },
       {
         "trait_type": "Left Item",
-        "value": "Wooden Spear"
+        "value": "Silver Pelte Shield"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Silver Javelin"
       }
     ]
   },
@@ -3243,6 +3575,10 @@
       {
         "trait_type": "Left Item",
         "value": "Wheat"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Sickle"
       }
     ]
   },
@@ -3267,27 +3603,31 @@
       },
       {
         "trait_type": "Outerwear",
-        "value": "Chain Mail"
+        "value": "Bronze Cuirass"
       },
       {
         "trait_type": "Bottom",
-        "value": "Brown Fustanella"
+        "value": "Bronze Tassets"
       },
       {
         "trait_type": "Footwear",
-        "value": "Brown Mummy Shoes"
+        "value": "Bronze Sabatons"
       },
       {
         "trait_type": "Hat",
-        "value": "Hoplite Helmet"
+        "value": "Bronze Hoplite Corinthian"
       },
       {
-        "trait_type": "Wrist",
-        "value": "Brown Wristband"
+        "trait_type": "Hands",
+        "value": "Bronze Gauntlets"
       },
       {
         "trait_type": "Left Item",
-        "value": "Hoplon Shield"
+        "value": "Bronze Aspis Shield"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Doru Spear"
       }
     ]
   },
@@ -3341,10 +3681,6 @@
       {
         "trait_type": "Hands",
         "value": "Black Gloves"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Sickle"
       }
     ]
   },
@@ -3389,7 +3725,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Doru Spear"
+        "value": "Blueprints"
       }
     ]
   },
@@ -3484,10 +3820,6 @@
       {
         "trait_type": "Eyewear",
         "value": "Black Shades"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Blueprints"
       }
     ]
   },
@@ -3537,6 +3869,10 @@
       {
         "trait_type": "Left Item",
         "value": "Vanilla Ice Cream"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Red Balloon"
       }
     ]
   },
@@ -3573,7 +3909,7 @@
       },
       {
         "trait_type": "Hat",
-        "value": "Toxotai Helmet"
+        "value": "Gold Ornis Corinthian"
       },
       {
         "trait_type": "Wrist",
@@ -3581,7 +3917,7 @@
       },
       {
         "trait_type": "Left Item",
-        "value": "Wooden Spear"
+        "value": "Ornis Javelin"
       }
     ]
   },
@@ -3631,10 +3967,6 @@
       {
         "trait_type": "Eyewear",
         "value": "Red Scouter"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Red Balloon"
       }
     ]
   },
@@ -3680,6 +4012,10 @@
       {
         "trait_type": "Left Item",
         "value": "Fish"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Fishing Pole"
       }
     ]
   },
@@ -3777,7 +4113,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Fishing Pole"
+        "value": "Jewel Cluster"
       }
     ]
   },
@@ -3802,27 +4138,27 @@
       },
       {
         "trait_type": "Outerwear",
-        "value": "Gold Armor"
+        "value": "Gold Special Forces Cuirass"
       },
       {
         "trait_type": "Back",
-        "value": "Red Cape"
+        "value": "Red Elite Cape"
       },
       {
         "trait_type": "Bottom",
-        "value": "Green Kilt"
+        "value": "Bronze Tassets"
       },
       {
         "trait_type": "Footwear",
-        "value": "Gold Boots"
-      },
-      {
-        "trait_type": "Belt",
-        "value": "Green Basic"
+        "value": "Gold Sabatons"
       },
       {
         "trait_type": "Hat",
-        "value": "Wing Headdress"
+        "value": "Gold Special Forces Corinthian"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Silver Special Forces Trident"
       }
     ]
   },
@@ -3847,11 +4183,11 @@
       },
       {
         "trait_type": "Top",
-        "value": "Brown T-shirt"
+        "value": "Tan Collared T-shirt"
       },
       {
         "trait_type": "Bottom",
-        "value": "Blue Pants"
+        "value": "Ripped Blue Jeans"
       },
       {
         "trait_type": "Belt",
@@ -3859,7 +4195,7 @@
       },
       {
         "trait_type": "Hat",
-        "value": "Ranger Hat"
+        "value": "Ranger Cap"
       },
       {
         "trait_type": "Right Item",
@@ -3888,7 +4224,7 @@
       },
       {
         "trait_type": "Top",
-        "value": "Yellow Collared T-Shirt"
+        "value": "Tropical Open Collared Button-Up Shirt"
       },
       {
         "trait_type": "Bottom",
@@ -3904,7 +4240,7 @@
       },
       {
         "trait_type": "Hat",
-        "value": "Sun Hat"
+        "value": "Straw Sun Hat"
       },
       {
         "trait_type": "Eyewear",
@@ -3941,7 +4277,7 @@
       },
       {
         "trait_type": "Top",
-        "value": "White Collared T-Shirt"
+        "value": "White Collared Longsleeve Button-Up"
       },
       {
         "trait_type": "Outerwear",
