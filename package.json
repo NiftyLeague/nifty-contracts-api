@@ -47,7 +47,7 @@
     "hardhat": "^2.12.2",
     "https": "^1.0.0",
     "ipfs-core-types": "^0.14.0",
-    "ipfs-http-client": "^56.0.1",
+    "ipfs-http-client": "^60.0.0",
     "json-colorizer": "^2.2.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
