@@ -20,7 +20,7 @@
       },
       {
         "trait_type": "Outerwear",
-        "value": "Chain Mail"
+        "value": "Gold Chain Mail"
       },
       {
         "trait_type": "Bottom",
@@ -32,7 +32,7 @@
       },
       {
         "trait_type": "Hat",
-        "value": "Hoplite Helmet"
+        "value": "Gold Hoplite Corinthian"
       },
       {
         "trait_type": "Wrist",
@@ -134,7 +134,7 @@
       },
       {
         "trait_type": "Outerwear",
-        "value": "Blacksmith Overalls"
+        "value": "Dark Gray Overalls"
       },
       {
         "trait_type": "Footwear",
@@ -150,7 +150,7 @@
       },
       {
         "trait_type": "Right Item",
-        "value": "Anvil"
+        "value": "Doru Spear"
       }
     ]
   },
@@ -188,6 +188,10 @@
       {
         "trait_type": "Eyewear",
         "value": "Black Shades"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Diamond"
       }
     ]
   },
@@ -231,6 +235,10 @@
         "value": "Beige Mummy Shoes"
       },
       {
+        "trait_type": "Hat",
+        "value": "White Backwards Hat"
+      },
+      {
         "trait_type": "Eyewear",
         "value": "Red Shades"
       },
@@ -249,6 +257,10 @@
       {
         "trait_type": "Left Item",
         "value": "Boombox"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Anvil"
       }
     ]
   },
@@ -294,10 +306,6 @@
       {
         "trait_type": "Left Item",
         "value": "Goldsmith's Hammer"
-      },
-      {
-        "trait_type": "Right Item",
-        "value": "Anvil"
       }
     ]
   },
@@ -322,7 +330,7 @@
       },
       {
         "trait_type": "Hair",
-        "value": "Undercut"
+        "value": "Brown Fade"
       },
       {
         "trait_type": "Beard",
@@ -363,11 +371,27 @@
       },
       {
         "trait_type": "Eye Color",
-        "value": "White"
+        "value": "Cherry Soda"
       },
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "White Targaryen"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Dress"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Yellow Basic Shoes"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Anvil"
       }
     ]
   },
@@ -389,6 +413,26 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Orange T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Green Hoodie"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Green Fustanella"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Brown work boots"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Knife"
       }
     ]
   },
@@ -410,6 +454,26 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Black Curly"
+      },
+      {
+        "trait_type": "Beard",
+        "value": "Handlebar"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Poncho"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Sombrero"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Snake"
       }
     ]
   },
@@ -426,11 +490,39 @@
       },
       {
         "trait_type": "Eye Color",
-        "value": "Sparky Blue"
+        "value": "White"
       },
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White Longsleeve Button-Up"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Brown Jumper"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Brown Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Beige Mummy Shoes"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Brown Basic"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Bottle"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Toxotai Bow"
       }
     ]
   },
@@ -447,11 +539,39 @@
       },
       {
         "trait_type": "Eye Color",
-        "value": "Primrose Path"
+        "value": "White"
       },
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Brown Quiff"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Orange Longsleeve"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Brown Waistcoat"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Brown Pants"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Brown Basic"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Carrot"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Vihuela Guitar"
       }
     ]
   },
@@ -473,6 +593,34 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White T-Shirt"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "White Boxers"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "White Basic Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "White Tennis Cap"
+      },
+      {
+        "trait_type": "Wrist",
+        "value": "White Sweatband"
+      },
+      {
+        "trait_type": "Neckwear",
+        "value": "Gold Whistle"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Wine Glass"
       }
     ]
   },
@@ -494,6 +642,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Black T-Shirt"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Green Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "3D Glasses"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Popcorn"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Carrot"
       }
     ]
   },
@@ -510,17 +682,19 @@
       },
       {
         "trait_type": "Eye Color",
-        "value": "Primrose Path"
+        "value": "White"
       },
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
       },
       {
-        "trait_type": "Print"
+        "trait_type": "Outerwear",
+        "value": "Shadowclan Robe"
       },
       {
-        "trait_type": "Hands"
+        "trait_type": "Right Item",
+        "value": "Tennis Racket"
       }
     ]
   },
@@ -542,6 +716,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Red Spiky"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White Torn Vest"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Denim Jeans"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Red Basic Shoes"
+      },
+      {
+        "trait_type": "Wrist",
+        "value": "Black Sweatband"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Soda"
       }
     ]
   },
@@ -563,6 +761,38 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White Longsleeve Button-Up"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Dark Blue Dress Coat"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Black Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Black Basic"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Top Hat"
+      },
+      {
+        "trait_type": "Neckwear",
+        "value": "Black Tie"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Enchanted Wooden Dagger"
       }
     ]
   },
@@ -584,6 +814,38 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Police Officer's Shirt"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Denim Jeans"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Black Basic"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Blue Police Hat"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Black Shades"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Police Baton"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Drumsticks"
       }
     ]
   },
@@ -605,6 +867,26 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Beard",
+        "value": "White Long Beard"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Dark Blue Cowl"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Wooden Spoon"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Cane"
       }
     ]
   },
@@ -626,6 +908,26 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Black Pulled-Back"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White Longsleeve Button-Up"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Denim Overalls"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Bottle"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Handcuffs"
       }
     ]
   },
@@ -647,6 +949,34 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White T-Shirt"
+      },
+      {
+        "trait_type": "Print",
+        "value": "Brown Skull"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Green Jeans"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Beige Mummy Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Green Beanie"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Red/Yellow Skateboard"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Cauldron"
       }
     ]
   },
@@ -668,6 +998,18 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Orange Robe"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Book"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Bottle"
       }
     ]
   },
@@ -689,6 +1031,26 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Brown Quiff"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Checkered Longsleeve Button-Up"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Beige Mummy Pants"
+      },
+      {
+        "trait_type": "Neckwear",
+        "value": "Red Tie"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Wood Plane"
       }
     ]
   },
@@ -710,6 +1072,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Legendary Bronze Cuirass"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Legendary Bronze Greaves"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Legendary Bronze Sabatons"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Legendary Bronze Corinthian"
+      },
+      {
+        "trait_type": "Hands",
+        "value": "Legendary Bronze Gauntlets"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Legendary Bronze Shield"
       }
     ]
   },
@@ -731,6 +1117,34 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Beige Collared T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Brown Overalls"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Red Construction Helmet"
+      },
+      {
+        "trait_type": "Hands",
+        "value": "Brown Gloves"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Construction Hammer"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Ruler"
       }
     ]
   },
@@ -752,6 +1166,42 @@
       {
         "trait_type": "Pupil Color",
         "value": "Primrose Path"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "White Curly"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White Longsleeve Button-Up"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "White Dress Coat"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Gray Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "White Top Hat"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Monocle"
+      },
+      {
+        "trait_type": "Neckwear",
+        "value": "Yellow Bowtie"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Legendary Bronze Trident"
       }
     ]
   },
@@ -773,6 +1223,42 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Brown Trenchcoat"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Denim Jeans"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Brown Mummy Shoes"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "White Studded"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Dark Gray Beanie"
+      },
+      {
+        "trait_type": "Piercing",
+        "value": "White Stud"
+      },
+      {
+        "trait_type": "Neckwear",
+        "value": "Thick Red Scarf"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Chisel"
       }
     ]
   },
@@ -794,6 +1280,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Gold Cuirass"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Gold Greaves"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Gold Sabatons"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Gold Peltast Corinthian"
+      },
+      {
+        "trait_type": "Hands",
+        "value": "Gold Gauntlets"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Gold Pelte Shield"
       }
     ]
   },
@@ -815,6 +1325,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Silver Cuirass"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Silver Greaves"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Silver Sabatons"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Silver Peltast Corinthian"
+      },
+      {
+        "trait_type": "Hands",
+        "value": "Silver Gauntlets"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Silver Pelte Shield"
       }
     ]
   },
@@ -836,6 +1370,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Space Suit"
+      },
+      {
+        "trait_type": "Back",
+        "value": "Space Pack"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Space Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Space Boots"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Space Helmet"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Gold Javelin"
       }
     ]
   },
@@ -852,11 +1410,35 @@
       },
       {
         "trait_type": "Eye Color",
-        "value": "Sparky Blue"
+        "value": "White"
       },
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Dark Blue Collared Overshirt"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Gray Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Red Headband"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Silver Javelin"
       }
     ]
   },
@@ -878,6 +1460,26 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Blue/White Striped T-Shirt"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Blue Shorts"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Loafers"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Red Beanie"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Spyglass"
       }
     ]
   },
@@ -899,6 +1501,22 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Mummy Wrap"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Mummy Wrap"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Mummy Wrap"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Arm Sling"
       }
     ]
   },
@@ -915,11 +1533,23 @@
       },
       {
         "trait_type": "Eye Color",
-        "value": "White"
+        "value": "Primrose Path"
       },
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "White Toga"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Hydra Princess Crown"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Helm"
       }
     ]
   },
@@ -941,6 +1571,22 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Black T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Construction Vest"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Denim Jeans"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Yellow Construction Helmet"
       }
     ]
   },
@@ -962,6 +1608,10 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Gold Trident"
       }
     ]
   },
@@ -983,6 +1633,38 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Brown Curly"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White T-Shirt"
+      },
+      {
+        "trait_type": "Print",
+        "value": "Brown Skull"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Green Jeans"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Beige Mummy Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "White Backwards Hat"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Red/Yellow Skateboard"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Pick Axe"
       }
     ]
   },
@@ -1004,6 +1686,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Blue Side Part"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Yellow/White Striped T-Shirt"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Brown Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "White Basic Shoes"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Black Shades"
+      },
+      {
+        "trait_type": "Piercing",
+        "value": "White Diamond Stud"
       }
     ]
   },
@@ -1025,6 +1731,10 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Brown Demon Horns"
       }
     ]
   },
@@ -1067,6 +1777,46 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Green Spiky"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Dark Gray T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Black Leather Waistcoat"
+      },
+      {
+        "trait_type": "Print",
+        "value": "White Skull"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Black Torn Jeans"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Black Studded"
+      },
+      {
+        "trait_type": "Piercing",
+        "value": "Gold Nose Ring"
+      },
+      {
+        "trait_type": "Wrist",
+        "value": "Black Studded Cuff"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Red Demon Trident"
       }
     ]
   },
@@ -1088,6 +1838,22 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Blonde Flow"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Gray Waistcoat"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Silver Chain Mail"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Knife"
       }
     ]
   },
@@ -1109,6 +1875,26 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Cuirass"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Bronze Greaves"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Brown Mummy Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Bronze Peltast Corinthian"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Pelte Shield"
       }
     ]
   },
@@ -1130,6 +1916,26 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Blonde Curly"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Tie Dye Shirt"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "White Boxers"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Glasses"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Toxotai Bow"
       }
     ]
   },
@@ -1151,6 +1957,18 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Shadowclan Robe"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Small Horns"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Javelin"
       }
     ]
   },
@@ -1172,6 +1990,38 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Dark Blue Longsleeve Button-Up"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Gold Epaulettes"
+      },
+      {
+        "trait_type": "Back",
+        "value": "Prince's Robe"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "White Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Golden Studded"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Prince's Crown"
+      },
+      {
+        "trait_type": "Neckwear",
+        "value": "Prince's Amulet"
       }
     ]
   },
@@ -1193,6 +2043,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Brown Flow"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Brown Poet Shirt"
+      },
+      {
+        "trait_type": "Back",
+        "value": "Brown Cape"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Brown Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Brown High-Top Boots"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Lute"
       }
     ]
   },
@@ -1214,6 +2088,18 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Dark Gray Beanie"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Glasses"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Golden Trident"
       }
     ]
   },
@@ -1230,11 +2116,19 @@
       },
       {
         "trait_type": "Eye Color",
-        "value": "Cherry Soda"
+        "value": "White"
       },
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Shadowclan Robe"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Long Curled Horns"
       }
     ]
   },
@@ -1277,6 +2171,26 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Green Longsleeve"
+      },
+      {
+        "trait_type": "Print",
+        "value": "420"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Brown Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "White Basic Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Safari Hat"
       }
     ]
   },
@@ -1298,6 +2212,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Silver Cuirass"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Blue Fustanella"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Silver Sabatons"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Silver Hoplite Corinthian"
+      },
+      {
+        "trait_type": "Wrist",
+        "value": "Pink/Blue Sweatband"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Hoplon Shield"
       }
     ]
   },
@@ -1319,6 +2257,10 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Dark Gray Curly"
       }
     ]
   },
@@ -1340,6 +2282,10 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Doru Spear"
       }
     ]
   },
@@ -1356,11 +2302,15 @@
       },
       {
         "trait_type": "Eye Color",
-        "value": "White"
+        "value": "Primrose Path"
       },
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Black Messy"
       }
     ]
   },
@@ -1382,6 +2332,14 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Blonde Mohawk"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
       }
     ]
   },
@@ -1390,11 +2348,11 @@
     "attributes": [
       {
         "trait_type": "Hydra",
-        "value": "Outlier"
+        "value": "Traditionalist"
       },
       {
         "trait_type": "Skin Color",
-        "value": "Range Land"
+        "value": "Pimrose Path"
       },
       {
         "trait_type": "Eye Color",
@@ -1403,6 +2361,22 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Brown Open Jacket"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Beige kneepatch jeans"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Poop"
       }
     ]
   },
@@ -1424,6 +2398,14 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Brown Pulled-Back"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
       }
     ]
   },
@@ -1445,6 +2427,34 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Diamond Cuirass"
+      },
+      {
+        "trait_type": "Back",
+        "value": "Red Cape"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Diamond Greaves"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Diamond Sabatons"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Diamond Special Forces Corinthian"
+      },
+      {
+        "trait_type": "Hands",
+        "value": "Diamond Gauntlets"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Poop"
       }
     ]
   },
@@ -1466,6 +2476,10 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Dark Gray Beanie"
       }
     ]
   },
@@ -1487,6 +2501,22 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Brown Pulled-Back"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Black Eyes"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Diamond Special Forces Trident"
       }
     ]
   },
@@ -1508,6 +2538,14 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Brown Quiff"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Red Basic Shoes"
       }
     ]
   },
@@ -1529,6 +2567,18 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Brown Pulled-Back"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Neckwear",
+        "value": "Red Tie"
       }
     ]
   },
@@ -1550,6 +2600,14 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Black Hooded Robe"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Skull"
       }
     ]
   },
@@ -1571,6 +2629,34 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Silver Cuirass"
+      },
+      {
+        "trait_type": "Back",
+        "value": "Red Cape"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Silver Greaves"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Silver Sabatons"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Brown Torn Utility Belt"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Silver Special Forces Corinthian"
+      },
+      {
+        "trait_type": "Hands",
+        "value": "Silver Gauntlets"
       }
     ]
   },
@@ -1592,6 +2678,42 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Brown Simple"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Beige Longsleeve Button-Up"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Brown Waistcoat"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Beige Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Red Basic Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Red Feathered Beret"
+      },
+      {
+        "trait_type": "Wrist",
+        "value": "Brown Cuffs"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Artist Paintbrush"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Golden Seed Piece"
       }
     ]
   },
@@ -1613,6 +2735,18 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Black Flow"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Fire Special Forces Gauntlet"
       }
     ]
   },
@@ -1634,6 +2768,14 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "White Horseshoe"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Artist Palette"
       }
     ]
   },
@@ -1676,6 +2818,14 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Diamond"
       }
     ]
   },
@@ -1697,6 +2847,14 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Back",
+        "value": "Arrows"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Brown Mummy Shoes"
       }
     ]
   },
@@ -1718,6 +2876,10 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Diamond"
       }
     ]
   },
@@ -1760,6 +2922,22 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Print",
+        "value": "Nifty"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "White Basic Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Nifty Cap"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Black Shades"
       }
     ]
   },
@@ -1802,6 +2980,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Back",
+        "value": "Wings"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Brown Mummy Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Toxotai Helmet"
+      },
+      {
+        "trait_type": "Wrist",
+        "value": "Brown Wristband"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Wooden Spear"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Nifty Mug"
       }
     ]
   },
@@ -1844,6 +3046,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Gray Quiff"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Red T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Tan Toga"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Red Basic Shoes"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Glasses"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Square Ruler"
       }
     ]
   },
@@ -1886,6 +3112,22 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Apron"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Baker's Hat"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Baker's Tray"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Blueprints"
       }
     ]
   },
@@ -1907,6 +3149,26 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Back",
+        "value": "Wings"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Yelllow Basic Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Toxotai Helmet"
+      },
+      {
+        "trait_type": "Wrist",
+        "value": "Brown Wristband"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Wooden Spear"
       }
     ]
   },
@@ -1928,6 +3190,22 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Brown T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Smock"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Laurel Wreath"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Harp"
       }
     ]
   },
@@ -1949,6 +3227,22 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Brown Toga"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Brown Mummy Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Farmer Hat"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Wheat"
       }
     ]
   },
@@ -1970,6 +3264,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Chain Mail"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Brown Fustanella"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Brown Mummy Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Hoplite Helmet"
+      },
+      {
+        "trait_type": "Wrist",
+        "value": "Brown Wristband"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Hoplon Shield"
       }
     ]
   },
@@ -1991,6 +3309,42 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Gray Curly"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Jester Top"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Jester Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Purple Boots"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Jester Belt"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Jester Hat"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Jester Mask"
+      },
+      {
+        "trait_type": "Hands",
+        "value": "Black Gloves"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Sickle"
       }
     ]
   },
@@ -2012,6 +3366,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Green Cut-off T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "White Toga"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Brown Tool Belt"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Red Construction Helmet"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Carpenter's Hammer"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Doru Spear"
       }
     ]
   },
@@ -2033,6 +3411,38 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Gray Quiff"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White Longsleeve Collared"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Brown Suit Vest"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Brown Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Brown Basic"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Glasses"
+      },
+      {
+        "trait_type": "Neckwear",
+        "value": "Red Tie"
       }
     ]
   },
@@ -2054,6 +3464,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Camo Closed Jacket"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Camo Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Camo Hat"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Black Shades"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Blueprints"
       }
     ]
   },
@@ -2075,6 +3509,34 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Brown Curly"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Black T-shirt"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Gray Jorts"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Gray/Black Running Shoes"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Black Basic"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Red Beanie"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Vanilla Ice Cream"
       }
     ]
   },
@@ -2096,6 +3558,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Tan Toga"
+      },
+      {
+        "trait_type": "Back",
+        "value": "Wings"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Beige Mummy Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Toxotai Helmet"
+      },
+      {
+        "trait_type": "Wrist",
+        "value": "Tan Sweatband"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Wooden Spear"
       }
     ]
   },
@@ -2117,6 +3603,38 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Blue Sidecut"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Blue T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Gray Spiked Jacket"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Brown Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Black Basic"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Red Scouter"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Red Balloon"
       }
     ]
   },
@@ -2138,6 +3656,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Green Sweater Vest"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Blue Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Brown Mummy Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Brown Fisherman Hat"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Fish"
       }
     ]
   },
@@ -2159,6 +3701,34 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Tan Striped T-shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Brown Overcoat"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Brown Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Brown Mummy Shoes"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Brown Basic"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Tan Deerstalker Hat"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Magnifying Glass"
       }
     ]
   },
@@ -2180,6 +3750,34 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Black T-shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Gray V-cut Longsleeve"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Black Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Jeweler's Loupe"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Jeweler's Hammer"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Fishing Pole"
       }
     ]
   },
@@ -2201,6 +3799,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Gold Armor"
+      },
+      {
+        "trait_type": "Back",
+        "value": "Red Cape"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Green Kilt"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Gold Boots"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Green Basic"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Wing Headdress"
       }
     ]
   },
@@ -2222,6 +3844,26 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Brown T-shirt"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Blue Pants"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Brown Basic"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Ranger Hat"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Jewel Cluster"
       }
     ]
   },
@@ -2243,6 +3885,38 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Yellow Collared T-Shirt"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Green Swimsuit"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "White Basic Shoes"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "White Studded"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Sun Hat"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Black Shades"
+      },
+      {
+        "trait_type": "Neckwear",
+        "value": "Hawaiian Lei"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Trident"
       }
     ]
   },
@@ -2264,6 +3938,30 @@
       {
         "trait_type": "Pupil Color",
         "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White Collared T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Brown Dinner Jacket"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Brown Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Neckwear",
+        "value": "Red Tie"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Key"
       }
     ]
   }
