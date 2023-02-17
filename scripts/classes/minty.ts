@@ -6,11 +6,20 @@ import { create, Options, IPFSHTTPClient } from 'ipfs-http-client';
 import { ListOptions } from 'ipfs-core-types/dist/src/root';
 import { concat } from 'uint8arrays/concat';
 import { toString } from 'uint8arrays/to-string';
+import pinataSDK from '@pinata/sdk';
 
 import { ContractName, TargetNetwork, NFTInfo } from '../../types';
 import getContractFactory from '../utils/getContractFactory';
+import refreshOpenSea from '../utils/refreshOpenSea';
+import { uploadToS3 } from '../utils/uploadToS3';
 import all from '../utils/it-all';
-import { stripIpfsUriPrefix, makeGatewayURL, extractCID } from '../utils/uriHelpers';
+import { stripIpfsUriPrefix, makeGatewayURL, extractCID, ensureIpfsUriPrefix } from '../utils/uriHelpers';
+import { IPFS_OPTIONS } from '../../constants';
+
+const pinata = new pinataSDK({
+  pinataApiKey: process.env.PINATA_API_KEY,
+  pinataSecretApiKey: process.env.PINATAT_API_SECRET,
+});
 
 /**
  * Minty is the main object responsible for storing NFT data and interacting with the smart contract.
@@ -104,9 +113,12 @@ export class Minty {
    * @property {number} creationInfo.blockNumber
    * @returns {Promise<NFTInfo>}
    */
-  async getNFT(tokenId: string | number, opts: { fetchAsset?: boolean; fetchCreationInfo?: boolean }) {
+  async getNFT(
+    tokenId: string | number,
+    opts: { fetchAsset?: boolean; fetchCreationInfo?: boolean },
+  ): Promise<NFTInfo> {
     const { metadata, metadataURI } = await this.getNFTMetadata(tokenId);
-    if (!metadata) return { metadata, metadataURI };
+    if (!metadata) return { tokenId, metadata, metadataURI };
     const ownerAddress = await this.getTokenOwner(tokenId);
     const metadataGatewayURL = makeGatewayURL(metadataURI);
     const nft = {
@@ -247,8 +259,49 @@ export class Minty {
   }
 
   //////////////////////////////////////////////
-  // -------- Pinning to remote services
+  // -------- Remote services
   //////////////////////////////////////////////
+
+  async uploadToS3(s3Path: string, content: Buffer | Uint8Array | string, bucket: string) {
+    await uploadToS3(s3Path, content, true, bucket);
+    console.log(`✅ Content uploaded to S3 ${bucket}/${s3Path}`);
+  }
+
+  async refreshOpenSea(tokenId: string | number) {
+    await refreshOpenSea(this.targetNetwork, tokenId, this.contractName);
+    console.log('✅ OpenSea force refresh triggered');
+  }
+
+  /**
+   * When you add an object to IPFS with a directory prefix in its path,
+   * IPFS will create a directory structure for you. This is nice, because
+   * it gives us URIs with descriptive filenames in them e.g.
+   * 'ipfs://QmaNZ2FCgvBPqnxtkbToVVbK2Nes6xk5K4Ns6BsmkPucAM/cat-pic.png' instead of
+   * 'ipfs://QmaNZ2FCgvBPqnxtkbToVVbK2Nes6xk5K4Ns6BsmkPucAM'
+   */
+  async pinImage(imgPath: string, content: Buffer | Uint8Array) {
+    if (this.ipfs) {
+      const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, IPFS_OPTIONS);
+      console.log('✅ Image pinned to Infura IPFS');
+      const options = {
+        pinataMetadata: { name: imgPath },
+        // pinataOptions: IPFS_OPTIONS,
+      };
+      await pinata.pinByHash(assetCid.toString(), options);
+      console.log('✅ Image pinned to Pinata IPFS');
+      const assetURI = ensureIpfsUriPrefix(assetCid) + imgPath;
+      return {
+        assetCid,
+        assetURI,
+        assetGatewayURL: makeGatewayURL(assetURI),
+      };
+    }
+    return {
+      assetCid: undefined,
+      assetURI: '',
+      assetGatewayURL: '',
+    };
+  }
 
   /**
    * Request that the remote pinning service pin the given CID or ipfs URI.
