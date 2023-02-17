@@ -6,8 +6,8 @@ export const TRIBES = {
   5: 'Cat',
   6: 'Alien',
   7: 'Hydra',
-  8: 'Satoshi',
-  9: 'Rugman',
+  8: 'Rugman',
+  9: 'Satoshi',
 };
 
 export const SKIN_COLORS = {
