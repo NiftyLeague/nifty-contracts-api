@@ -2,6 +2,7 @@ import config from 'config';
 import fetch from 'node-fetch';
 import fs from 'fs';
 import hre from 'hardhat';
+import { BytesLike } from 'ethers';
 import { API_BASE_URL } from '../constants';
 
 const BALANCE_MANAGER_ABI = JSON.parse(
@@ -10,7 +11,7 @@ const BALANCE_MANAGER_ABI = JSON.parse(
   }),
 );
 
-async function parseInputData(input: any) {
+async function parseInputData(input: BytesLike) {
   const iface = new hre.ethers.utils.Interface(BALANCE_MANAGER_ABI);
   const inputData = await iface.decodeFunctionData('withdraw', input);
   return {
