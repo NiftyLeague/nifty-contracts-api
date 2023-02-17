@@ -2,406 +2,2269 @@
   "9901": {
     "rarity": "Meta",
     "attributes": [
-      { "trait_type": "Hydra", "value": "Royalty" },
-      { "trait_type": "Skin Color", "value": "Blue" },
-      { "trait_type": "Eye Color", "value": "Yellow" },
-      { "trait_type": "Pupil Color", "value": "Red" },
-      { "trait_type": "Hair", "value": " Afro" },
-      { "trait_type": "Mouth", "value": " Pipe" },
-      { "trait_type": "Beard", "value": " Bushy Beard" },
-      { "trait_type": "Top", "value": " T-Shirt" },
-      { "trait_type": "Outerwear", "value": " Jacket" },
-      { "trait_type": "Print", "value": "Duck" },
-      { "trait_type": "Bottom", "value": "Jeans" },
-      { "trait_type": "Footwear", "value": "Winged Shoes" },
-      { "trait_type": "Belt", "value": "Brown Belt" },
-      { "trait_type": "Hat", "value": "Hydra Cap" },
-      { "trait_type": "Eyewear", "value": " Hydra Eyepatch" },
-      { "trait_type": "Right Item", "value": "Skateboard" }
+      {
+        "trait_type": "Hydra",
+        "value": "Battalion"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Atmosphere"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Chain Mail"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Red Fustanella"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Yellow Basic Shoes"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Hoplite Helmet"
+      },
+      {
+        "trait_type": "Wrist",
+        "value": "White/Red Sweatband"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Hoplon Shield"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Doru Spear"
+      }
     ]
   },
   "9902": {
     "rarity": "Common",
-    "attributes": []
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Ripe Pumpkin"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Brown Curly"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White Longsleeve Button-Up"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Black Elbowpatch Jacket"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Gray Kneepatch Jeans"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Black Basic Shoes"
+      },
+      {
+        "trait_type": "Belt",
+        "value": "Black Basic"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Black Shades"
+      },
+      {
+        "trait_type": "Neckwear",
+        "value": "Red Tie"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Money Bag"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Diamond"
+      }
+    ]
   },
   "9903": {
     "rarity": "Common",
-    "attributes": []
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Signal Pink"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Blacksmith Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Blacksmith Overalls"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Brown work boots"
+      },
+      {
+        "trait_type": "Hat",
+        "value": "Bandana"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Blacksmith's Hammer"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Anvil"
+      }
+    ]
   },
   "9904": {
     "rarity": "Rare",
-    "attributes": []
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Range Land"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Yellow T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Hawaiian Shirt"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "White Boxers"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Black Shades"
+      }
+    ]
   },
   "9905": {
     "rarity": "Common",
-    "attributes": []
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Atmosphere"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Brown Curly"
+      },
+      {
+        "trait_type": "Top",
+        "value": "White T-Shirt"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Black Puffer Jacket"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Orange Baggy Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Beige Mummy Shoes"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Red Shades"
+      },
+      {
+        "trait_type": "Piercing",
+        "value": "Gold Nose Ring"
+      },
+      {
+        "trait_type": "Wrist",
+        "value": "Gold Watch"
+      },
+      {
+        "trait_type": "Neckwear",
+        "value": "Gold Medal Necklace"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Boombox"
+      }
+    ]
   },
   "9906": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Blonde Simple"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Orange Longsleeve"
+      },
+      {
+        "trait_type": "Outerwear",
+        "value": "Brown Overalls"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Brown Pants"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Brown Work boots"
+      },
+      {
+        "trait_type": "Left Item",
+        "value": "Goldsmith's Hammer"
+      },
+      {
+        "trait_type": "Right Item",
+        "value": "Anvil"
+      }
+    ]
   },
   "9907": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Range Land"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      },
+      {
+        "trait_type": "Hair",
+        "value": "Undercut"
+      },
+      {
+        "trait_type": "Beard",
+        "value": "Huge Beard"
+      },
+      {
+        "trait_type": "Top",
+        "value": "Red T-Shirt"
+      },
+      {
+        "trait_type": "Bottom",
+        "value": "Denim Jeans"
+      },
+      {
+        "trait_type": "Footwear",
+        "value": "Red Basic Shoes"
+      },
+      {
+        "trait_type": "Eyewear",
+        "value": "Black Shades"
+      },
+      {
+        "trait_type": "Wrist",
+        "value": "Black Sweatband"
+      }
+    ]
   },
   "9908": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9909": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Battalion"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9910": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Range Land"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9911": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Rare",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Signal Pink"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "Sparky Blue"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9912": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Ornery Tangerine"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "Primrose Path"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9913": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9914": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Atmosphere"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9915": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Shadowclan"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "Primrose Path"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      },
+      {
+        "trait_type": "Print"
+      },
+      {
+        "trait_type": "Hands"
+      }
+    ]
   },
   "9916": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Range Land"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9917": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Allegiance"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9918": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Icy Brook"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9919": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Rare",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Range Land"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9920": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9921": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Allegiance"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9922": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Atmosphere"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9923": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Icy Brook"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9924": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Legendary",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Commander"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9925": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9926": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Meta",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Signal Pink"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "Primrose Path"
+      }
+    ]
   },
   "9927": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9928": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Battalion"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9929": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Battalion"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9930": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Rare",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Single Orgin"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9931": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Signal Pink"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "Sparky Blue"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9932": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Icy Brook"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9933": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Range Land"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9934": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Royalty"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Atmosphere"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9935": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Icy Brook"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9936": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Naked"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Signal Pink"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9937": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Allegiance"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9938": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Atmosphere"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9939": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9940": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Naked"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "Japanese Carmine"
+      }
+    ]
   },
   "9941": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
+  },
+  "9942": {
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Battalion"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9943": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Battalion"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Greenery"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9944": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Rare",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Range Land"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9945": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Shadowclan"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Atmosphere"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9946": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Meta",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Royalty"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Atmosphere"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9947": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Begonia"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9948": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Icy Brook"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9949": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Meta",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Shadowclan"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9950": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Range Land"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9951": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9952": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Battalion"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Signal Pink"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9953": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Rare",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Battalion"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Icy Brook"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9954": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Atmosphere"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9955": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Range Land"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9956": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Rare",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Signal Pink"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9957": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Range Land"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9958": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9959": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Battalion"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Signal Pink"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9960": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Range Land"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9961": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9962": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9963": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Icy Brook"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9964": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9965": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Battalion"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Ripe Pumpkin"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9966": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Ripe Pumpkin"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9967": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Rare",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9968": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9969": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Naked"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9970": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Ripe Pumpkin"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9971": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Greenery"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9972": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Naked"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Greenery"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9973": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9974": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Rare",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9975": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "Primrose Path"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9976": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Battalion"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Greenery"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9977": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Naked"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9978": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9979": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Naked"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Atmosphere"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9980": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9981": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Rare",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Battalion"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Icy Brook"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9982": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9983": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9984": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Battalion"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Icy Brook"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9985": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Rare",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Royalty"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9986": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9987": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Icy Brook"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9988": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Atmosphere"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9989": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Atmosphere"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9990": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Battalion"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9991": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9992": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Atmosphere"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9993": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9994": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Traditionalist"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Pimrose Path"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9995": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Battalion"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Greenery"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9996": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Cherry Soda"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "Primrose Path"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9997": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Meta",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Atmosphere"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   },
   "9998": {
-    "rarity": "???",
-    "attributes": []
+    "rarity": "Common",
+    "attributes": [
+      {
+        "trait_type": "Hydra",
+        "value": "Outlier"
+      },
+      {
+        "trait_type": "Skin Color",
+        "value": "Range Land"
+      },
+      {
+        "trait_type": "Eye Color",
+        "value": "White"
+      },
+      {
+        "trait_type": "Pupil Color",
+        "value": "River Styx"
+      }
+    ]
   }
 }
