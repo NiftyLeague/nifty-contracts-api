@@ -51,7 +51,7 @@
     "json-colorizer": "^2.2.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
-    "node-fetch": "^2.6.7",
+    "node-fetch": "^3.3.0",
     "uint8arrays": "^3.0.0",
     "web3": "^1.7.3"
   },
