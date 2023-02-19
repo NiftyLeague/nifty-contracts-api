@@ -169,9 +169,8 @@ app.post(
   async function (req: Request, res: Response) {
     const targetNetwork = req.params.network as TargetNetwork;
     const tx = req.body;
-    console.log('DEGEN WEBHOOK TX:', targetNetwork, tx);
     if (
-      tx.network === targetNetwork &&
+      targetNetwork === 'mainnet' &&
       tx.status === 'confirmed' &&
       tx.direction === 'incoming' &&
       tx.apiKey === config.get('blocknative.apiKey.degens')
