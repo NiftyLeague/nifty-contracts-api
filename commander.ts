@@ -73,7 +73,7 @@ async function main() {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TOTAL_DEGENS_TESTNET = 7550;
-const TOTAL_DEGENS = 9905;
+const TOTAL_DEGENS = 9998;
 const START_INDEX = 1;
 
 async function refreshDegen(tokenId: number) {
