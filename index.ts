@@ -17,7 +17,6 @@ import { CONTRACT_METHODS } from './constants';
 import { S3_BASE_URL, DEGENS_S3_BUCKET, COMICS_S3_BUCKET, ITEMS_S3_BUCKET } from './constants/aws';
 
 import { handleNameChangeByInput } from './scripts/handleNameChange';
-import { handleHydraRefresh } from './scripts/hydraRefresh';
 import { handleDepositConfirmation } from './scripts/deposit';
 import { handleWithdrawConfirmation } from './scripts/withdraw';
 import { resolveCirculatingSupply } from './scripts/nftl';
