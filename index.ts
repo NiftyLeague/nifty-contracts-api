@@ -170,18 +170,16 @@ app.post(
   async function (req: Request, res: Response) {
     const targetNetwork = req.params.network as TargetNetwork;
     const tx = req.body;
+    console.log('DEGEN WEBHOOK TX:', targetNetwork, tx);
     if (
       tx.network === targetNetwork &&
       tx.status === 'confirmed' &&
+      tx.direction === 'incoming' &&
       tx.apiKey === config.get('blocknative.apiKey.degens')
     ) {
       if (tx.input.startsWith(CONTRACT_METHODS.RENAME)) {
         console.log('DEGEN RENAME WEBHOOK TX:', tx);
         await handleNameChangeByInput(targetNetwork, tx.input);
-      }
-      if (tx.input.startsWith(CONTRACT_METHODS.HYDRA_CLAIM)) {
-        console.log('HYDRA CLAIM WEBHOOK TX:', tx);
-        await handleHydraRefresh(targetNetwork, tx);
       }
     }
     res.sendStatus(200);
