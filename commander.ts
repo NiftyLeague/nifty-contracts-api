@@ -111,7 +111,7 @@ async function generateHydra(tokenId: number) {
   const { exists } = await minty.checkTokenMetadataExists(tokenId);
   if (exists) {
     console.log(`Metadata already exists for token id ${tokenId}`);
-    console.log(`Updating Metadata for token id ${tokenId}:`);
+    console.log(`Updating Metadata for token id: ${tokenId}`);
     const { newMetadata } = await minty.updateHydra(tokenId);
     console.log('');
     console.log('Updated Hydra Metadata:');
