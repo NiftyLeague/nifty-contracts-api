@@ -251,7 +251,7 @@ class Degen extends Minty {
    * @returns {Promise<NameChangeInfo>}
    */
   async updateHydra(tokenId: string | number) {
-    const hydra = HYDRA_ATTRIBUTES[tokenId];
+    const hydra = HYDRA_ATTRIBUTES[tokenId.toString()];
     const { rarity, attributes } = hydra;
     // upload image to IPFS & S3
     let image = HYDRA_EGG_IPFS;
