@@ -73,8 +73,9 @@ async function main() {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TOTAL_DEGENS_TESTNET = 7550;
-const TOTAL_DEGENS = 9905;
+const TOTAL_DEGENS = 9998;
 const START_INDEX = 1;
+const HYDRA_START_INDEX = 9901;
 
 async function refreshDegen(tokenId: number) {
   await refreshOpenSea(targetNetwork, tokenId);
@@ -91,7 +92,7 @@ async function updateDegenName(tokenId: number) {
 }
 
 async function updateDegensNames() {
-  for (let i = START_INDEX; i <= 9900; i++) {
+  for (let i = START_INDEX; i <= TOTAL_DEGENS; i++) {
     await updateDegenName(i);
   }
 }
@@ -101,7 +102,7 @@ async function updateDegen(tokenId: number) {
 }
 
 async function updateDegens() {
-  for (let i = START_INDEX; i <= TOTAL_DEGENS_TESTNET; i++) {
+  for (let i = START_INDEX; i < HYDRA_START_INDEX; i++) {
     await updateDegen(i);
   }
 }
@@ -111,7 +112,7 @@ async function generateHydra(tokenId: number) {
   const { exists } = await minty.checkTokenMetadataExists(tokenId);
   if (exists) {
     console.log(`Metadata already exists for token id ${tokenId}`);
-    console.log(`Updating Metadata for token id ${tokenId}:`);
+    console.log(`Updating Metadata for token id: ${tokenId}`);
     const { newMetadata } = await minty.updateHydra(tokenId);
     console.log('');
     console.log('Updated Hydra Metadata:');
@@ -132,7 +133,7 @@ async function generateHydra(tokenId: number) {
 }
 
 async function generateHydras() {
-  for (let i = 9901; i <= TOTAL_DEGENS; i++) {
+  for (let i = HYDRA_START_INDEX; i <= TOTAL_DEGENS; i++) {
     await generateHydra(i);
   }
 }
