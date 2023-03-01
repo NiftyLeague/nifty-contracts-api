@@ -9,7 +9,11 @@ export const ITEMS_METADATA = [
         value: 'Wearable',
       },
       {
-        trait_type: 'Placement',
+        trait_type: 'Tier',
+        value: 'Legendary',
+      },
+      {
+        trait_type: 'Wearable Placement',
         value: 'Back',
       },
       {
@@ -17,6 +21,9 @@ export const ITEMS_METADATA = [
         value: 'Cape',
       },
     ],
+    type: 'Wearable',
+    tier: 'Legendary',
+    placement: 'Back',
   },
   {
     name: 'Halo',
@@ -28,7 +35,11 @@ export const ITEMS_METADATA = [
         value: 'Wearable',
       },
       {
-        trait_type: 'Placement',
+        trait_type: 'Tier',
+        value: 'Epic',
+      },
+      {
+        trait_type: 'Wearable Placement',
         value: 'Head',
       },
       {
@@ -36,6 +47,9 @@ export const ITEMS_METADATA = [
         value: 'Halo',
       },
     ],
+    type: 'Wearable',
+    tier: 'Epic',
+    placement: 'Head',
   },
   {
     name: 'Diamond Bat',
@@ -47,10 +61,16 @@ export const ITEMS_METADATA = [
         value: 'Weapon',
       },
       {
+        trait_type: 'Tier',
+        value: 'Rare',
+      },
+      {
         trait_type: 'Name',
         value: 'Diamond Bat',
       },
     ],
+    type: 'Weapon',
+    tier: 'Rare',
   },
   {
     name: 'Bread Bat',
@@ -62,10 +82,16 @@ export const ITEMS_METADATA = [
         value: 'Weapon',
       },
       {
+        trait_type: 'Tier',
+        value: 'Uncommon',
+      },
+      {
         trait_type: 'Name',
         value: 'Bread Bat',
       },
     ],
+    type: 'Weapon',
+    tier: 'Uncommon',
   },
   {
     name: 'Purple Bat',
@@ -77,10 +103,16 @@ export const ITEMS_METADATA = [
         value: 'Weapon',
       },
       {
+        trait_type: 'Tier',
+        value: 'Uncommon',
+      },
+      {
         trait_type: 'Name',
         value: 'Purple Bat',
       },
     ],
+    type: 'Weapon',
+    tier: 'Uncommon',
   },
   {
     name: 'Companion',
@@ -92,7 +124,11 @@ export const ITEMS_METADATA = [
         value: 'Wearable',
       },
       {
-        trait_type: 'Placement',
+        trait_type: 'Tier',
+        value: 'Mythic',
+      },
+      {
+        trait_type: 'Wearable Placement',
         value: 'Special',
       },
       {
@@ -100,6 +136,9 @@ export const ITEMS_METADATA = [
         value: 'Companion',
       },
     ],
+    type: 'Wearable',
+    tier: 'Mythic',
+    placement: 'Special',
   },
   {
     name: 'Citadel Key',
@@ -113,8 +152,9 @@ export const ITEMS_METADATA = [
       },
       {
         trait_type: 'Name',
-        value: 'Comic Key',
+        value: 'Comics Key',
       },
     ],
+    type: 'Citadel Key',
   },
 ];
