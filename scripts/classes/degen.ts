@@ -212,7 +212,7 @@ class Degen extends Minty {
   }
 
   /**
-   * Update token metadata with new name
+   * Update token metadata
    * @param {string|number} tokenId
    * @property {object} metadata
    *
@@ -220,18 +220,15 @@ class Degen extends Minty {
    * @property {object} newMetadata
    * @returns {Promise<NameChangeInfo>}
    */
-  async updateTokenTraitCount(tokenId: number, metadata: Metadata) {
-    const allTraits = await this.getCharacterTraits(tokenId);
-    const extraTraits = allTraits.slice(5);
-    const extraTraitCount = extraTraits.filter(t => t > 0).length;
-    const newMetadata = { ...metadata };
-    newMetadata.external_url = `https://app.niftyleague.com/degens/${tokenId}`;
-    newMetadata.attributes = [
-      ...newMetadata.attributes.filter(
-        a => a.trait_type !== 'Extra Trait Count' && a.trait_type !== 'Generation' && a.value !== 'Naked Gang',
-      ),
-    ];
-    if (extraTraitCount === 0) newMetadata.attributes.push({ value: 'Naked Gang' });
+  async updateDegenMetadata(tokenId: number, metadata: Metadata) {
+    const newMetadata = {
+      name: metadata.name,
+      image: metadata.image,
+      description: metadata.description,
+      external_url: metadata.external_url,
+      animation_url: `${DEGEN_METADATA.animation_url}/${tokenId}`,
+      attributes: metadata.attributes,
+    };
     await this.uploadToS3(
       `${this.targetNetwork}/metadata/${tokenId}.json`,
       JSON.stringify(newMetadata, null, 2),

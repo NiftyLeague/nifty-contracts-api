@@ -13,6 +13,7 @@ export type Metadata = {
   image: string;
   description: string;
   external_url: string;
+  animation_url?: string;
   attributes: Attribute[];
 };
 
