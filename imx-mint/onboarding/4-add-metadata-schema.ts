@@ -32,20 +32,30 @@ const component = '[IMX-ADD-COLLECTION-METADATA-SCHEMA]';
   const params: AddMetadataSchemaToCollectionParams = {
     metadata: [
       {
-        name: 'EXAMPLE_BOOLEAN',
-        type: MetadataTypes.Boolean,
-        filterable: true,
+        name: 'item_id',
+        type: MetadataTypes.Continuous,
+        filterable: false,
       },
       {
-        name: 'EXAMPLE_Text',
+        name: 'name',
         type: MetadataTypes.Text,
-      },
-      {
-        name: 'Discrete',
-        type: MetadataTypes.Discrete,
         filterable: true,
       },
-      // ..add rest of schema here
+      {
+        name: 'type',
+        type: MetadataTypes.Enum,
+        filterable: true,
+      },
+      {
+        name: 'tier',
+        type: MetadataTypes.Enum,
+        filterable: true,
+      },
+      {
+        name: 'placement',
+        type: MetadataTypes.Enum,
+        filterable: true,
+      },
     ],
   };
 
