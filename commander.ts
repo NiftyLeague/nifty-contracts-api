@@ -15,7 +15,7 @@ import { COLORIZE_OPTIONS } from './constants';
 import { handleNameChangeById } from './scripts/handleNameChange';
 import { MakeDegen } from './scripts/classes/degen';
 import alignOutput from './scripts/utils/alignOutput';
-import handleTraitCount from './scripts/handleTraitCount';
+import handleMetadataUpdate from './scripts/handleMetadataUpdate';
 import refreshOpenSea from './scripts/utils/refreshOpenSea';
 
 const targetNetwork = config.get('hardhat.defaultNetwork') as TargetNetwork;
@@ -98,11 +98,11 @@ async function updateDegensNames() {
 }
 
 async function updateDegen(tokenId: number) {
-  await handleTraitCount(targetNetwork, tokenId);
+  await handleMetadataUpdate(targetNetwork, tokenId);
 }
 
 async function updateDegens() {
-  for (let i = START_INDEX; i < HYDRA_START_INDEX; i++) {
+  for (let i = START_INDEX; i < TOTAL_DEGENS; i++) {
     await updateDegen(i);
   }
 }
