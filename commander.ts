@@ -14,6 +14,7 @@ import path from 'path';
 import { COLORIZE_OPTIONS } from './constants';
 import { handleNameChangeById } from './scripts/handleNameChange';
 import { MakeDegen } from './scripts/classes/degen';
+import { MakeItem } from './scripts/classes/item';
 import alignOutput from './scripts/utils/alignOutput';
 import handleMetadataUpdate from './scripts/handleMetadataUpdate';
 import refreshOpenSea from './scripts/utils/refreshOpenSea';
@@ -55,6 +56,9 @@ async function main() {
 
   program.command('create-hydra <token-id>').description('"create" image and metadata for hydra').action(generateHydra);
   program.command('create-hydras').description('"create" image and metadata for all hydra').action(generateHydras);
+
+  program.command('pin-item <token-id>').description('"pins" imx item metadata').action(pinItem);
+  program.command('pin-items').description('"pins" imx items metadata').action(pinItems);
 
   // The hardhat and getconfig modules both expect to be running from the root directory of the project,
   // so we change the current directory to the parent dir of this script file to make things work
@@ -159,6 +163,29 @@ async function getDegen(tokenId: number, options: { creationInfo: any }) {
 
   console.log('NFT Metadata:');
   console.log(colorize(JSON.stringify(nft.metadata), COLORIZE_OPTIONS));
+}
+
+// ---- ITEMS
+
+async function pinItem(tokenId: number) {
+  const minty = await MakeItem(targetNetwork);
+  console.log(`Generating asset and metadata for item id ${tokenId}:`);
+  const nft = await minty.generateItem(tokenId);
+  console.log('');
+  alignOutput([
+    ['Token ID:', chalk.green(`${nft.tokenId}`)],
+    ['Asset Address:', chalk.blue(nft.assetURI)],
+    ['Asset Gateway URL:', chalk.blue(nft.assetGatewayURL)],
+  ]);
+  console.log('NFT Metadata:');
+  console.log(colorize(JSON.stringify(nft.metadata), COLORIZE_OPTIONS));
+  return;
+}
+
+async function pinItems() {
+  for (let i = 1; i <= 7; i++) {
+    await pinItem(i);
+  }
 }
 
 // ---- main entry point when running as a script
