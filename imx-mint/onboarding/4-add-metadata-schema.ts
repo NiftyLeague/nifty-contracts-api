@@ -38,7 +38,7 @@ const component = '[IMX-ADD-COLLECTION-METADATA-SCHEMA]';
       },
       {
         name: 'name',
-        type: MetadataTypes.Text,
+        type: MetadataTypes.Enum,
         filterable: true,
       },
       {
@@ -55,6 +55,16 @@ const component = '[IMX-ADD-COLLECTION-METADATA-SCHEMA]';
         name: 'placement',
         type: MetadataTypes.Enum,
         filterable: true,
+      },
+      {
+        name: 'image_url',
+        type: MetadataTypes.Text,
+        filterable: false,
+      },
+      {
+        name: 'description',
+        type: MetadataTypes.Text,
+        filterable: false,
       },
     ],
   };
