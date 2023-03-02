@@ -18,7 +18,8 @@
     "onboarding:user-registration": "ts-node -r tsconfig-paths/register -r dotenv/config ./imx-mint/onboarding/1-user-registration.ts",
     "onboarding:create-project": "ts-node -r tsconfig-paths/register -r dotenv/config ./imx-mint/onboarding/2-create-project.ts",
     "onboarding:create-collection": "ts-node -r tsconfig-paths/register -r dotenv/config ./imx-mint/onboarding/3-create-collection.ts",
-    "onboarding:add-metadata-schema": "ts-node -r tsconfig-paths/register -r dotenv/config ./imx-mint/onboarding/4-add-metadata-schema.ts"
+    "onboarding:add-metadata-schema": "ts-node -r tsconfig-paths/register -r dotenv/config ./imx-mint/onboarding/4-add-metadata-schema.ts",
+    "admin:update-metadata-schema": "ts-node -r tsconfig-paths/register -r dotenv/config ./imx-mint/admin/update-metadata-schema.ts"
   },
   "author": "Nifty Andy",
   "license": "MIT",
@@ -52,6 +53,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "node-fetch": "^2.6.7",
+    "ts-command-line-args": "^2.4.2",
     "uint8arrays": "^3.0.0",
     "web3": "^1.7.3"
   },

@@ -26,6 +26,7 @@ import {
 export const DEGEN_METADATA = {
   description: 'Original collection of your favorite 10k DEGENs 🎮',
   externalURL: 'https://app.niftyleague.com/degens',
+  animation_url: 'https://niftyleague.com/gltf',
 };
 
 export const CHARACTER_BACKGROUNDS = ['Common', 'Rare', 'Meta', 'Legendary'];
