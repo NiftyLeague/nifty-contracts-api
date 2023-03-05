@@ -7,11 +7,12 @@ const s3 = new AWS.S3({
   secretAccessKey: config.get('s3.secretAccessKey'),
 });
 
-type ExtType = '.png' | '.mp4' | '.json';
+type ExtType = '.png' | '.mp4' | '.gif' | '.json';
 
 const mimeTypes = {
   '.png': 'image/png',
   '.mp4': 'video/mp4',
+  '.gif': 'image/gif',
   '.json': 'application/json',
 };
 

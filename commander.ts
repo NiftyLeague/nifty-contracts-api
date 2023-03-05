@@ -12,6 +12,7 @@ import config from 'config';
 import path from 'path';
 
 import { COLORIZE_OPTIONS } from './constants';
+import { LEGGIES } from './constants/degenMetadata';
 import { handleNameChangeById } from './scripts/handleNameChange';
 import { MakeDegen } from './scripts/classes/degen';
 import { MakeItem } from './scripts/classes/item';
@@ -59,6 +60,9 @@ async function main() {
 
   program.command('pin-item <token-id>').description('"pins" imx item metadata').action(pinItem);
   program.command('pin-items').description('"pins" imx items metadata').action(pinItems);
+
+  program.command('update-leggy <token-id>').description('"update" leggy image').action(updateLeggy);
+  program.command('update-leggies').description('"update" leggies images').action(updateLeggies);
 
   // The hardhat and getconfig modules both expect to be running from the root directory of the project,
   // so we change the current directory to the parent dir of this script file to make things work
@@ -163,6 +167,23 @@ async function getDegen(tokenId: number, options: { creationInfo: any }) {
 
   console.log('NFT Metadata:');
   console.log(colorize(JSON.stringify(nft.metadata), COLORIZE_OPTIONS));
+}
+
+async function updateLeggy(tokenId: number) {
+  const minty = await MakeDegen(targetNetwork);
+  const { metadata } = await minty.checkTokenMetadataExists(tokenId);
+  console.log(`Updating Image & Metadata for token id: ${tokenId}`);
+  const { newMetadata } = await minty.updateLeggy(tokenId, metadata);
+  console.log('');
+  console.log('Updated Leggy Metadata:');
+  console.log(colorize(JSON.stringify(newMetadata), COLORIZE_OPTIONS));
+  return;
+}
+
+async function updateLeggies() {
+  for (const id of LEGGIES) {
+    await updateLeggy(id);
+  }
 }
 
 // ---- ITEMS
