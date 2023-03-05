@@ -106,7 +106,7 @@ async function updateDegen(tokenId: number) {
 }
 
 async function updateDegens() {
-  for (let i = START_INDEX; i < TOTAL_DEGENS; i++) {
+  for (let i = START_INDEX; i < HYDRA_START_INDEX; i++) {
     await updateDegen(i);
   }
 }
