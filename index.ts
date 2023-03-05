@@ -24,6 +24,7 @@ import { handleIMXMint } from './scripts/imx-mint';
 import { generateIMXAuthorisationHeaders } from './imx-mint/libs/sign';
 import env from './imx-mint/config/client';
 import { getItemIdByTokenId } from './imx-mint/libs/utils';
+import { LEGGIES } from './constants/degenMetadata';
 
 const app = express()
   .set('port', config.get('port'))
@@ -59,10 +60,7 @@ app.get('/:network/degen/metadata/:token_id', async function (req: Request, res:
 
 app.get('/:network/degen/image/:token_id', async function (req: Request, res: Response) {
   const { network, token_id } = req.params;
-  const metadata = await resolveDegenMetadata(req);
-  const background = metadata?.attributes?.find((a: Attribute) => a.trait_type === 'Background')?.value;
-  const tribe = metadata?.attributes?.find((a: Attribute) => a.trait_type === 'Tribe')?.value;
-  const type = background === 'Legendary' || tribe === '???' ? 'mp4' : 'png';
+  const type = LEGGIES.includes(Number(token_id)) ? 'gif' : 'png';
   pipeRequest(`${S3_BASE_URL}/${DEGENS_S3_BUCKET}/${network}/images/${token_id}.${type}`, res);
 });
 
