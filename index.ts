@@ -7,7 +7,7 @@ import express, { Request, Response } from 'express';
 import path from 'path';
 import { AlchemyProvider } from '@ethersproject/providers';
 import { Wallet } from '@ethersproject/wallet';
-import { groupBy } from 'lodash';
+import { groupBy, mapValues } from 'lodash';
 
 dotenv.config();
 
@@ -119,14 +119,17 @@ app.get('/imx/items/overview', async function (req: Request, res: Response) {
     const itemBalances = Object.values(groupBy(result, 'metadata.item_id')).map(group => ({
       [group[0].metadata.name]: group.length,
     }));
-    const holderBalances = Object.values(groupBy(result, 'user')).map(group => ({
-      [group[0].user]: group.length,
-    }));
+    const holders = groupBy(result, 'user');
+    const holderBalances = mapValues(holders, v => v.length);
+    const holderKeyBalances = mapValues(holders, v => v.filter(item => item.metadata.item_id === 7).length);
+    const removeNullBal = Object.fromEntries(Object.entries(holderKeyBalances).filter(([, v]) => v !== 0));
     res.send({
-      total: result.length,
-      holders: holderBalances.length,
-      balances: Object.values(itemBalances),
-      holder_balances: Object.values(holderBalances),
+      total_items: result.length,
+      total_holders: Object.keys(holderBalances).length,
+      key_holders: Object.keys(removeNullBal).length,
+      item_balances: Object.assign({}, ...itemBalances),
+      holder_balances: holderBalances,
+      holder_key_balances: removeNullBal,
     });
   } catch (e) {
     res.send(e);
