@@ -80,7 +80,7 @@ class Degen extends Minty {
    */
   // eslint-disable-next-line class-methods-use-this
   async generateImage(tokenId: number, traits: number[], rarity: number) {
-    const filePath = `./public/images/${this.targetNetwork}/${tokenId}.${rarity < 3 ? 'png' : 'mp4'}`;
+    const filePath = `./public/images/${this.targetNetwork}/${tokenId}.${rarity < 3 ? 'png' : 'gif'}`;
     const url = generateImageURL(traits, rarity, tokenId);
     console.log('🎮 Unity image url:', url);
     console.log('');
@@ -239,6 +239,29 @@ class Degen extends Minty {
   }
 
   /**
+   * Update Legendary Degen image to gifs
+   * @param {string|number} tokenId
+   * @property {object} metadata
+   *
+   * @typedef {object} NameChangeInfo
+   * @property {object} newMetadata
+   * @returns {Promise<NameChangeInfo>}
+   */
+  async updateLeggy(tokenId: number, metadata: Metadata) {
+    const newMetadata = { ...metadata };
+    const filePath = `./public/images/degens/${tokenId}.gif`;
+    const content = await fs.promises.readFile(filePath);
+    const basename = path.basename(filePath);
+    const { assetGatewayURL } = await this.pinImage(`/nifty-degens/${basename}`, content);
+    await this.uploadToS3(`${this.targetNetwork}/images/${basename}`, content, DEGENS_S3_BUCKET);
+    newMetadata.image = assetGatewayURL;
+    const s3MetadataPath = `${this.targetNetwork}/metadata/${tokenId}.json`;
+    await this.uploadToS3(s3MetadataPath, JSON.stringify(newMetadata, null, 2), DEGENS_S3_BUCKET);
+    await this.refreshOpenSea(tokenId);
+    return { newMetadata };
+  }
+
+  /**
    * Update Hydra metadata on claim
    * @param {string|number} tokenId
    * @property {object} metadata
@@ -252,7 +275,7 @@ class Degen extends Minty {
     const { rarity, attributes } = hydra;
     // upload image to IPFS & S3
     let image = HYDRA_EGG_IPFS;
-    const filePath = `./public/images/hydra/${tokenId}.${rarity === 'Legendary' ? 'mp4' : 'png'}`;
+    const filePath = `./public/images/hydra/${tokenId}.${rarity === 'Legendary' ? 'gif' : 'png'}`;
     const content = await fs.promises.readFile(filePath);
     const basename = path.basename(filePath);
     const { assetGatewayURL } = await this.pinImage(`/nifty-degens/${basename}`, content);
