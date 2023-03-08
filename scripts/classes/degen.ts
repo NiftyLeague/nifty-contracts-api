@@ -13,6 +13,7 @@ import { DEGEN_CONTRACT_NAME } from '../../constants';
 import { DEGENS_S3_BUCKET } from '../../constants/aws';
 import { Minty } from './minty';
 import { HYDRA_ATTRIBUTES, HYDRA_EGG_IPFS, UNHATCHED_METADATA } from '../../constants/hydraMetadata';
+import { RUGMAN, SATOSHI } from '../../constants/mythicMetadata';
 
 /**
  * Construct and asynchronously initialize a new Minty instance.
@@ -178,6 +179,36 @@ class Degen extends Minty {
     const content = await fs.promises.readFile(filePath);
     await this.uploadToS3(`${this.targetNetwork}/images/${tokenId}.mp4`, content, DEGENS_S3_BUCKET);
     const metadata = await this.makeNewHydraMetadata(tokenId);
+    await this.refreshOpenSea(tokenId);
+    return {
+      tokenId,
+      metadata,
+    };
+  }
+
+  async makeNewMythicMetadata(tokenId: number, assetGatewayURL: string) {
+    const metadata = {
+      name: tokenId === 10000 ? 'Satoshi' : 'RugMan',
+      image: assetGatewayURL,
+      description: DEGEN_METADATA.description,
+      external_url: `${DEGEN_METADATA.externalURL}/${tokenId}`,
+      attributes: tokenId === 10000 ? SATOSHI.attributes : RUGMAN.attributes,
+    };
+    await this.uploadToS3(
+      `${this.targetNetwork}/metadata/${tokenId}.json`,
+      JSON.stringify(metadata, null, 2),
+      DEGENS_S3_BUCKET,
+    );
+    return metadata;
+  }
+
+  async generateMythic(tokenId: number): Promise<NFTInfo | null> {
+    const filePath = `./public/images/degens/${tokenId}.png`;
+    const content = await fs.promises.readFile(filePath);
+    const basename = path.basename(filePath);
+    const { assetGatewayURL } = await this.pinImage(`/nifty-degens/${basename}`, content);
+    await this.uploadToS3(`${this.targetNetwork}/images/${basename}`, content, DEGENS_S3_BUCKET);
+    const metadata = await this.makeNewMythicMetadata(tokenId, assetGatewayURL);
     await this.refreshOpenSea(tokenId);
     return {
       tokenId,
