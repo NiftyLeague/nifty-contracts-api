@@ -64,6 +64,8 @@ async function main() {
   program.command('update-leggy <token-id>').description('"update" leggy image').action(updateLeggy);
   program.command('update-leggies').description('"update" leggies images').action(updateLeggies);
 
+  program.command('create-mythics').description('"create" image and metadata for all hydra').action(generateMythics);
+
   // The hardhat and getconfig modules both expect to be running from the root directory of the project,
   // so we change the current directory to the parent dir of this script file to make things work
   // even if you call minty from elsewhere
@@ -144,6 +146,25 @@ async function generateHydras() {
   for (let i = HYDRA_START_INDEX; i <= TOTAL_DEGENS; i++) {
     await generateHydra(i);
   }
+}
+async function generateMythic(tokenId: number) {
+  const minty = await MakeDegen(targetNetwork);
+  console.log(`Generating asset and metadata for token id ${tokenId}:`);
+  const nft = (await minty.generateMythic(tokenId)) as NFTInfo;
+  console.log('');
+  alignOutput([
+    ['Token ID:', chalk.green(`${nft.tokenId}`)],
+    ['Asset Address:', chalk.blue(nft.assetURI || '')],
+    ['Asset Gateway URL:', chalk.blue(nft.assetGatewayURL || '')],
+  ]);
+  console.log('NFT Metadata:');
+  console.log(colorize(JSON.stringify(nft.metadata), COLORIZE_OPTIONS));
+  return;
+}
+
+async function generateMythics() {
+  await generateMythic(9999);
+  await generateMythic(10000);
 }
 
 async function getDegen(tokenId: number, options: { creationInfo: any }) {
