@@ -2,7 +2,7 @@ import { AlchemyProvider } from '@ethersproject/providers';
 import { Wallet } from '@ethersproject/wallet';
 import { ImmutableXClient, ImmutableMethodResults } from '@imtbl/imx-sdk';
 import { getEnv } from '../libs/utils';
-import { TargetNetwork } from '../../types';
+import { TargetNetwork } from '../../../types';
 
 import Config from './config';
 

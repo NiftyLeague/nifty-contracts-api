@@ -18,7 +18,7 @@ export const RUGMAN = {
     },
     {
       trait_type: 'Skin Color',
-      value: 'Toledo',
+      value: 'Matterhorn',
     },
     {
       trait_type: 'Eye Color',
