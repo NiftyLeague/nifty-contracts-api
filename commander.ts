@@ -3,7 +3,7 @@
 // This file contains the main entry point for the command line `minty` app, and the command line option parsing code.
 // See minty.js for the core functionality.
 
-import { NFTInfo, TargetNetwork } from './types';
+import { NFTInfo, TargetNetwork } from './api/types';
 
 import { Command } from 'commander';
 import chalk from 'chalk';
@@ -11,14 +11,14 @@ import colorize from 'json-colorizer';
 import config from 'config';
 import path from 'path';
 
-import { COLORIZE_OPTIONS } from './constants';
-import { LEGGIES } from './constants/degenMetadata';
-import { handleNameChangeById } from './scripts/handleNameChange';
-import { MakeDegen } from './scripts/classes/degen';
-import { MakeItem } from './scripts/classes/item';
-import alignOutput from './scripts/utils/alignOutput';
-import handleMetadataUpdate from './scripts/handleMetadataUpdate';
-import refreshOpenSea from './scripts/utils/refreshOpenSea';
+import { COLORIZE_OPTIONS } from './api/constants';
+import { LEGGIES } from './api/constants/degenMetadata';
+import { handleNameChangeById } from './api/scripts/handleNameChange';
+import { MakeDegen } from './api/scripts/classes/degen';
+import { MakeItem } from './api/scripts/classes/item';
+import alignOutput from './api/scripts/utils/alignOutput';
+import handleMetadataUpdate from './api/scripts/handleMetadataUpdate';
+import refreshOpenSea from './api/scripts/utils/refreshOpenSea';
 
 const targetNetwork = config.get('hardhat.defaultNetwork') as TargetNetwork;
 
