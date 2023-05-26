@@ -21,9 +21,9 @@ import { handleDepositConfirmation } from './scripts/deposit';
 import { handleWithdrawConfirmation } from './scripts/withdraw';
 import { resolveCirculatingSupply } from './scripts/nftl';
 import { handleIMXMint } from './scripts/imx-mint';
-import { generateIMXAuthorisationHeaders } from './imx-mint/libs/sign';
-import env from './imx-mint/config/client';
-import { getItemIdByTokenId } from './imx-mint/libs/utils';
+import { generateIMXAuthorisationHeaders } from './scripts/imx/libs/sign';
+import env from './scripts/imx/config/client';
+import { getItemIdByTokenId } from './scripts/imx/libs/utils';
 import { LEGGIES } from './constants/degenMetadata';
 
 const app = express()

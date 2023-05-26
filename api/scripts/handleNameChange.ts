@@ -1,9 +1,9 @@
 import colorize from 'json-colorizer';
 import fs from 'fs';
 import { ethers, BytesLike } from 'ethers';
-import { MakeDegen } from './classes/degen';
 import { TargetNetwork } from '../types';
 import { COLORIZE_OPTIONS, DEGEN_CONTRACT_NAME } from '../constants';
+import { MakeDegen } from './classes/degen';
 
 export async function handleNameChangeById(targetNetwork: TargetNetwork, tokenId: string | number) {
   const degen = await MakeDegen(targetNetwork);

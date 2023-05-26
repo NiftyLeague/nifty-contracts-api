@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import fetch from 'node-fetch';
 import https from 'https';
-import env from '../../imx-mint/config/client';
+import env from '../imx/config/client';
 import { Metadata } from '../../types';
 
 export async function fetchMetadata(URI: string): Promise<Metadata | null> {
