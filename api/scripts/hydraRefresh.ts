@@ -9,7 +9,7 @@ export async function handleHydraRefreshById(targetNetwork: TargetNetwork, token
   const minty = await MakeDegen(targetNetwork);
   const { exists } = await minty.checkTokenMetadataExists(tokenId);
   if (exists) {
-    console.log(`Updating Metadata for token id: ${tokenId}`);
+    console.log(`⚠️  Updating Metadata for token id: ${tokenId}`);
     const { newMetadata } = await minty.updateHydra(tokenId);
     console.log('');
     console.log('Updated Hydra Metadata:');

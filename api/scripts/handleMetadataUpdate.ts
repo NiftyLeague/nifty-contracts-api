@@ -7,7 +7,7 @@ export default async function handleMetadataUpdate(targetNetwork: TargetNetwork,
   const minty = await MakeDegen(targetNetwork);
   const { exists, metadata } = await minty.checkTokenMetadataExists(tokenId);
   if (exists) {
-    console.log(`Updating Metadata for token id: ${tokenId}`);
+    console.log(`⚠️  Updating Metadata for token id: ${tokenId}`);
     const { newMetadata } = await minty.updateDegenMetadata(tokenId, metadata);
     console.log('');
     console.log('Updated NFT Metadata:');
