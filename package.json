@@ -1,29 +1,31 @@
 {
   "name": "@niftyleague/contracts-api",
   "version": "1.0.0",
-  "description": "API for Game Account webhooks",
+  "description": "Nifty League Contracts API & Webhooks",
   "repository": "github:NiftyLeague/ContractsAPI.git",
-  "main": "dist/index.js",
+  "main": "dist/api/index.js",
   "bin": {
     "minty": "dist/commander.js"
   },
   "scripts": {
     "build": "npx tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/api/index.js",
     "postinstall": "npm run build",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
-    "test": "ts-node test.ts",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/api/index.js\"",
+    "test": "ts-node api/test.ts",
     "lint": "eslint --ignore-path .eslintignore . --ext .ts,.js",
     "format": "prettier --ignore-path .prettierignore --write .",
-    "onboarding:user-registration": "ts-node -r tsconfig-paths/register -r dotenv/config ./imx-mint/onboarding/1-user-registration.ts",
-    "onboarding:create-project": "ts-node -r tsconfig-paths/register -r dotenv/config ./imx-mint/onboarding/2-create-project.ts",
-    "onboarding:create-collection": "ts-node -r tsconfig-paths/register -r dotenv/config ./imx-mint/onboarding/3-create-collection.ts",
-    "onboarding:add-metadata-schema": "ts-node -r tsconfig-paths/register -r dotenv/config ./imx-mint/onboarding/4-add-metadata-schema.ts",
-    "admin:update-metadata-schema": "ts-node -r tsconfig-paths/register -r dotenv/config ./imx-mint/admin/update-metadata-schema.ts"
+    "onboarding:user-registration": "ts-node -r tsconfig-paths/register -r dotenv/config ./api/scripts/imx/onboarding/1-user-registration.ts",
+    "onboarding:create-project": "ts-node -r tsconfig-paths/register -r dotenv/config ./api/scripts/imx/onboarding/2-create-project.ts",
+    "onboarding:create-collection": "ts-node -r tsconfig-paths/register -r dotenv/config ./api/scripts/imx/onboarding/3-create-collection.ts",
+    "onboarding:add-metadata-schema": "ts-node -r tsconfig-paths/register -r dotenv/config ./api/scripts/imx/onboarding/4-add-metadata-schema.ts",
+    "admin:update-metadata-schema": "ts-node -r tsconfig-paths/register -r dotenv/config ./api/scripts/imx/admin/update-metadata-schema.ts"
   },
   "author": "Nifty Andy",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.341.0",
+    "@aws-sdk/lib-storage": "^3.341.0",
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@imtbl/core-sdk": "^1.0.0-beta.3",
@@ -36,7 +38,6 @@
     "@nomiclabs/hardhat-etherscan": "^3.1.6",
     "@pinata/sdk": "^2.1.0",
     "@types/node-fetch": "^2.6.2",
-    "aws-sdk": "^2.1313.0",
     "bn.js": "^5.2.1",
     "body-parser": "^1.20.0",
     "config": "^3.3.8",
@@ -90,7 +91,7 @@
     "typescript": "^4.8.4"
   },
   "engines": {
-    "node": "16.18.1",
+    "node": ">=16.10",
     "npm": "8.19.2"
   }
 }
