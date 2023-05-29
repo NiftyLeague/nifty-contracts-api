@@ -3,10 +3,10 @@ import fs from 'fs';
 import { JsonRpcProvider, Log, TransactionResponse } from '@ethersproject/providers';
 import { Result } from '@ethersproject/abi';
 
-import { mint } from '../imx-mint/minting/minting';
-import { getEnv } from '../imx-mint/libs/utils';
-import Config from '../imx-mint/minting/config';
 import { TargetNetwork } from '../types';
+import { mint } from './imx/minting/minting';
+import { getEnv } from './imx/libs/utils';
+import Config from './imx/minting/config';
 import { getTxReceipt } from './utils/txReceipt';
 
 const NIFTY_BURNING_COMICS_L2 = JSON.parse(

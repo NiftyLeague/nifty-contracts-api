@@ -3,7 +3,7 @@
 // This file contains the main entry point for the command line `minty` app, and the command line option parsing code.
 // See minty.js for the core functionality.
 
-import { NFTInfo, TargetNetwork } from './types';
+import { NFTInfo, TargetNetwork } from './api/types';
 
 import { Command } from 'commander';
 import chalk from 'chalk';
@@ -11,13 +11,14 @@ import colorize from 'json-colorizer';
 import config from 'config';
 import path from 'path';
 
-import { COLORIZE_OPTIONS } from './constants';
-import { handleNameChangeById } from './scripts/handleNameChange';
-import { MakeDegen } from './scripts/classes/degen';
-import { MakeItem } from './scripts/classes/item';
-import alignOutput from './scripts/utils/alignOutput';
-import handleMetadataUpdate from './scripts/handleMetadataUpdate';
-import refreshOpenSea from './scripts/utils/refreshOpenSea';
+import { COLORIZE_OPTIONS } from './api/constants';
+import { LEGGIES } from './api/constants/degenMetadata';
+import { handleNameChangeById } from './api/scripts/handleNameChange';
+import { MakeDegen } from './api/scripts/classes/degen';
+import { MakeItem } from './api/scripts/classes/item';
+import alignOutput from './api/scripts/utils/alignOutput';
+import handleMetadataUpdate from './api/scripts/handleMetadataUpdate';
+import refreshOpenSea from './api/scripts/utils/refreshOpenSea';
 
 const targetNetwork = config.get('hardhat.defaultNetwork') as TargetNetwork;
 
@@ -59,6 +60,11 @@ async function main() {
 
   program.command('pin-item <token-id>').description('"pins" imx item metadata').action(pinItem);
   program.command('pin-items').description('"pins" imx items metadata').action(pinItems);
+
+  program.command('update-leggy <token-id>').description('"update" leggy image').action(updateLeggy);
+  program.command('update-leggies').description('"update" leggies images').action(updateLeggies);
+
+  program.command('create-mythics').description('"create" image and metadata for all hydra').action(generateMythics);
 
   // The hardhat and getconfig modules both expect to be running from the root directory of the project,
   // so we change the current directory to the parent dir of this script file to make things work
@@ -116,13 +122,13 @@ async function generateHydra(tokenId: number) {
   const { exists } = await minty.checkTokenMetadataExists(tokenId);
   if (exists) {
     console.log(`Metadata already exists for token id ${tokenId}`);
-    console.log(`Updating Metadata for token id: ${tokenId}`);
+    console.log(`⚠️  Updating Metadata for token id: ${tokenId}`);
     const { newMetadata } = await minty.updateHydra(tokenId);
     console.log('');
     console.log('Updated Hydra Metadata:');
     console.log(colorize(JSON.stringify(newMetadata), COLORIZE_OPTIONS));
   } else {
-    console.log(`Generating asset and metadata for token id ${tokenId}:`);
+    console.log(`⚠️  Generating asset and metadata for token id ${tokenId}:`);
     const nft = (await minty.generateHydra(tokenId)) as NFTInfo;
     console.log('');
     alignOutput([
@@ -140,6 +146,25 @@ async function generateHydras() {
   for (let i = HYDRA_START_INDEX; i <= TOTAL_DEGENS; i++) {
     await generateHydra(i);
   }
+}
+async function generateMythic(tokenId: number) {
+  const minty = await MakeDegen(targetNetwork);
+  console.log(`⚠️  Generating asset and metadata for token id ${tokenId}:`);
+  const nft = (await minty.generateMythic(tokenId)) as NFTInfo;
+  console.log('');
+  alignOutput([
+    ['Token ID:', chalk.green(`${nft.tokenId}`)],
+    ['Asset Address:', chalk.blue(nft.assetURI || '')],
+    ['Asset Gateway URL:', chalk.blue(nft.assetGatewayURL || '')],
+  ]);
+  console.log('NFT Metadata:');
+  console.log(colorize(JSON.stringify(nft.metadata), COLORIZE_OPTIONS));
+  return;
+}
+
+async function generateMythics() {
+  await generateMythic(9999);
+  await generateMythic(10000);
 }
 
 async function getDegen(tokenId: number, options: { creationInfo: any }) {
@@ -165,11 +190,28 @@ async function getDegen(tokenId: number, options: { creationInfo: any }) {
   console.log(colorize(JSON.stringify(nft.metadata), COLORIZE_OPTIONS));
 }
 
+async function updateLeggy(tokenId: number) {
+  const minty = await MakeDegen(targetNetwork);
+  const { metadata } = await minty.checkTokenMetadataExists(tokenId);
+  console.log(`⚠️  Updating Image & Metadata for token id: ${tokenId}`);
+  const { newMetadata } = await minty.updateLeggy(tokenId, metadata);
+  console.log('');
+  console.log('Updated Leggy Metadata:');
+  console.log(colorize(JSON.stringify(newMetadata), COLORIZE_OPTIONS));
+  return;
+}
+
+async function updateLeggies() {
+  for (const id of LEGGIES) {
+    await updateLeggy(id);
+  }
+}
+
 // ---- ITEMS
 
 async function pinItem(tokenId: number) {
   const minty = await MakeItem(targetNetwork);
-  console.log(`Generating asset and metadata for item id ${tokenId}:`);
+  console.log(`⚠️  Generating asset and metadata for item id ${tokenId}:`);
   const nft = await minty.generateItem(tokenId);
   console.log('');
   alignOutput([

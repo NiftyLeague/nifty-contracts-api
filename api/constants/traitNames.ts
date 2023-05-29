@@ -6,7 +6,7 @@ export const TRIBES = {
   5: 'Cat',
   6: 'Alien',
   7: 'Hydra',
-  8: 'Rugman',
+  8: 'RugMan',
   9: 'Satoshi',
 };
 

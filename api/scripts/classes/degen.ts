@@ -3,6 +3,8 @@ import fs from 'fs';
 
 import { Metadata, NFTInfo, TargetNetwork } from '../../types';
 import { downloadImage, generateImageURL, raritySelector } from '../utils/imageGenerator';
+import { makeGatewayURL } from '../utils/uriHelpers';
+
 import {
   CHARACTER_BACKGROUNDS,
   CHARACTER_TRAIT_TYPES,
@@ -13,6 +15,7 @@ import { DEGEN_CONTRACT_NAME } from '../../constants';
 import { DEGENS_S3_BUCKET } from '../../constants/aws';
 import { Minty } from './minty';
 import { HYDRA_ATTRIBUTES, HYDRA_EGG_IPFS, UNHATCHED_METADATA } from '../../constants/hydraMetadata';
+import { RUGMAN, SATOSHI } from '../../constants/mythicMetadata';
 
 /**
  * Construct and asynchronously initialize a new Minty instance.
@@ -80,7 +83,7 @@ class Degen extends Minty {
    */
   // eslint-disable-next-line class-methods-use-this
   async generateImage(tokenId: number, traits: number[], rarity: number) {
-    const filePath = `./public/images/${this.targetNetwork}/${tokenId}.${rarity < 3 ? 'png' : 'mp4'}`;
+    const filePath = `./public/images/${this.targetNetwork}/${tokenId}.${rarity < 3 ? 'png' : 'gif'}`;
     const url = generateImageURL(traits, rarity, tokenId);
     console.log('🎮 Unity image url:', url);
     console.log('');
@@ -185,6 +188,36 @@ class Degen extends Minty {
     };
   }
 
+  async makeNewMythicMetadata(tokenId: number, assetGatewayURL: string) {
+    const metadata = {
+      name: tokenId === 10000 ? 'Satoshi' : 'RugMan',
+      image: assetGatewayURL,
+      description: DEGEN_METADATA.description,
+      external_url: `${DEGEN_METADATA.externalURL}/${tokenId}`,
+      attributes: tokenId === 10000 ? SATOSHI.attributes : RUGMAN.attributes,
+    };
+    await this.uploadToS3(
+      `${this.targetNetwork}/metadata/${tokenId}.json`,
+      JSON.stringify(metadata, null, 2),
+      DEGENS_S3_BUCKET,
+    );
+    return metadata;
+  }
+
+  async generateMythic(tokenId: number): Promise<NFTInfo | null> {
+    const filePath = `./public/images/degens/${tokenId}.png`;
+    const content = await fs.promises.readFile(filePath);
+    const basename = path.basename(filePath);
+    const { assetGatewayURL } = await this.pinImage(`/nifty-degens/${basename}`, content);
+    await this.uploadToS3(`${this.targetNetwork}/images/${basename}`, content, DEGENS_S3_BUCKET);
+    const metadata = await this.makeNewMythicMetadata(tokenId, assetGatewayURL);
+    await this.refreshOpenSea(tokenId);
+    return {
+      tokenId,
+      metadata,
+    };
+  }
+
   //////////////////////////////////////////////
   // ------ DEGEN NFT Updates
   //////////////////////////////////////////////
@@ -223,7 +256,7 @@ class Degen extends Minty {
   async updateDegenMetadata(tokenId: number, metadata: Metadata) {
     const newMetadata = {
       name: metadata.name,
-      image: metadata.image,
+      image: makeGatewayURL(metadata.image),
       description: metadata.description,
       external_url: metadata.external_url,
       animation_url: `${DEGEN_METADATA.animation_url}/${tokenId}`,
@@ -234,6 +267,29 @@ class Degen extends Minty {
       JSON.stringify(newMetadata, null, 2),
       DEGENS_S3_BUCKET,
     );
+    await this.refreshOpenSea(tokenId);
+    return { newMetadata };
+  }
+
+  /**
+   * Update Legendary Degen image to gifs
+   * @param {string|number} tokenId
+   * @property {object} metadata
+   *
+   * @typedef {object} NameChangeInfo
+   * @property {object} newMetadata
+   * @returns {Promise<NameChangeInfo>}
+   */
+  async updateLeggy(tokenId: number, metadata: Metadata) {
+    const newMetadata = { ...metadata };
+    const filePath = `./public/images/degens/${tokenId}.gif`;
+    const content = await fs.promises.readFile(filePath);
+    const basename = path.basename(filePath);
+    const { assetGatewayURL } = await this.pinImage(`/nifty-degens/${basename}`, content);
+    await this.uploadToS3(`${this.targetNetwork}/images/${basename}`, content, DEGENS_S3_BUCKET);
+    newMetadata.image = assetGatewayURL;
+    const s3MetadataPath = `${this.targetNetwork}/metadata/${tokenId}.json`;
+    await this.uploadToS3(s3MetadataPath, JSON.stringify(newMetadata, null, 2), DEGENS_S3_BUCKET);
     await this.refreshOpenSea(tokenId);
     return { newMetadata };
   }
@@ -252,7 +308,7 @@ class Degen extends Minty {
     const { rarity, attributes } = hydra;
     // upload image to IPFS & S3
     let image = HYDRA_EGG_IPFS;
-    const filePath = `./public/images/hydra/${tokenId}.${rarity === 'Legendary' ? 'mp4' : 'png'}`;
+    const filePath = `./public/images/hydra/${tokenId}.${rarity === 'Legendary' ? 'gif' : 'png'}`;
     const content = await fs.promises.readFile(filePath);
     const basename = path.basename(filePath);
     const { assetGatewayURL } = await this.pinImage(`/nifty-degens/${basename}`, content);
