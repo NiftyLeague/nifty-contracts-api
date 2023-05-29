@@ -1,10 +1,13 @@
 import config from 'config';
-import AWS from 'aws-sdk';
+import { S3Client, PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
 import path from 'path';
 
-const s3 = new AWS.S3({
-  accessKeyId: config.get('s3.accessKeyId'),
-  secretAccessKey: config.get('s3.secretAccessKey'),
+const client = new S3Client({
+  region: 'us-east-1',
+  credentials: {
+    accessKeyId: config.get('s3.accessKeyId'),
+    secretAccessKey: config.get('s3.secretAccessKey'),
+  },
 });
 
 type ExtType = '.png' | '.mp4' | '.gif' | '.json';
@@ -16,18 +19,26 @@ const mimeTypes = {
   '.json': 'application/json',
 };
 
-export const uploadToS3 = async (fileName: string, content: AWS.S3.Body, retry = true, baseDirectory = '') => {
+export const uploadToS3 = async (
+  fileName: string,
+  content: PutObjectCommandInput['Body'],
+  retry = true,
+  baseDirectory = '',
+) => {
   const params = {
     Bucket: config.get('s3.bucket'),
     Key: `${baseDirectory}/${fileName}`,
     Body: content,
     ContentType: mimeTypes[path.extname(fileName) as ExtType] || 'application/json',
     ACL: 'public-read',
-  } as AWS.S3.PutObjectRequest;
+  } as PutObjectCommandInput;
+
   try {
-    return s3.upload(params).promise();
+    const command = new PutObjectCommand(params);
+    const response = await client.send(command);
+    console.log(response);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     if (retry) uploadToS3(fileName, content, false, baseDirectory);
   }
 };

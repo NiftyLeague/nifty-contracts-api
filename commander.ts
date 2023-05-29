@@ -122,13 +122,13 @@ async function generateHydra(tokenId: number) {
   const { exists } = await minty.checkTokenMetadataExists(tokenId);
   if (exists) {
     console.log(`Metadata already exists for token id ${tokenId}`);
-    console.log(`Updating Metadata for token id: ${tokenId}`);
+    console.log(`⚠️  Updating Metadata for token id: ${tokenId}`);
     const { newMetadata } = await minty.updateHydra(tokenId);
     console.log('');
     console.log('Updated Hydra Metadata:');
     console.log(colorize(JSON.stringify(newMetadata), COLORIZE_OPTIONS));
   } else {
-    console.log(`Generating asset and metadata for token id ${tokenId}:`);
+    console.log(`⚠️  Generating asset and metadata for token id ${tokenId}:`);
     const nft = (await minty.generateHydra(tokenId)) as NFTInfo;
     console.log('');
     alignOutput([
@@ -149,7 +149,7 @@ async function generateHydras() {
 }
 async function generateMythic(tokenId: number) {
   const minty = await MakeDegen(targetNetwork);
-  console.log(`Generating asset and metadata for token id ${tokenId}:`);
+  console.log(`⚠️  Generating asset and metadata for token id ${tokenId}:`);
   const nft = (await minty.generateMythic(tokenId)) as NFTInfo;
   console.log('');
   alignOutput([
@@ -193,7 +193,7 @@ async function getDegen(tokenId: number, options: { creationInfo: any }) {
 async function updateLeggy(tokenId: number) {
   const minty = await MakeDegen(targetNetwork);
   const { metadata } = await minty.checkTokenMetadataExists(tokenId);
-  console.log(`Updating Image & Metadata for token id: ${tokenId}`);
+  console.log(`⚠️  Updating Image & Metadata for token id: ${tokenId}`);
   const { newMetadata } = await minty.updateLeggy(tokenId, metadata);
   console.log('');
   console.log('Updated Leggy Metadata:');
@@ -211,7 +211,7 @@ async function updateLeggies() {
 
 async function pinItem(tokenId: number) {
   const minty = await MakeItem(targetNetwork);
-  console.log(`Generating asset and metadata for item id ${tokenId}:`);
+  console.log(`⚠️  Generating asset and metadata for item id ${tokenId}:`);
   const nft = await minty.generateItem(tokenId);
   console.log('');
   alignOutput([

@@ -3,6 +3,8 @@ import fs from 'fs';
 
 import { Metadata, NFTInfo, TargetNetwork } from '../../types';
 import { downloadImage, generateImageURL, raritySelector } from '../utils/imageGenerator';
+import { makeGatewayURL } from '../utils/uriHelpers';
+
 import {
   CHARACTER_BACKGROUNDS,
   CHARACTER_TRAIT_TYPES,
@@ -254,7 +256,7 @@ class Degen extends Minty {
   async updateDegenMetadata(tokenId: number, metadata: Metadata) {
     const newMetadata = {
       name: metadata.name,
-      image: metadata.image,
+      image: makeGatewayURL(metadata.image),
       description: metadata.description,
       external_url: metadata.external_url,
       animation_url: `${DEGEN_METADATA.animation_url}/${tokenId}`,
