@@ -33,5 +33,5 @@ export const UNHATCHED_METADATA = {
   ],
 };
 
-const HYDRAS = fs.readFileSync('./constants/hydras.json', { encoding: 'utf8' });
+const HYDRAS = fs.readFileSync('./api/constants/hydras.json', { encoding: 'utf8' });
 export const HYDRA_ATTRIBUTES: { [tokenId: string]: { rarity: Rarity; attributes: Attribute[] } } = JSON.parse(HYDRAS);
