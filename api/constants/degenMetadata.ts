@@ -24,9 +24,16 @@ import {
 } from './traitNames';
 
 export const DEGEN_METADATA = {
-  description: 'Original collection of your favorite 10k DEGENs 🎮',
-  externalURL: 'https://app.niftyleague.com/degens',
-  animation_url: 'https://niftyleague.com/gltf',
+  mainnet: {
+    description: 'Original collection of your favorite 10k DEGENs 🎮',
+    externalURL: 'https://app.niftyleague.com/degens',
+    animation_url: 'https://niftyleague.com/gltf',
+  },
+  goerli: {
+    description: 'Original collection of your favorite 10k DEGENs 🎮',
+    externalURL: 'https://staging.app.niftyleague.com/degens',
+    animation_url: 'https://staging.niftyleague.com/gltf',
+  },
 };
 
 export const CHARACTER_BACKGROUNDS = ['Common', 'Rare', 'Meta', 'Legendary'];
