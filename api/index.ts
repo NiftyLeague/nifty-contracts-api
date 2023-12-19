@@ -161,6 +161,34 @@ app.get('/imx/metadata-refresh/:token_id', async function (req: Request, res: Re
   res.send(response);
 });
 
+app.get('/imx/metadata-refresh-all/:max_token_id', async function (req: Request, res: Response) {
+  const maxTokenId = req.params.max_token_id;
+  const tokenIds = Array.from({ length: Number(maxTokenId) }, (_, index) => (index + 1).toString());
+
+  const privateKey = env.ownerAccountPrivateKey;
+  const provider = new AlchemyProvider(env.ethNetwork, env.alchemyApiKey);
+  const wallet = new Wallet(privateKey);
+  const signer = wallet.connect(provider);
+  const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
+
+  const headers = {
+    'x-imx-eth-address': env.ownerAccountPublicKey,
+    'x-imx-eth-signature': signature,
+    'x-imx-eth-timestamp': timestamp,
+  };
+  const body = JSON.stringify({
+    collection_address: env.collectionContractAddress,
+    token_ids: tokenIds,
+  });
+
+  const response = await fetch(`${env.client.publicApiUrl}/metadata-refreshes`, {
+    method: 'POST',
+    headers,
+    body,
+  });
+  res.send(response);
+});
+
 //////////////////////////////////////////////
 // ------ WEBHOOKS
 //////////////////////////////////////////////

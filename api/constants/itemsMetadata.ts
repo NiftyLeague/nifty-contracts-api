@@ -62,7 +62,7 @@ export const ITEMS_METADATA = [
       },
       {
         trait_type: 'Tier',
-        value: 'Rare',
+        value: 'Mythic',
       },
       {
         trait_type: 'Name',
@@ -70,7 +70,7 @@ export const ITEMS_METADATA = [
       },
     ],
     type: 'Weapon',
-    tier: 'Rare',
+    tier: 'Mythic',
   },
   {
     name: 'Bread Bat',
@@ -83,7 +83,7 @@ export const ITEMS_METADATA = [
       },
       {
         trait_type: 'Tier',
-        value: 'Uncommon',
+        value: 'Legendary',
       },
       {
         trait_type: 'Name',
@@ -91,7 +91,7 @@ export const ITEMS_METADATA = [
       },
     ],
     type: 'Weapon',
-    tier: 'Uncommon',
+    tier: 'Legendary',
   },
   {
     name: 'Purple Bat',
@@ -104,7 +104,7 @@ export const ITEMS_METADATA = [
       },
       {
         trait_type: 'Tier',
-        value: 'Uncommon',
+        value: 'Epic',
       },
       {
         trait_type: 'Name',
@@ -112,7 +112,7 @@ export const ITEMS_METADATA = [
       },
     ],
     type: 'Weapon',
-    tier: 'Uncommon',
+    tier: 'Epic',
   },
   {
     name: 'Companion',
