@@ -122,8 +122,8 @@ class Degen extends Minty {
     const metadata = {
       name: (await this.contract?.getName(tokenId)) || `DEGEN #${tokenId}`,
       image: assetGatewayURL,
-      description: DEGEN_METADATA.description,
-      external_url: `${DEGEN_METADATA.externalURL}/${tokenId}`,
+      description: DEGEN_METADATA[this.targetNetwork].description,
+      external_url: `${DEGEN_METADATA[this.targetNetwork].externalURL}/${tokenId}`,
       attributes,
     };
     await this.uploadToS3(
@@ -192,8 +192,8 @@ class Degen extends Minty {
     const metadata = {
       name: tokenId === 10000 ? 'Satoshi' : 'RugMan',
       image: assetGatewayURL,
-      description: DEGEN_METADATA.description,
-      external_url: `${DEGEN_METADATA.externalURL}/${tokenId}`,
+      description: DEGEN_METADATA[this.targetNetwork].description,
+      external_url: `${DEGEN_METADATA[this.targetNetwork].externalURL}/${tokenId}`,
       attributes: tokenId === 10000 ? SATOSHI.attributes : RUGMAN.attributes,
     };
     await this.uploadToS3(
@@ -257,9 +257,9 @@ class Degen extends Minty {
     const newMetadata = {
       name: metadata.name,
       image: makeGatewayURL(metadata.image),
-      description: metadata.description,
-      external_url: metadata.external_url,
-      animation_url: `${DEGEN_METADATA.animation_url}/${tokenId}`,
+      description: DEGEN_METADATA[this.targetNetwork].description,
+      external_url: `${DEGEN_METADATA[this.targetNetwork].externalURL}/${tokenId}`,
+      animation_url: `${DEGEN_METADATA[this.targetNetwork].animation_url}/${tokenId}`,
       attributes: metadata.attributes,
     };
     await this.uploadToS3(
