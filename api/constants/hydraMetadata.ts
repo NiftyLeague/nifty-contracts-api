@@ -16,7 +16,7 @@ export const HYDRA_EGG_IPFS = 'ipfs://bafybeicawvt3acmrrenmesvflib73xbfihexncsey
 export const UNHATCHED_METADATA = {
   name: 'HYDRA',
   image: HYDRA_EGG_IPFS,
-  ...DEGEN_METADATA,
+  ...DEGEN_METADATA.mainnet,
   attributes: [
     {
       trait_type: 'Background',

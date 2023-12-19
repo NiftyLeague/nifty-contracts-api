@@ -5,8 +5,8 @@ export const RUGMAN_IMAGE_IPFS = '';
 export const RUGMAN = {
   name: 'RugMan',
   image: RUGMAN_IMAGE_IPFS,
-  description: DEGEN_METADATA.description,
-  external_url: `${DEGEN_METADATA.externalURL}/9999`,
+  description: DEGEN_METADATA.mainnet.description,
+  external_url: `${DEGEN_METADATA.mainnet.externalURL}/9999`,
   attributes: [
     {
       trait_type: 'Background',
@@ -68,8 +68,8 @@ export const SATOSHI_IMAGE_IPFS = '';
 export const SATOSHI = {
   name: 'Satoshi',
   image: SATOSHI_IMAGE_IPFS,
-  description: DEGEN_METADATA.description,
-  external_url: `${DEGEN_METADATA.externalURL}/10000`,
+  description: DEGEN_METADATA.mainnet.description,
+  external_url: `${DEGEN_METADATA.mainnet.externalURL}/10000`,
   attributes: [
     {
       trait_type: 'Background',
