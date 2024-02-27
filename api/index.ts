@@ -19,11 +19,12 @@ import { S3_BASE_URL, DEGENS_S3_BUCKET, COMICS_S3_BUCKET, ITEMS_S3_BUCKET } from
 import { handleNameChangeByInput } from './scripts/handleNameChange';
 import { handleDepositConfirmation } from './scripts/deposit';
 import { handleWithdrawConfirmation } from './scripts/withdraw';
-import { resolveCirculatingSupply } from './scripts/nftl';
+import { resolveCirculatingSupply, resolveMaxSupply, resolveTotalSupply, resolveUnclaimedSupply } from './scripts/nftl';
 import { handleIMXMint } from './scripts/imx-mint';
 import { generateIMXAuthorisationHeaders } from './scripts/imx/libs/sign';
 import env from './scripts/imx/config/client';
 import { getItemIdByTokenId } from './scripts/imx/libs/utils';
+import { getBurnedDegens } from './scripts/degensBurned';
 import { LEGGIES } from './constants/degenMetadata';
 
 const app = express()
@@ -46,6 +47,40 @@ app.use(cors());
 app.get('/NFTL/supply', async function (req: Request, res: Response) {
   const supply = await resolveCirculatingSupply();
   if (supply) res.send(supply);
+  else res.sendStatus(404);
+});
+
+app.get('/NFTL/supply/circulating', async function (req: Request, res: Response) {
+  const supply = await resolveCirculatingSupply();
+  if (supply) res.send(supply);
+  else res.sendStatus(404);
+});
+
+app.get('/NFTL/supply/unclaimed', async function (req: Request, res: Response) {
+  const supply = await resolveUnclaimedSupply();
+  if (supply) res.send(supply);
+  else res.sendStatus(404);
+});
+
+app.get('/NFTL/supply/total', async function (req: Request, res: Response) {
+  const supply = await resolveTotalSupply();
+  if (supply) res.send(supply);
+  else res.sendStatus(404);
+});
+
+app.get('/NFTL/supply/max', async function (req: Request, res: Response) {
+  const supply = await resolveMaxSupply();
+  if (supply) res.send(supply);
+  else res.sendStatus(404);
+});
+
+//////////////////////////////////////////////
+// ------ DEGENs
+//////////////////////////////////////////////
+
+app.get('/degens/burn-list', async function (req: Request, res: Response) {
+  const burnList = await getBurnedDegens();
+  if (burnList) res.send(burnList);
   else res.sendStatus(404);
 });
 

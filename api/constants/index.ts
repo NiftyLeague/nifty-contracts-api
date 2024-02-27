@@ -10,6 +10,8 @@ export const CONTRACT_METHODS = {
   HYDRA_CLAIM: '0xb741465f',
 };
 
+export const NFTL_ADDRESS = '0x3c8d2fce49906e11e71cb16fa0ffeb2b16c29638';
+export const NFTL_CONTRACT_NAME = 'NFTLToken';
 export const DEGEN_CONTRACT_NAME = 'NiftyDegen';
 export const COMICS_CONTRACT_NAME = 'NiftyLaunchComics';
 export const ITEMS_CONTRACT_NAME = 'NiftyItemL2';
