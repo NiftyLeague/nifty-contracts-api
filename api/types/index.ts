@@ -1,6 +1,6 @@
 import { BytesLike } from 'ethers';
 
-export type ContractName = 'NiftyDegen' | 'NiftyLaunchComics' | 'NiftyItemL2';
+export type ContractName = 'NiftyDegen' | 'NiftyLaunchComics' | 'NiftyItemL2' | 'NFTLToken' | 'HydraDistributor';
 
 export type TargetNetwork = 'mainnet' | 'goerli';
 
