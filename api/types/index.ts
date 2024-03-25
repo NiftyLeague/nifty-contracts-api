@@ -1,8 +1,16 @@
 import { BytesLike } from 'ethers';
+export type ContractName =
+  | 'NiftyDegen'
+  | 'NiftyLaunchComics'
+  | 'NiftyItemL2'
+  | 'NFTLToken'
+  | 'HydraDistributor'
+  | 'NiftyBurningComicsL2'
+  | 'BalanceManager';
 
-export type ContractName = 'NiftyDegen' | 'NiftyLaunchComics' | 'NiftyItemL2' | 'NFTLToken' | 'HydraDistributor';
+export type TargetNetwork = 'mainnet' | 'sepolia';
 
-export type TargetNetwork = 'mainnet' | 'goerli';
+export type ChainId = '1' | '11155111';
 
 export type Rarity = '???' | 'Common' | 'Rare' | 'Meta' | 'Legendary' | 'Mythic';
 
