@@ -4,7 +4,7 @@ dotenv.config();
 const config = {
   host: {
     mainnet: 'https://api.niftyleague.com',
-    goerli: 'https://niftyleague-dev.herokuapp.com',
+    sepolia: 'https://niftyleague-dev.herokuapp.com',
   },
   port: process.env.PORT || 5000,
   secret: process.env.BE_API_SECRET,
@@ -38,16 +38,16 @@ const config = {
   },
 
   ipfs: {
-    authorizationDEV: process.env.INFURA_AUTHORIZATION_DEV,
-    authorizationPROD: process.env.INFURA_AUTHORIZATION_PROD,
+    authorization: process.env.NFT_STORAGE_KEY,
     // Can use http for local IPFS node
     protocol: 'https',
     // For local IPFS nodes you can set this to http://localhost:5001
-    host: 'ipfs.infura.io',
+    host: 'api.nft.storage',
     // If you're running IPFS on a non-default port, update this URL. If you're using the IPFS defaults, you should be all set.
     port: '5001',
     // This default it already set by ipfs-http-client but can be updated if necessary
-    path: 'api/v0',
+    // path: 'api/v0',
+    path: '',
     // If you're running the local IPFS gateway on a non-default port, or if you want to use a public gatway when displaying IPFS gateway urls, edit this.
     gatewayURL: 'https://ipfs.io/ipfs',
   },
