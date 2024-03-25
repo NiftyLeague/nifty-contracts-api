@@ -9,8 +9,8 @@ const hardhatConfig: HardhatUserConfig = {
     mainnet: {
       url: `https://mainnet.infura.io/v3/${config.get('hardhat.infura')}`,
     },
-    goerli: {
-      url: `https://goerli.infura.io/v3/${config.get('hardhat.infura')}`,
+    sepolia: {
+      url: `https://sepolia.infura.io/v3/${config.get('hardhat.infura')}`,
     },
   },
 };

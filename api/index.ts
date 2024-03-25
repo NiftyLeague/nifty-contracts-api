@@ -11,20 +11,20 @@ import { groupBy, mapValues } from 'lodash';
 
 dotenv.config();
 
-import { getItemsRecursive, resolveDegenMetadata, pipeRequest } from './scripts/utils/api';
+import { getItemsRecursive, resolveDegenMetadata, pipeRequest } from './utils/api';
 import { Attribute, Metadata, TargetNetwork } from './types';
-import { CONTRACT_METHODS } from './constants';
+import { CONTRACT_METHODS } from './constants/contracts';
 import { S3_BASE_URL, DEGENS_S3_BUCKET, COMICS_S3_BUCKET, ITEMS_S3_BUCKET } from './constants/aws';
 
-import { handleNameChangeByInput } from './scripts/handleNameChange';
-import { handleDepositConfirmation } from './scripts/deposit';
-import { handleWithdrawConfirmation } from './scripts/withdraw';
-import { resolveCirculatingSupply, resolveMaxSupply, resolveTotalSupply, resolveUnclaimedSupply } from './scripts/nftl';
-import { handleIMXMint } from './scripts/imx-mint';
-import { generateIMXAuthorisationHeaders } from './scripts/imx/libs/sign';
-import env from './scripts/imx/config/client';
-import { getItemIdByTokenId } from './scripts/imx/libs/utils';
-import { getBurnedDegens } from './scripts/degensBurned';
+import { handleNameChangeByInput } from './utils/handleNameChange';
+import { handleDepositConfirmation } from './utils/deposit';
+import { handleWithdrawConfirmation } from './utils/withdraw';
+import { resolveCirculatingSupply, resolveMaxSupply, resolveTotalSupply, resolveUnclaimedSupply } from './utils/nftl';
+import { handleIMXMint } from './imx/minting/mint';
+import { generateIMXAuthorisationHeaders } from './imx/libs/sign';
+import env from './imx/config/client';
+import { getItemIdByTokenId } from './imx/libs/utils';
+import { getBurnedDegens } from './utils/degensBurned';
 import { LEGGIES } from './constants/degenMetadata';
 
 const app = express()
