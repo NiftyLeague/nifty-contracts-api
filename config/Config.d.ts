@@ -64,6 +64,7 @@ declare module 'node-config-ts' {
   }
   interface Owner {
     address: string;
+    publicKey: string;
     pk: string;
   }
   interface Client {

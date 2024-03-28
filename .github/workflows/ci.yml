@@ -29,8 +29,19 @@ jobs:
       - name: Check TypeScript
         uses: borales/actions-yarn@v4
         with:
-          cmd: tsc --noEmit
+          cmd: type-check
       - name: Build
         uses: borales/actions-yarn@v4
         with:
           cmd: build
+        env:
+          ETH_NETWORK: sepolia
+          OPENSEA_API_KEY: XXXXX
+          OWNER_ACCOUNT_PRIVATE_KEY: XXXXX
+          OWNER_ACCOUNT_PUBLIC_KEY: XXXXX
+          OWNER_ACCOUNT_ADDRESS: 0x000000000000000000000000000000000000000
+          COLLECTION_CONTRACT_ADDRESS: 0xF1863D85095AA932de5BccEBE02Dac0b67303383
+          COLLECTION_PROJECT_ID: 10070
+          UNITY_IMAGE_GENERATOR_BASE_URL: http://localhost:5003/
+          UNITY_IMAGE_GENERATOR_SECRET: XXXXX
+          UNITY_IMAGE_GENERATOR_VERSION: 92

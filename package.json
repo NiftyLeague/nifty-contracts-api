@@ -9,9 +9,9 @@
     "minty": "commander.ts"
   },
   "scripts": {
-    "build": "npx tsc",
+    "build": "npx tsc && tsc-alias",
     "start": "node dist/api/index.js",
-    "postinstall": "node-config-ts && npm run build",
+    "postinstall": "node-config-ts",
     "dev": "tsx watch api/index.ts",
     "test": "tsx api/index.test.ts",
     "lint": "eslint --ignore-path .eslintignore . --ext .ts,.js",
@@ -43,7 +43,7 @@
     "ipfs-core-types": "^0.14.0",
     "ipfs-http-client": "^60.0.1",
     "json-colorizer": "^2.2.2",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "node-config-ts": "^3.3.1",
     "node-fetch": "^3.3.2",
     "ts-command-line-args": "^2.5.1",
@@ -52,7 +52,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
-    "@types/lodash": "^4.17.0",
+    "@types/lodash-es": "^4.17.12",
     "@types/node": "^20.11.30",
     "@types/node-fetch": "^2.6.11",
     "@types/request": "^2.48.12",
@@ -68,6 +68,7 @@
     "prettier": "^3.2.5",
     "request": "^2.88.2",
     "tape": "^5.7.5",
+    "tsc-alias": "^1.8.8",
     "tsx": "^4.7.1",
     "typescript": "^5.4.3"
   },
