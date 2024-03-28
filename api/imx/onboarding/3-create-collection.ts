@@ -33,8 +33,7 @@ const component = '[IMX-CREATE-COLLECTION]';
       name: config.imx.collection.name,
       description: config.imx.collection.description,
       contract_address: config.imx.collection.contractAddress,
-      owner_public_key:
-        '0x0484d92185c9a413c46f91dcfbdc430e8a5c8dbd7e363205135a5fccdd781233dc4c865903ead42e69fdcda3a3ffa23e504ec627f03e6f68da10196c1955eb9db6',
+      owner_public_key: config.imx.owner.publicKey,
       icon_url: 'https://cdn.madskullz.io/madskullz/images/5359.png',
       metadata_api_url: `${config.host[config.eth.network]}/imx/items/metadata`,
       collection_image_url: 'https://cdn.madskullz.io/madskullz/images/1000.png',

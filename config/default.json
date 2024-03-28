@@ -31,7 +31,8 @@
       "enableDebug": true
     },
     "owner": {
-      "address": "@@OWNER_ACCOUNT_PUBLIC_KEY",
+      "address": "@@OWNER_ACCOUNT_ADDRESS",
+      "publicKey": "@@OWNER_ACCOUNT_PUBLIC_KEY",
       "pk": "@@OWNER_ACCOUNT_PRIVATE_KEY"
     },
     "company": {
