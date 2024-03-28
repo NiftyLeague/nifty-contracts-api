@@ -1,19 +1,19 @@
+import { config } from 'node-config-ts';
 import { AlchemyProvider, Wallet } from 'ethers';
 import { ImLogger, WinstonLogger } from '@imtbl/imlogging';
 import { ImmutableXClient, UpdateMetadataSchemaByNameParams, MetadataTypes } from '@imtbl/imx-sdk';
 import { parse } from 'ts-command-line-args';
 
-import env from '../config/client';
 import { loggerConfig } from '../config/logging';
 
-const provider = new AlchemyProvider(env.ethNetwork, env.alchemyApiKey);
+const provider = new AlchemyProvider(config.eth.network, config.eth.alchemy);
 const log: ImLogger = new WinstonLogger(loggerConfig);
 
 const component = '[IMX-UPDATE-COLLECTION-METADATA-SCHEMA]';
 
 (async (): Promise<void> => {
-  const privateKey = env.ownerAccountPrivateKey;
-  const collectionContractAddress = env.collectionContractAddress;
+  const privateKey = config.imx.owner.pk;
+  const collectionContractAddress = config.imx.collection.contractAddress;
 
   const { name } = parse<{ name: string }>({
     name: {
@@ -27,10 +27,9 @@ const component = '[IMX-UPDATE-COLLECTION-METADATA-SCHEMA]';
   const signer = wallet.connect(provider);
 
   const user = await ImmutableXClient.build({
-    ...env.client,
+    ...config.imx.client,
     // @ts-expect-error - Wallet is assingable to Signer
     signer,
-    enableDebug: true,
   });
 
   log.info(component, `Updating metadata schema for ${name}`, collectionContractAddress);

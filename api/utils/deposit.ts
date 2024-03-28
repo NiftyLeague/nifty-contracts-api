@@ -1,7 +1,6 @@
-import type { BytesLike } from 'ethers';
-import config from 'config';
+import { config } from 'node-config-ts';
 import fetch from 'node-fetch';
-import hre from 'hardhat';
+import { type BytesLike, formatEther, Interface } from 'ethers';
 
 import { getContractABI } from '../contracts';
 import { API_BASE_URL } from '../constants/aws';
@@ -9,9 +8,9 @@ import { BALANCE_MANAGER_CONTRACT_NAME } from '../constants/contracts';
 
 async function parseInputData(input: BytesLike) {
   const abi = getContractABI('mainnet', BALANCE_MANAGER_CONTRACT_NAME);
-  const iface = new hre.ethers.Interface(abi);
+  const iface = new Interface(abi);
   const inputData = await iface.decodeFunctionData('deposit', input);
-  return hre.ethers.formatEther(inputData[0]);
+  return formatEther(inputData[0]);
 }
 
 export async function handleDepositConfirmation(tx: any) {
@@ -24,7 +23,7 @@ export async function handleDepositConfirmation(tx: any) {
   });
   console.log('body', body);
   try {
-    const response = await fetch(`${API_BASE_URL}/accounts/deposit?secret=${config.get('secret')}`, {
+    const response = await fetch(`${API_BASE_URL}/accounts/deposit?secret=${config.secret}`, {
       method: 'POST',
       body,
     });

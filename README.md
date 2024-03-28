@@ -32,19 +32,7 @@ To run commands locally:
 
 ## IPFS Quick Start
 
-1A. Run the `start-local-environment.sh` script to start the local Ethereum testnet and IPFS daemon:
-
-```shell
-./start-local-environment.sh
-
-> Initializing daemon...
-> Started HTTP and WebSocket JSON-RPC server at http://127.0.0.1:8545/
-> ...
-```
-
 > This command continues to run. All further commands must be entered in another terminal window.
-
-1B. Alternatively you can run ipfs yourself
 
 > if there's no local ipfs repo at `$HOME/.ipfs`, initialize one:
 

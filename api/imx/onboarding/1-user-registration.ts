@@ -1,21 +1,21 @@
+import { config } from 'node-config-ts';
 import { AlchemyProvider, Wallet } from 'ethers';
 import { ImLogger, WinstonLogger } from '@imtbl/imlogging';
 import { ImmutableXClient } from '@imtbl/imx-sdk';
 
-import env from '../config/client';
 import { loggerConfig } from '../config/logging';
 
-const provider = new AlchemyProvider(env.ethNetwork, env.alchemyApiKey);
+const provider = new AlchemyProvider(config.eth.network, config.eth.alchemy);
 const log: ImLogger = new WinstonLogger(loggerConfig);
 
 const component = '[IMX-USER-REGISTRATION]';
 
 (async (): Promise<void> => {
-  const privateKey = env.ownerAccountPrivateKey;
+  const privateKey = config.imx.owner.pk;
   const signer = new Wallet(privateKey).connect(provider);
 
   const user = await ImmutableXClient.build({
-    ...env.client,
+    ...config.imx.client,
     // @ts-expect-error - Wallet is assingable to Signer
     signer,
   });

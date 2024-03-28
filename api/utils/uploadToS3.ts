@@ -1,14 +1,8 @@
-import config from 'config';
+import { config } from 'node-config-ts';
 import { S3Client, PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
 import path from 'path';
 
-const client = new S3Client({
-  region: 'us-east-1',
-  credentials: {
-    accessKeyId: config.get('s3.accessKeyId'),
-    secretAccessKey: config.get('s3.secretAccessKey'),
-  },
-});
+const client = new S3Client(config.s3.clientConfig);
 
 type ExtType = '.png' | '.mp4' | '.gif' | '.json';
 
@@ -26,7 +20,7 @@ export const uploadToS3 = async (
   baseDirectory = '',
 ) => {
   const params = {
-    Bucket: config.get('s3.bucket'),
+    Bucket: config.s3.bucket,
     Key: `${baseDirectory}/${fileName}`,
     Body: content,
     ContentType: mimeTypes[path.extname(fileName) as ExtType] || 'application/json',

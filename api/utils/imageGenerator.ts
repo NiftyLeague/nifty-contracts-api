@@ -1,6 +1,6 @@
 import fs from 'fs';
 import request from 'request';
-import config from 'config';
+import { config } from 'node-config-ts';
 
 /**
  * Returns random background option based on probabilities
@@ -42,13 +42,13 @@ export function generateImageURL(traits: number[], rarity: number, token: number
     ['Right Item', traits[21]],
   ];
   const params = new URLSearchParams({
-    version: config.get('imageGenerator.version'),
+    version: config.imageGenerator.version,
     traits: JSON.stringify(traitArray),
-    secret: config.get('imageGenerator.secret'),
+    secret: config.imageGenerator.secret,
     rarity: rarity.toString(),
     token: token.toString(),
   });
-  return `${config.get('imageGenerator.baseURL')}?${params.toString()}`;
+  return `${config.imageGenerator.baseURL}?${params.toString()}`;
 }
 
 /**
