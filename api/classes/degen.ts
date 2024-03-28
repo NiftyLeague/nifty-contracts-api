@@ -3,7 +3,7 @@ import fs from 'fs';
 
 import { Metadata, TargetNetwork } from '../types';
 import { downloadImage, generateImageURL, raritySelector } from '../utils/imageGenerator';
-import { makeGatewayURL } from '../utils/uriHelpers';
+// import { makeGatewayURL } from '../utils/uriHelpers';
 
 import {
   CHARACTER_BACKGROUNDS,

@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 
-import type { TargetNetwork, Metadata } from '../types';
+import type { TargetNetwork } from '../types';
 import { COMICS_CONTRACT_NAME } from '../constants/contracts';
 import { COMICS_S3_BUCKET } from '../constants/aws';
 import { COMICS_IMAGES_CID } from '../constants/ipfs';

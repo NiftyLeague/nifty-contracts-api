@@ -1,5 +1,4 @@
-import { AlchemyProvider } from '@ethersproject/providers';
-import { Wallet } from '@ethersproject/wallet';
+import { AlchemyProvider, Wallet } from 'ethers';
 import { ImmutableXClient, ImmutableMethodResults } from '@imtbl/imx-sdk';
 import { getEnv } from '../../utils/env';
 import { TargetNetwork } from '../../types';
@@ -43,6 +42,7 @@ async function get_imx_client_from_wallet(
     registrationContractAddress: imx_client_config.registration_contract_address,
     gasLimit: imx_client_config.gas_limit,
     gasPrice: imx_client_config.gas_price,
+    // @ts-expect-error - Wallet is assingable to Signer
     signer: wallet,
   });
 }

@@ -1,4 +1,4 @@
-import { JsonRpcProvider, TransactionReceipt, TransactionResponse } from '@ethersproject/providers';
+import type { JsonRpcProvider, TransactionReceipt, TransactionResponse } from 'ethers';
 import { sleep } from './api';
 
 /**

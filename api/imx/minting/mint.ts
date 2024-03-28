@@ -1,6 +1,5 @@
 import hre from 'hardhat';
-import { JsonRpcProvider, Log, TransactionResponse } from '@ethersproject/providers';
-import { Result } from '@ethersproject/abi';
+import { JsonRpcProvider, type Log, type TransactionResponse, type Result } from 'ethers';
 
 import { TargetNetwork } from '../../types';
 import { mint } from './minting';
@@ -12,7 +11,7 @@ import { getContractABI } from '../../contracts';
 
 function parseTopics(targetNetwork: TargetNetwork, log: Log, eventName: string) {
   const abi = getContractABI(targetNetwork, COMICS_BURNER_CONTRACT_NAME);
-  const iface = new hre.ethers.utils.Interface(abi);
+  const iface = new hre.ethers.Interface(abi);
   const inputData = iface.decodeEventLog(eventName, log.data, log.topics);
   return inputData;
 }

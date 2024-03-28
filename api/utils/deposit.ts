@@ -9,9 +9,9 @@ import { BALANCE_MANAGER_CONTRACT_NAME } from '../constants/contracts';
 
 async function parseInputData(input: BytesLike) {
   const abi = getContractABI('mainnet', BALANCE_MANAGER_CONTRACT_NAME);
-  const iface = new hre.ethers.utils.Interface(abi);
+  const iface = new hre.ethers.Interface(abi);
   const inputData = await iface.decodeFunctionData('deposit', input);
-  return hre.ethers.utils.formatEther(inputData[0]);
+  return hre.ethers.formatEther(inputData[0]);
 }
 
 export async function handleDepositConfirmation(tx: any) {

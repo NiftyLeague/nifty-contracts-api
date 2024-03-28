@@ -1,6 +1,5 @@
 import config from 'config';
-import { AlchemyProvider } from '@ethersproject/providers';
-import { Wallet } from '@ethersproject/wallet';
+import { AlchemyProvider, Wallet } from 'ethers';
 import { ImLogger, WinstonLogger } from '@imtbl/imlogging';
 import { CreateCollectionParams, ImmutableXClient } from '@imtbl/imx-sdk';
 
@@ -17,11 +16,11 @@ const component = '[IMX-CREATE-COLLECTION]';
   const collectionContractAddress = env.collectionContractAddress;
   const projectId = env.collectionProjectId;
 
-  const wallet = new Wallet(privateKey);
-  const signer = wallet.connect(provider);
+  const signer = new Wallet(privateKey).connect(provider);
 
   const user = await ImmutableXClient.build({
     ...env.client,
+    // @ts-expect-error - Wallet is assingable to Signer
     signer,
     enableDebug: true,
   });

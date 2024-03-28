@@ -1,6 +1,6 @@
 import CID from 'cids';
 import config from 'config';
-import ethers, { Contract } from 'ethers';
+import type { Contract, EventLog } from 'ethers';
 import fetch from 'node-fetch';
 import { create, Options, IPFSHTTPClient } from 'ipfs-http-client';
 import { ListOptions } from 'ipfs-core-types/dist/src/root';
@@ -18,7 +18,7 @@ import { IPFS_OPTIONS } from '../constants/ipfs';
 
 const pinata = new pinataSDK({
   pinataApiKey: process.env.PINATA_API_KEY,
-  pinataSecretApiKey: process.env.PINATAT_API_SECRET,
+  pinataSecretApiKey: process.env.PINATA_API_SECRET,
 });
 
 /**
@@ -196,9 +196,9 @@ export class Minty {
    */
   async getCreationInfo(tokenId: string | number) {
     if (this.contract) {
-      const filter = await this.contract.filters.Transfer(null, null, ethers.BigNumber.from(tokenId));
+      const filter = await this.contract.filters.Transfer(null, null, BigInt(tokenId));
 
-      const logs = await this.contract.queryFilter(filter);
+      const logs = (await this.contract.queryFilter(filter)) as EventLog[];
       const blockNumber = logs[0].blockNumber;
       const creatorAddress = logs[0].args?.to;
       return {
@@ -285,7 +285,7 @@ export class Minty {
       };
       await pinata.pinByHash(assetCid.toString(), options);
       console.log('✅ Image pinned to Pinata IPFS');
-      const assetURI = ensureIpfsUriPrefix(assetCid) + imgPath;
+      const assetURI = ensureIpfsUriPrefix(assetCid.toString()) + imgPath;
       return {
         assetCid,
         assetURI,
@@ -316,7 +316,7 @@ export class Minty {
     // Ask the remote service to pin the content.
     // Behind the scenes, this will cause the pinning service to connect to our local IPFS node
     // and fetch the data using Bitswap, IPFS's transfer protocol.
-    await this.ipfs?.pin.add(cid);
+    await this.ipfs?.pin.add(cid.toString());
   }
 
   /**
@@ -348,7 +348,7 @@ export class Minty {
       const opts = {
         cid: [[typeof cid === 'string' ? new CID(cid) : cid]], // ls expects an array of cids
       } as ListOptions;
-      // eslint-disable-next-line no-unused-vars, no-unsafe-optional-chaining
+      // eslint-disable-next-line no-unused-vars, no-unsafe-optional-chaining, @typescript-eslint/no-unused-vars
       for await (const result of this.ipfs?.pin.ls(opts)) {
         return true;
       }
