@@ -4,8 +4,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import express, { type Request, type Response } from 'express';
 import fetch from 'node-fetch';
-import groupBy from 'lodash/groupBy';
-import mapValues from 'lodash/mapValues';
+import { groupBy, mapValues } from 'lodash-es';
 import path from 'path';
 
 import { generateIMXAuthorisationHeaders } from './imx/libs/sign';
