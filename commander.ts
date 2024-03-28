@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env tsx
 
 // This file contains the main entry point for the command line `minty` app, and the command line option parsing code.
 // See minty.js for the core functionality.
@@ -64,6 +64,7 @@ async function main() {
   // The hardhat and getconfig modules both expect to be running from the root directory of the project,
   // so we change the current directory to the parent dir of this script file to make things work
   // even if you call minty from elsewhere
+  const __dirname = path.resolve();
   const rootDir = path.join(__dirname, '..');
   process.chdir(rootDir);
 
@@ -76,8 +77,6 @@ async function main() {
 
 // ---- DEGENS
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const TOTAL_DEGENS_TESTNET = 7550;
 const TOTAL_DEGENS = 10000;
 const START_INDEX = 1;
 // const HYDRA_START_INDEX = 9901;

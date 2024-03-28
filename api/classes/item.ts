@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 
-import type { Metadata, TargetNetwork } from '../types';
+import type { TargetNetwork } from '../types';
 import { ITEMS_CONTRACT_NAME } from '../constants/contracts';
 import { ITEMS_S3_BUCKET } from '../constants/aws';
 import { ITEMS_METADATA } from '../constants/itemsMetadata';

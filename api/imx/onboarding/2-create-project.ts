@@ -1,5 +1,4 @@
-import { AlchemyProvider } from '@ethersproject/providers';
-import { Wallet } from '@ethersproject/wallet';
+import { AlchemyProvider, Wallet } from 'ethers';
 import { ImLogger, WinstonLogger } from '@imtbl/imlogging';
 import { CreateProjectParams, ImmutableXClient } from '@imtbl/imx-sdk';
 
@@ -13,11 +12,11 @@ const component = '[IMX-CREATE-PROJECT]';
 
 (async (): Promise<void> => {
   const privateKey = env.ownerAccountPrivateKey;
-
   const signer = new Wallet(privateKey).connect(provider);
 
   const user = await ImmutableXClient.build({
     ...env.client,
+    // @ts-expect-error - Wallet is assingable to Signer
     signer,
     enableDebug: true,
   });

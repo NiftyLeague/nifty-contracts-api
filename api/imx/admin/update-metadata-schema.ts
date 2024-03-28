@@ -1,5 +1,4 @@
-import { AlchemyProvider } from '@ethersproject/providers';
-import { Wallet } from '@ethersproject/wallet';
+import { AlchemyProvider, Wallet } from 'ethers';
 import { ImLogger, WinstonLogger } from '@imtbl/imlogging';
 import { ImmutableXClient, UpdateMetadataSchemaByNameParams, MetadataTypes } from '@imtbl/imx-sdk';
 import { parse } from 'ts-command-line-args';
@@ -29,6 +28,7 @@ const component = '[IMX-UPDATE-COLLECTION-METADATA-SCHEMA]';
 
   const user = await ImmutableXClient.build({
     ...env.client,
+    // @ts-expect-error - Wallet is assingable to Signer
     signer,
     enableDebug: true,
   });
