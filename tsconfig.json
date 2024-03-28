@@ -10,6 +10,6 @@
     "noImplicitAny": false
   },
   "include": ["./api/**/*.ts", "./config/**/*.ts"],
-  "files": ["./hardhat.config.ts", "./commander.ts"],
+  "files": ["./commander.ts"],
   "exclude": ["node_modules"]
 }

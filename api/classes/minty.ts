@@ -1,5 +1,5 @@
 import CID from 'cids';
-import config from 'config';
+import { config } from 'node-config-ts';
 import type { Contract, EventLog } from 'ethers';
 import fetch from 'node-fetch';
 import { create, Options, IPFSHTTPClient } from 'ipfs-http-client';
@@ -16,10 +16,7 @@ import all from '../utils/it-all';
 import { stripIpfsUriPrefix, makeGatewayURL, extractCID, ensureIpfsUriPrefix } from '../utils/uriHelpers';
 import { IPFS_OPTIONS } from '../constants/ipfs';
 
-const pinata = new pinataSDK({
-  pinataApiKey: process.env.PINATA_API_KEY,
-  pinataSecretApiKey: process.env.PINATA_API_SECRET,
-});
+const pinata = new pinataSDK(config.ipfs.pinata);
 
 /**
  * Minty is the main object responsible for storing NFT data and interacting with the smart contract.
@@ -47,12 +44,12 @@ export class Minty {
     this.contract = await getContractFactory(this.targetNetwork, this.contractName);
 
     const options = {
-      protocol: config.get('ipfs.protocol'),
-      host: config.get('ipfs.host'),
-      port: config.get('ipfs.port'),
-      path: config.get('ipfs.path'),
+      protocol: config.ipfs.protocol,
+      host: config.ipfs.host,
+      port: config.ipfs.port,
+      path: config.ipfs.path,
       headers: {
-        authorization: `Basic ${config.get('ipfs.authorization')}`,
+        authorization: `Basic ${config.ipfs.authorization}`,
       },
     } as Options;
 

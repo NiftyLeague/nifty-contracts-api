@@ -1,5 +1,5 @@
 import CID from 'cids';
-import config from 'config';
+import { config } from 'node-config-ts';
 
 /**
  * @param {string} cidOrURI either a CID string, or a URI string of the form `ipfs://${cid}`
@@ -30,7 +30,7 @@ export function ensureIpfsUriPrefix(cidOrURI: CID | string) {
  * @returns - an HTTP url to view the IPFS object on the configured gateway.
  */
 export function makeGatewayURL(ipfsURI: string) {
-  return config.get('ipfs.gatewayURL') + '/' + stripIpfsUriPrefix(ipfsURI);
+  return config.ipfs.gatewayURL + '/' + stripIpfsUriPrefix(ipfsURI);
 }
 
 /**

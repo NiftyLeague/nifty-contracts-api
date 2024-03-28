@@ -1,10 +1,6 @@
 import { Encoder, ENCODER_TYPES, Handler, ImLoggerConfig, LOG_LEVELS, SINK_TYPES, SinkType } from '@imtbl/imlogging';
-import * as dotenv from 'dotenv';
-
 import { validateString } from '../../utils/string';
 import { getEnv } from '../../utils/env';
-
-dotenv.config();
 
 function getHandlers(): Handler[] {
   const names = getEnv('LOG_HANDLERS');
