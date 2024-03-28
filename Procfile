@@ -1,1 +1,1 @@
-api: node dist/api/index.js
+web: node dist/api/index.js
