@@ -3,16 +3,16 @@ import request from 'request';
 import test, { Test } from 'tape';
 
 // Start the app
-const env: NodeJS.ProcessEnv = Object.assign({}, process.env, { PORT: '5000' });
+const env: NodeJS.ProcessEnv = Object.assign({}, process.env, { PORT: '5005' });
 const child: ChildProcess = spawn('node', ['index.ts'], { env });
 
 test('responds to requests', (t: Test) => {
-  t.plan(4);
+  t.plan(3);
 
   // Wait until the server is ready
   child.stdout?.on('data', () => {
     // Make a request to our app
-    request('http://127.0.0.1:5000', (error: Error | null, response: request.Response, body: string) => {
+    request('http://127.0.0.1:5005', (error: Error | null, response: request.Response, body: string) => {
       // stop the server
       child.kill();
 
@@ -21,7 +21,7 @@ test('responds to requests', (t: Test) => {
       // Successful response
       t.equal(response.statusCode, 200);
       // Assert content checks
-      t.notEqual(body.indexOf('P2E API for the Nifty League!'), -1);
+      t.notEqual(body.indexOf('Smart Contract API for the Nifty League!'), -1);
     });
   });
 });

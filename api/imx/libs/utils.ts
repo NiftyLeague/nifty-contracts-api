@@ -1,12 +1,12 @@
 import { Contract, JsonRpcProvider } from 'ethers';
+import { config } from 'node-config-ts';
 import { COMICS_BURNER_CONTRACT_NAME } from '../../constants/contracts';
 import { getDeployedContract } from '../../contracts';
 import type { TargetNetwork } from '../../types';
-import { getEnv } from '../../utils/env';
 
 export async function getItemIdByTokenId(tokenId: string): Promise<string> {
-  const targetNetwork = getEnv('HARDHAT_NETWORK') as TargetNetwork;
-  const providerUrl = `https://${targetNetwork}.infura.io/v3/${getEnv('INFURA_PROJECT_ID')}`;
+  const targetNetwork = config.eth.network as TargetNetwork;
+  const providerUrl = `https://${targetNetwork}.infura.io/v3/${config.eth.infura}`;
   const provider = new JsonRpcProvider(providerUrl);
   const { address, abi } = getDeployedContract(targetNetwork, COMICS_BURNER_CONTRACT_NAME);
   const contract = new Contract(address, abi, provider);

@@ -1,36 +1,33 @@
-import dotenv from 'dotenv';
-import bodyParser from 'body-parser';
-import config from 'config';
-import cors from 'cors';
-import fetch from 'node-fetch';
-import express, { Request, Response } from 'express';
-import path from 'path';
 import { AlchemyProvider, Wallet } from 'ethers';
-import mapValues from 'lodash/mapValues';
+import { config } from 'node-config-ts';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import express, { type Request, type Response } from 'express';
+import fetch from 'node-fetch';
 import groupBy from 'lodash/groupBy';
+import mapValues from 'lodash/mapValues';
+import path from 'path';
 
-dotenv.config();
+import { generateIMXAuthorisationHeaders } from './imx/libs/sign';
+import { getItemIdByTokenId } from './imx/libs/utils';
+import { handleIMXMint } from './imx/minting/mint';
 
+import { getBurnedDegens } from './utils/degensBurned';
 import { getItemsRecursive, resolveDegenMetadata, pipeRequest } from './utils/api';
-import { Attribute, Metadata, TargetNetwork } from './types';
-import { CONTRACT_METHODS } from './constants/contracts';
-import { S3_BASE_URL, DEGENS_S3_BUCKET, COMICS_S3_BUCKET, ITEMS_S3_BUCKET } from './constants/aws';
-
-import { handleNameChangeByInput } from './utils/handleNameChange';
 import { handleDepositConfirmation } from './utils/deposit';
+import { handleNameChangeByInput } from './utils/handleNameChange';
 import { handleWithdrawConfirmation } from './utils/withdraw';
 import { resolveCirculatingSupply, resolveMaxSupply, resolveTotalSupply, resolveUnclaimedSupply } from './utils/nftl';
-import { handleIMXMint } from './imx/minting/mint';
-import { generateIMXAuthorisationHeaders } from './imx/libs/sign';
-import env from './imx/config/client';
-import { getItemIdByTokenId } from './imx/libs/utils';
-import { getBurnedDegens } from './utils/degensBurned';
+
+import { CONTRACT_METHODS } from './constants/contracts';
 import { LEGGIES } from './constants/degenMetadata';
+import { S3_BASE_URL, DEGENS_S3_BUCKET, COMICS_S3_BUCKET, ITEMS_S3_BUCKET } from './constants/aws';
+import type { Attribute, Metadata, TargetNetwork } from './types';
 
 const __dirname = path.resolve();
 
 const app = express()
-  .set('port', config.get('port'))
+  .set('port', config.port || 5005)
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs');
 
@@ -132,8 +129,8 @@ app.get('/imx/items/image/:token_id', async function (req: Request, res: Respons
 
 app.get('/imx/items', async function (req: Request, res: Response) {
   const { cursor } = req.query;
-  const assetsURL = `${env.client.publicApiUrl}/assets?collection=${
-    env.collectionContractAddress
+  const assetsURL = `${config.imx.client.publicApiUrl}/assets?collection=${
+    config.imx.collection.contractAddress
   }&order_by=updated_at&page_size=200${cursor ? `&cursor=${cursor}` : ''}`;
   pipeRequest(assetsURL, res);
 });
@@ -174,23 +171,23 @@ app.get('/imx/items/overview', async function (req: Request, res: Response) {
 app.get('/imx/metadata-refresh/:token_id', async function (req: Request, res: Response) {
   const tokenId = req.params.token_id;
 
-  const privateKey = env.ownerAccountPrivateKey;
-  const provider = new AlchemyProvider(env.ethNetwork, env.alchemyApiKey);
+  const privateKey = config.imx.owner.pk;
+  const provider = new AlchemyProvider(config.eth.network, config.eth.alchemy);
   const wallet = new Wallet(privateKey);
   const signer = wallet.connect(provider);
   const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
 
   const headers = {
-    'x-imx-eth-address': env.ownerAccountPublicKey,
+    'x-imx-eth-address': config.imx.owner.address,
     'x-imx-eth-signature': signature,
     'x-imx-eth-timestamp': timestamp,
   };
   const body = JSON.stringify({
-    collection_address: env.collectionContractAddress,
+    collection_address: config.imx.collection.contractAddress,
     token_ids: [tokenId],
   });
 
-  const response = await fetch(`${env.client.publicApiUrl}/metadata-refreshes`, {
+  const response = await fetch(`${config.imx.client.publicApiUrl}/metadata-refreshes`, {
     method: 'POST',
     headers,
     body,
@@ -202,23 +199,23 @@ app.get('/imx/metadata-refresh-all/:max_token_id', async function (req: Request,
   const maxTokenId = req.params.max_token_id;
   const tokenIds = Array.from({ length: Number(maxTokenId) }, (_, index) => (index + 1).toString());
 
-  const privateKey = env.ownerAccountPrivateKey;
-  const provider = new AlchemyProvider(env.ethNetwork, env.alchemyApiKey);
+  const privateKey = config.imx.owner.pk;
+  const provider = new AlchemyProvider(config.eth.network, config.eth.alchemy);
   const wallet = new Wallet(privateKey);
   const signer = wallet.connect(provider);
   const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
 
   const headers = {
-    'x-imx-eth-address': env.ownerAccountPublicKey,
+    'x-imx-eth-address': config.imx.owner.address,
     'x-imx-eth-signature': signature,
     'x-imx-eth-timestamp': timestamp,
   };
   const body = JSON.stringify({
-    collection_address: env.collectionContractAddress,
+    collection_address: config.imx.collection.contractAddress,
     token_ids: tokenIds,
   });
 
-  const response = await fetch(`${env.client.publicApiUrl}/metadata-refreshes`, {
+  const response = await fetch(`${config.imx.client.publicApiUrl}/metadata-refreshes`, {
     method: 'POST',
     headers,
     body,
@@ -230,61 +227,48 @@ app.get('/imx/metadata-refresh-all/:max_token_id', async function (req: Request,
 // ------ WEBHOOKS
 //////////////////////////////////////////////
 
-app.post(
-  `/:network/webhooks/degen/${config.get('blocknative.webhookSecret')}`,
-  async function (req: Request, res: Response) {
-    const targetNetwork = req.params.network as TargetNetwork;
-    const tx = req.body;
-    if (
-      targetNetwork === 'mainnet' &&
-      tx.status === 'confirmed' &&
-      tx.direction === 'incoming' &&
-      tx.apiKey === config.get('blocknative.apiKey.degens')
-    ) {
-      if (tx.input.startsWith(CONTRACT_METHODS.RENAME)) {
-        console.log('DEGEN RENAME WEBHOOK TX:', tx);
-        await handleNameChangeByInput(targetNetwork, tx.input);
-      }
+app.post(`/:network/webhooks/degen/${config.blocknative.webhookSecret}`, async function (req: Request, res: Response) {
+  const targetNetwork = req.params.network as TargetNetwork;
+  const tx = req.body;
+  if (
+    targetNetwork === 'mainnet' &&
+    tx.status === 'confirmed' &&
+    tx.direction === 'incoming' &&
+    tx.apiKey === config.blocknative.apiKey.degens
+  ) {
+    if (tx.input.startsWith(CONTRACT_METHODS.RENAME)) {
+      console.log('DEGEN RENAME WEBHOOK TX:', tx);
+      await handleNameChangeByInput(targetNetwork, tx.input);
     }
-    res.sendStatus(200);
-  },
-);
+  }
+  res.sendStatus(200);
+});
 
-app.post(
-  `/:network/webhooks/p2e/${config.get('blocknative.webhookSecret')}`,
-  async function (req: Request, res: Response) {
-    const targetNetwork = req.params.network as TargetNetwork;
-    const tx = req.body;
-    if (
-      targetNetwork === 'mainnet' &&
-      tx.status === 'confirmed' &&
-      tx.direction === 'incoming' &&
-      tx.apiKey === config.get('blocknative.apiKey.p2e')
-    ) {
-      console.log('P2E WEBHOOK TX:', tx);
-      if (tx.input.startsWith(CONTRACT_METHODS.DEPOSIT)) await handleDepositConfirmation(tx);
-      if (tx.input.startsWith(CONTRACT_METHODS.WITHDRAW)) await handleWithdrawConfirmation(tx);
-    }
-    res.sendStatus(200);
-  },
-);
+app.post(`/:network/webhooks/p2e/${config.blocknative.webhookSecret}`, async function (req: Request, res: Response) {
+  const targetNetwork = req.params.network as TargetNetwork;
+  const tx = req.body;
+  if (
+    targetNetwork === 'mainnet' &&
+    tx.status === 'confirmed' &&
+    tx.direction === 'incoming' &&
+    tx.apiKey === config.blocknative.apiKey.p2e
+  ) {
+    console.log('P2E WEBHOOK TX:', tx);
+    if (tx.input.startsWith(CONTRACT_METHODS.DEPOSIT)) await handleDepositConfirmation(tx);
+    if (tx.input.startsWith(CONTRACT_METHODS.WITHDRAW)) await handleWithdrawConfirmation(tx);
+  }
+  res.sendStatus(200);
+});
 
-app.post(
-  `/:network/webhooks/comics/${config.get('blocknative.webhookSecret')}`,
-  async function (req: Request, res: Response) {
-    const targetNetwork = req.params.network as TargetNetwork;
-    const tx = req.body;
-    if (
-      tx.status === 'confirmed' &&
-      tx.direction === 'incoming' &&
-      tx.apiKey === config.get('blocknative.apiKey.comics')
-    ) {
-      console.log('COMICS WEBHOOK TX:', targetNetwork, tx);
-      handleIMXMint(tx, targetNetwork);
-    }
-    res.sendStatus(200);
-  },
-);
+app.post(`/:network/webhooks/comics/${config.blocknative.webhookSecret}`, async function (req: Request, res: Response) {
+  const targetNetwork = req.params.network as TargetNetwork;
+  const tx = req.body;
+  if (tx.status === 'confirmed' && tx.direction === 'incoming' && tx.apiKey === config.blocknative.apiKey.comics) {
+    console.log('COMICS WEBHOOK TX:', targetNetwork, tx);
+    handleIMXMint(tx, targetNetwork);
+  }
+  res.sendStatus(200);
+});
 
 //////////////////////////////////////////////
 

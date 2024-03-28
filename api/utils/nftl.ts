@@ -1,4 +1,4 @@
-import config from 'config';
+import { config } from 'node-config-ts';
 import fetch from 'node-fetch';
 import { parseEther } from 'ethers';
 
@@ -9,7 +9,7 @@ import { getBurnedDegens } from './degensBurned';
 
 export async function resolveCirculatingSupply(): Promise<string | null> {
   try {
-    const secret = config.get('hardhat.etherscan');
+    const secret = config.eth.etherscan;
     const supplyURI = `https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress=${NFTL_ADDRESS}&apikey=${secret}`;
     const supplyRes = await fetch(supplyURI, {});
     if (supplyRes.status < 400) {
@@ -26,7 +26,7 @@ export async function resolveCirculatingSupply(): Promise<string | null> {
 
 export async function resolveUnclaimedSupply(): Promise<string | null> {
   try {
-    const targetNetwork = config.get('hardhat.defaultNetwork') as TargetNetwork;
+    const targetNetwork = config.eth.network as TargetNetwork;
     const nftlContract = await getContractFactory(targetNetwork, NFTL_CONTRACT_NAME);
     if (nftlContract) {
       const burnedDegens = await getBurnedDegens();

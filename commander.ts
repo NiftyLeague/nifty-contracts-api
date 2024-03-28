@@ -3,12 +3,12 @@
 // This file contains the main entry point for the command line `minty` app, and the command line option parsing code.
 // See minty.js for the core functionality.
 
-import { NFTInfo, TargetNetwork } from './api/types';
+import type { NFTInfo, TargetNetwork } from './api/types';
 
 import { Command } from 'commander';
 import chalk from 'chalk';
 import colorize from 'json-colorizer';
-import config from 'config';
+import { config } from 'node-config-ts';
 import path from 'path';
 
 import { COLORIZE_OPTIONS } from './api/constants/commandLine';
@@ -21,7 +21,7 @@ import { MakeItem } from './api/classes/item';
 import { MakeComic } from './api/classes/comic';
 import { sleep } from './api/utils/api';
 
-const targetNetwork = config.get('hardhat.defaultNetwork') as TargetNetwork;
+const targetNetwork = config.eth.network as TargetNetwork;
 
 async function main() {
   const program = new Command();
@@ -61,7 +61,7 @@ async function main() {
 
   program.command('update-imx').description('"update" imx items & comics metadata').action(updateIMX);
 
-  // The hardhat and getconfig modules both expect to be running from the root directory of the project,
+  // The getconfig modules expect to be running from the root directory of the project,
   // so we change the current directory to the parent dir of this script file to make things work
   // even if you call minty from elsewhere
   const __dirname = path.resolve();

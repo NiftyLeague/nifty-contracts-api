@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
+import { config } from 'node-config-ts';
 import fetch from 'node-fetch';
 import https from 'https';
-import env from '../imx/config/client';
-import { Metadata } from '../types';
+import type { Metadata } from '../types';
+import type { Request, Response } from 'express';
 
 export async function fetchMetadata(URI: string): Promise<Metadata | null> {
   try {
@@ -33,8 +33,8 @@ export function sleep(ms: number) {
 }
 
 export async function getItemsRecursive(cursor: string | null = null, result = []): Promise<any[]> {
-  const assetsURL = `${env.client.publicApiUrl}/assets?collection=${
-    env.collectionContractAddress
+  const assetsURL = `${config.imx.client.publicApiUrl}/assets?collection=${
+    config.imx.collection.contractAddress
   }&order_by=updated_at&page_size=200${cursor ? `&cursor=${cursor}` : ''}`;
   const response = await fetch(assetsURL, {});
   const json = (await response.json()) as {

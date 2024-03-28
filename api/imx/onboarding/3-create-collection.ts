@@ -1,28 +1,26 @@
-import config from 'config';
+import { config } from 'node-config-ts';
 import { AlchemyProvider, Wallet } from 'ethers';
 import { ImLogger, WinstonLogger } from '@imtbl/imlogging';
 import { CreateCollectionParams, ImmutableXClient } from '@imtbl/imx-sdk';
 
-import env from '../config/client';
 import { loggerConfig } from '../config/logging';
 
-const provider = new AlchemyProvider(env.ethNetwork, env.alchemyApiKey);
+const provider = new AlchemyProvider(config.eth.network, config.eth.alchemy);
 const log: ImLogger = new WinstonLogger(loggerConfig);
 
 const component = '[IMX-CREATE-COLLECTION]';
 
 (async (): Promise<void> => {
-  const privateKey = env.ownerAccountPrivateKey;
-  const collectionContractAddress = env.collectionContractAddress;
-  const projectId = env.collectionProjectId;
+  const privateKey = config.imx.owner.pk;
+  const collectionContractAddress = config.imx.collection.contractAddress;
+  const projectId = config.imx.collection.projectId;
 
   const signer = new Wallet(privateKey).connect(provider);
 
   const user = await ImmutableXClient.build({
-    ...env.client,
+    ...config.imx.client,
     // @ts-expect-error - Wallet is assingable to Signer
     signer,
-    enableDebug: true,
   });
 
   log.info(component, 'Creating collection...', collectionContractAddress);
@@ -32,13 +30,13 @@ const component = '[IMX-CREATE-COLLECTION]';
    */
   const params: Array<CreateCollectionParams> = [
     {
-      name: env.collectionName,
-      description: env.collectionDescription,
-      contract_address: collectionContractAddress,
+      name: config.imx.collection.name,
+      description: config.imx.collection.description,
+      contract_address: config.imx.collection.contractAddress,
       owner_public_key:
         '0x0484d92185c9a413c46f91dcfbdc430e8a5c8dbd7e363205135a5fccdd781233dc4c865903ead42e69fdcda3a3ffa23e504ec627f03e6f68da10196c1955eb9db6',
       icon_url: 'https://cdn.madskullz.io/madskullz/images/5359.png',
-      metadata_api_url: `${config.get(`host.${env.ethNetwork}`)}/imx/items/metadata`,
+      metadata_api_url: `${config.host[config.eth.network]}/imx/items/metadata`,
       collection_image_url: 'https://cdn.madskullz.io/madskullz/images/1000.png',
       project_id: parseInt(projectId, 10),
     },
