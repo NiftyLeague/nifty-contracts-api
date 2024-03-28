@@ -8,10 +8,10 @@ import { BALANCE_MANAGER_CONTRACT_NAME } from '../constants/contracts';
 
 async function parseInputData(input: BytesLike) {
   const abi = getContractABI('mainnet', BALANCE_MANAGER_CONTRACT_NAME);
-  const iface = new hre.ethers.utils.Interface(abi);
+  const iface = new hre.ethers.Interface(abi);
   const inputData = await iface.decodeFunctionData('withdraw', input);
   return {
-    amount: hre.ethers.utils.formatEther(inputData[0]),
+    amount: hre.ethers.formatEther(inputData[0]),
     nonce: inputData[1].toNumber(),
     expireAt: inputData[2],
     signature: inputData[3],

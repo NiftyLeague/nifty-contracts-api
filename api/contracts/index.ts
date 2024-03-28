@@ -1,8 +1,8 @@
-import { ethers } from 'hardhat';
-import type { Contract } from 'ethers';
+import { Contract } from 'ethers';
 import type { TargetNetwork, ContractName } from '../types';
 import MAINNET_DEPLOYMENTS from './deployments.mainnet';
 import TESTNET_DEPLOYMENTS from './deployments.sepolia';
+import { getWallet } from '../utils/wallet';
 
 export const getDeployedContract = (targetNetwork: TargetNetwork, contractName: ContractName) => {
   const deployments = targetNetwork === 'mainnet' ? MAINNET_DEPLOYMENTS : TESTNET_DEPLOYMENTS;
@@ -22,7 +22,6 @@ export const getContractABI = (targetNetwork: TargetNetwork, contractName: Contr
  */
 export async function getContractFactory(targetNetwork: TargetNetwork, contractName: ContractName): Promise<Contract> {
   const { address, abi } = getDeployedContract(targetNetwork, contractName);
-  const contract = await ethers.getContractAt(abi as unknown as any[], address);
-  await contract.deployed();
-  return contract;
+  const wallet = await getWallet();
+  return new Contract(address, abi, wallet);
 }

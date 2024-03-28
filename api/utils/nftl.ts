@@ -1,6 +1,6 @@
 import config from 'config';
 import fetch from 'node-fetch';
-import { ethers } from 'hardhat';
+import { parseEther } from 'ethers';
 
 import { NFTL_ADDRESS, NFTL_CONTRACT_NAME } from '../constants/contracts';
 import { getContractFactory } from '../contracts';
@@ -54,14 +54,14 @@ export async function resolveTotalSupply(): Promise<string | null> {
 export const calculateRemainingEmissions = (): string => {
   const today = new Date();
   const endDate = new Date('2024-09-14');
-  if (today.getTime() > endDate.getTime()) return ethers.utils.parseEther('0').toString();
+  if (today.getTime() > endDate.getTime()) return parseEther('0').toString();
 
   const degenSupply = 9201;
   const nftlPerDay = 68.5;
   const daysRemaining = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
   const remainingEmissions = daysRemaining * nftlPerDay * degenSupply;
-  return ethers.utils.parseEther(remainingEmissions.toString()).toString();
+  return parseEther(remainingEmissions.toString()).toString();
 };
 
 export async function resolveMaxSupply(): Promise<string | null> {
@@ -70,7 +70,6 @@ export async function resolveMaxSupply(): Promise<string | null> {
     if (!totalSupply) return null;
     const remainingEmissions = calculateRemainingEmissions();
     return (BigInt(totalSupply) + BigInt(remainingEmissions)).toString();
-    return null;
   } catch (e) {
     return null;
   }

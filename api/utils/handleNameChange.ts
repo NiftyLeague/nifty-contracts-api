@@ -21,7 +21,7 @@ export async function handleNameChangeById(targetNetwork: TargetNetwork, tokenId
 
 async function getIdFromInput(targetNetwork: TargetNetwork, input: BytesLike) {
   const abi = getContractABI(targetNetwork, DEGEN_CONTRACT_NAME);
-  const iface = new ethers.utils.Interface(abi);
+  const iface = new ethers.Interface(abi);
   const inputData = await iface.decodeFunctionData('changeName', input);
   const tokenId = inputData[0].toNumber();
   return tokenId;

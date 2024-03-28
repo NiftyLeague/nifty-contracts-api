@@ -5,9 +5,9 @@ import cors from 'cors';
 import fetch from 'node-fetch';
 import express, { Request, Response } from 'express';
 import path from 'path';
-import { AlchemyProvider } from '@ethersproject/providers';
-import { Wallet } from '@ethersproject/wallet';
-import { groupBy, mapValues } from 'lodash';
+import { AlchemyProvider, Wallet } from 'ethers';
+import mapValues from 'lodash/mapValues';
+import groupBy from 'lodash/groupBy';
 
 dotenv.config();
 
@@ -26,6 +26,8 @@ import env from './imx/config/client';
 import { getItemIdByTokenId } from './imx/libs/utils';
 import { getBurnedDegens } from './utils/degensBurned';
 import { LEGGIES } from './constants/degenMetadata';
+
+const __dirname = path.resolve();
 
 const app = express()
   .set('port', config.get('port'))

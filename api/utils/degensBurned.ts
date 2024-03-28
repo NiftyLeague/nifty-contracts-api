@@ -19,22 +19,28 @@ export async function getBurnedDegens(): Promise<number[]> {
     const apiKey = config.get('hardhat.alchemy');
     const targetNetwork = config.get('hardhat.defaultNetwork') as TargetNetwork;
     const degenAddress = getContractAddress(targetNetwork, DEGEN_CONTRACT_NAME);
-    const baseURI = `https://eth-mainnet.g.alchemy.com/nft/v3/${apiKey}/getNFTsForOwner?contractAddresses[]=${degenAddress}&withMetadata=false&pageSize=100`;
+    const baseURI = `https://eth-${targetNetwork}.g.alchemy.com/nft/v3/${apiKey}`;
+    const endpoint = `${baseURI}/getNFTsForOwner?contractAddresses[]=${degenAddress}&withMetadata=false&pageSize=100`;
 
     let inventoryRes: number[] = [];
 
     // Fetch BURN_ADDY1
-    const inventoryURI1 = `${baseURI}&owner=${BURN_ADDY1}`;
+    const inventoryURI1 = `${endpoint}&owner=${BURN_ADDY1}`;
     inventoryRes = await fetchAndProcess(inventoryURI1, inventoryRes);
 
     // Fetch BURN_ADDY2
-    const inventoryURI2 = `${baseURI}&owner=${BURN_ADDY2}`;
+    const inventoryURI2 = `${endpoint}&owner=${BURN_ADDY2}`;
     inventoryRes = await fetchAndProcess(inventoryURI2, inventoryRes);
 
     return inventoryRes.sort((a, b) => a - b);
   } catch (e) {
     return [];
   }
+}
+
+interface FetchResponse {
+  ownedNfts: NftOwned[];
+  pageKey: string | null;
 }
 
 async function fetchAndProcess(inventoryURI: string, inventoryRes: number[]) {
@@ -44,7 +50,7 @@ async function fetchAndProcess(inventoryURI: string, inventoryRes: number[]) {
   do {
     const paginatedURI: string = pageKey != null ? `${inventoryURI}&pageKey=${pageKey}` : inventoryURI;
     const response = await fetch(paginatedURI, options);
-    const { ownedNfts, pageKey: nextPageKey } = await response.json();
+    const { ownedNfts, pageKey: nextPageKey } = (await response.json()) as FetchResponse;
 
     inventoryRes.push(...ownedNfts.map((nft: NftOwned) => parseInt(nft.tokenId, 10)));
 
