@@ -1,5 +1,5 @@
 import fs from 'fs';
-import request from 'request';
+import fetch from 'node-fetch';
 import { config } from 'node-config-ts';
 
 /**
@@ -55,25 +55,41 @@ export function generateImageURL(traits: number[], rarity: number, token: number
  * Download NFT image from webserver.
  */
 export async function downloadImage(url: string, dest: fs.PathLike) {
+  const res = await fetch(url);
   /* Create an empty file where we can save data */
-  const file = fs.createWriteStream(dest);
+  const fileStream = fs.createWriteStream(dest);
 
   /* Using Promises so that we can use the ASYNC AWAIT syntax */
   await new Promise((resolve, reject) => {
-    request({
-      /* Here you should specify the exact link to the file you are trying to download */
-      uri: url,
-      gzip: true,
-    })
-      .pipe(file)
-      .on('finish', async () => {
-        console.log(`✅ The file is finished downloading.`);
-        resolve(file);
-      })
-      .on('error', error => {
-        reject(error);
-      });
-  }).catch(error => {
-    console.log(`Something happened: ${error}`);
+    res.body?.pipe(fileStream);
+    res.body?.on('error', reject);
+    fileStream.on('finish', async () => {
+      console.log(`✅ The file is finished downloading.`);
+      resolve;
+    });
   });
 }
+
+// export async function downloadImage(url: string, dest: fs.PathLike) {
+//   /* Create an empty file where we can save data */
+//   const file = fs.createWriteStream(dest);
+
+//   /* Using Promises so that we can use the ASYNC AWAIT syntax */
+//   await new Promise((resolve, reject) => {
+//     request({
+//       /* Here you should specify the exact link to the file you are trying to download */
+//       uri: url,
+//       gzip: true,
+//     })
+//       .pipe(file)
+//       .on('finish', async () => {
+//         console.log(`✅ The file is finished downloading.`);
+//         resolve(file);
+//       })
+//       .on('error', error => {
+//         reject(error);
+//       });
+//   }).catch(error => {
+//     console.log(`Something happened: ${error}`);
+//   });
+// }

@@ -1,27 +1,174 @@
-import { spawn, ChildProcess } from 'child_process';
-import request from 'request';
-import test, { Test } from 'tape';
+import request from 'supertest';
+import { jest } from '@jest/globals';
 
-// Start the app
-const env: NodeJS.ProcessEnv = Object.assign({}, process.env, { PORT: '5005' });
-const child: ChildProcess = spawn('node', ['index.ts'], { env });
+import { ITEMS_METADATA } from './constants/itemsMetadata';
+import { getItemIdByTokenId } from './utils/getItemIdByTokenId';
+import { handleNameChangeById } from './utils/handleNameChange';
+import { MakeDegen, Degen } from './classes/degen';
+import app from './index';
 
-test('responds to requests', (t: Test) => {
-  t.plan(3);
+describe('API Endpoints', () => {
+  it('should return "Smart Contract API for Nifty League!" on the root endpoint', async () => {
+    const response = await request(app).get('/');
+    expect(response.status).toBe(200);
+    expect(response.text).toBe('Smart Contract API for Nifty League!');
+  });
 
-  // Wait until the server is ready
-  child.stdout?.on('data', () => {
-    // Make a request to our app
-    request('http://127.0.0.1:5005', (error: Error | null, response: request.Response, body: string) => {
-      // stop the server
-      child.kill();
+  describe('NFTL', () => {
+    const NFTL_MIN_SUPPLY = 500000000000000000000000000n;
 
-      // No error
-      t.false(error);
-      // Successful response
-      t.equal(response.statusCode, 200);
-      // Assert content checks
-      t.notEqual(body.indexOf('Smart Contract API for the Nifty League!'), -1);
+    it('should return the circulating supply of NFTL', async () => {
+      const response = await request(app).get('/NFTL/supply/circulating');
+      expect(response.status).toBe(200);
+      expect(BigInt(response.text)).toBeGreaterThan(NFTL_MIN_SUPPLY);
+    });
+
+    it('should return the unclaimed supply of NFTL', async () => {
+      const response = await request(app).get('/NFTL/supply/unclaimed');
+      expect(response.status).toBe(200);
+      expect(response.text).toBeDefined();
+    });
+
+    it('should return the total supply of NFTL', async () => {
+      const response = await request(app).get('/NFTL/supply/total');
+      expect(response.status).toBe(200);
+      expect(BigInt(response.text)).toBeGreaterThan(NFTL_MIN_SUPPLY);
+    });
+
+    it('should return the max supply of NFTL', async () => {
+      const response = await request(app).get('/NFTL/supply/max');
+      expect(response.status).toBe(200);
+      expect(BigInt(response.text)).toBeGreaterThan(NFTL_MIN_SUPPLY);
+    });
+  });
+
+  describe('DEGENs', () => {
+    const network = 'sepolia';
+    const tokenId = 123;
+
+    it('should return the burned degens list', async () => {
+      const response = await request(app).get('/degens/burn-list');
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveLength(800);
+    });
+
+    it('should return the metadata of a degen by token ID', async () => {
+      const response = await request(app).get(`/${network}/degen/metadata/${tokenId}`);
+      expect(response.status).toBe(200);
+      expect(response.body.name).toEqual(`DEGEN #${tokenId}`);
+    });
+
+    it('should return the image of a degen by token ID', async () => {
+      const response = await request(app).get(`/${network}/degen/image/${tokenId}`);
+      expect(response.status).toBe(200);
+      expect(response.header['content-type']).toMatch(/image\/(png|gif)/);
+    });
+
+    it('should return the background attribute', async () => {
+      const response = await request(app).get(`/${network}/degen/${tokenId}/background`);
+      expect(response.status).toBe(200);
+      expect(response.text).toMatch('Common');
+    });
+  });
+
+  describe('COMICS', () => {
+    const tokenId = 2;
+
+    it('should return the metadata of a comic by token ID', async () => {
+      const response = await request(app).get(`/imx/comics/metadata/${tokenId}`);
+      expect(response.status).toBe(200);
+      expect(response.body.name).toEqual(`COMIC #${tokenId}`);
+    });
+
+    it('should return the image of a comic by token ID', async () => {
+      const response = await request(app).get(`/imx/comics/image/${tokenId}`);
+      expect(response.status).toBe(200);
+      expect(response.header['content-type']).toMatch(/image\/(png|gif)/);
+    });
+  });
+
+  describe('ITEMS', () => {
+    const tokenId = 10;
+
+    it('should return the metadata of an item by token ID', async () => {
+      const response = await request(app).get(`/imx/items/metadata/${tokenId}`);
+      expect(response.status).toBe(200);
+      const itemId = await getItemIdByTokenId(tokenId.toString());
+      expect(response.body.name).toEqual(ITEMS_METADATA[`${itemId - 1n}`].name);
+    });
+
+    it('should return the image of an item by token ID', async () => {
+      const response = await request(app).get(`/imx/items/image/${tokenId}`);
+      expect(response.status).toBe(200);
+      expect(response.header['content-type']).toMatch(/image\/gif/);
+    });
+
+    it('should return a paginated list of items', async () => {
+      const response = await request(app).get('/imx/items');
+      expect(response.status).toBe(200);
+      expect(response.body.result).toHaveLength(200);
+      expect(response.body.cursor).toBeDefined();
+    });
+
+    it('should return an empty list of null items', async () => {
+      const response = await request(app).get('/imx/null-items');
+      expect(response.status).toBe(200);
+      expect(response.body.total).toEqual(0);
+    });
+
+    it('should return an full overview of items stats', async () => {
+      const response = await request(app).get('/imx/items/overview');
+      expect(response.status).toBe(200);
+
+      expect(BigInt(response.body.total_items)).toBeGreaterThan(10);
+      expect(BigInt(response.body.total_holders)).toBeGreaterThan(10);
+      expect(BigInt(response.body.key_holders)).toBeGreaterThan(10);
+
+      expect(response.body.item_balances).toBeDefined();
+      expect(response.body.holder_balances).toBeDefined();
+      expect(response.body.holder_key_balances).toBeDefined();
+    });
+  });
+});
+
+jest.mock('./classes/degen');
+
+describe('API Webhooks', () => {
+  describe('DEGENS', () => {
+    const network = 'sepolia';
+    const tokenId = 1;
+
+    const metadata = {
+      name: 'Old Name',
+      image: `ipfs://bafybeih75ntopwuggljajz3p2y2mh2ylxfv6joqlbvo2wxtabxkxm6igaa/degens/${tokenId}.png`,
+      description: 'Original collection of your favorite 10k DEGENs 🎮',
+      external_url: `https://staging.app.niftyleague.com/degens/${tokenId}`,
+      attributes: [],
+    };
+    const newMetadata = { ...metadata };
+    newMetadata.name = 'New Name';
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      // Disable console.log within scripts
+      jest.spyOn(console, 'log').mockImplementation(jest.fn());
+    });
+
+    it('should update the metadata on name change', async () => {
+      const degenInstance = await MakeDegen(network);
+      jest
+        .spyOn(Degen.prototype, 'checkTokenMetadataExists')
+        .mockResolvedValueOnce({ exists: true, metadata, metadataURI: null });
+      jest.spyOn(Degen.prototype, 'updateDegenName').mockResolvedValueOnce({ newMetadata });
+
+      const result = await handleNameChangeById(network, tokenId);
+
+      expect(degenInstance.checkTokenMetadataExists).toHaveBeenCalledWith(tokenId);
+      expect(degenInstance.updateDegenName).toHaveBeenCalledWith(tokenId, metadata);
+      expect(result).toEqual({ metadata: newMetadata });
+
+      // Add a delay to ensure async operations are completed before the test ends
+      await new Promise(resolve => setTimeout(resolve, 1000));
     });
   });
 });

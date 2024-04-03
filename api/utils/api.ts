@@ -26,6 +26,9 @@ export const pipeRequest = (url: string, res: Response) =>
   https.get(url, (getRes: any) => {
     res.setHeader('content-type', getRes.headers['content-type']);
     getRes.pipe(res);
+    getRes.on('end', () => {
+      res.end();
+    });
   });
 
 // await sleep trick
