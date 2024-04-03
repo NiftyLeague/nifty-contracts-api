@@ -1,19 +1,15 @@
 import { config } from 'node-config-ts';
-import { AlchemyProvider, Wallet } from 'ethers';
-import { ImLogger, WinstonLogger } from '@imtbl/imlogging';
 import { ImmutableXClient, UpdateMetadataSchemaByNameParams, MetadataTypes } from '@imtbl/imx-sdk';
 import { parse } from 'ts-command-line-args';
+import type { Signer, TargetNetwork } from '../../types';
+import { getWallet } from '../../utils/wallet';
 
-import { loggerConfig } from '../config/logging';
-
-const provider = new AlchemyProvider(config.eth.network, config.eth.alchemy);
-const log: ImLogger = new WinstonLogger(loggerConfig);
-
-const component = '[IMX-UPDATE-COLLECTION-METADATA-SCHEMA]';
+const network = config.eth.network as TargetNetwork;
 
 (async (): Promise<void> => {
-  const privateKey = config.imx.owner.pk;
-  const collectionContractAddress = config.imx.collection.contractAddress;
+  console.group('IMX-UPDATE-COLLECTION-METADATA-SCHEMA');
+  const { collection, client } = config.imx[network];
+  const collectionContractAddress = collection.contractAddress;
 
   const { name } = parse<{ name: string }>({
     name: {
@@ -23,16 +19,10 @@ const component = '[IMX-UPDATE-COLLECTION-METADATA-SCHEMA]';
     },
   });
 
-  const wallet = new Wallet(privateKey);
-  const signer = wallet.connect(provider);
+  const signer = getWallet<Signer>();
+  const user = await ImmutableXClient.build({ ...client, signer });
 
-  const user = await ImmutableXClient.build({
-    ...config.imx.client,
-    // @ts-expect-error - Wallet is assingable to Signer
-    signer,
-  });
-
-  log.info(component, `Updating metadata schema for ${name}`, collectionContractAddress);
+  console.log(`Updating metadata schema for ${name}...`, collectionContractAddress);
 
   /**
    * Edit your values here
@@ -45,13 +35,12 @@ const component = '[IMX-UPDATE-COLLECTION-METADATA-SCHEMA]';
 
   const message = await user.updateMetadataSchemaByName(name, collectionContractAddress, params);
 
-  log.info(
-    component,
-    `Update metadata schema for ${name}. Run 
-    'npm run admin:get-metadata-schema' to see updated schema`,
-  );
+  console.log(`✅ Updated metadata schema for ${name}.`);
+  console.log(`Run 'npm run admin:get-metadata-schema' to see updated schema.`);
   console.log(JSON.stringify(message, null, 2));
+  console.groupEnd();
 })().catch(e => {
-  log.error(component, e);
+  console.error(e);
+  console.groupEnd();
   process.exit(1);
 });

@@ -26,7 +26,7 @@ export async function handleWithdrawConfirmation(tx: any) {
   });
   console.log('body', body);
   try {
-    const response = await fetch(`${API_BASE_URL}/accounts/withdraw-confirm?secret=${config.secret}`, {
+    const response = await fetch(`${API_BASE_URL}/accounts/withdraw-confirm?secret=${config.aws.apiSecret}`, {
       method: 'POST',
       body,
     });

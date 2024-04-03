@@ -1,4 +1,5 @@
 import { BytesLike } from 'ethers';
+import type { ImmutableXClientParams } from '@imtbl/imx-sdk';
 export type ContractName =
   | 'NiftyDegen'
   | 'NiftyLaunchComics'
@@ -9,6 +10,9 @@ export type ContractName =
   | 'BalanceManager';
 
 export type TargetNetwork = 'mainnet' | 'sepolia';
+
+// TODO: remove temp Ethers v5 Signer reference
+export type Signer = NonNullable<ImmutableXClientParams['signer']>;
 
 export type ChainId = '1' | '11155111';
 

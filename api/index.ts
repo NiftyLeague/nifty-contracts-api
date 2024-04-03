@@ -1,4 +1,3 @@
-import { AlchemyProvider, Wallet } from 'ethers';
 import { config } from 'node-config-ts';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -7,9 +6,9 @@ import fetch from 'node-fetch';
 import { groupBy, mapValues } from 'lodash-es';
 import path from 'path';
 
-import { generateIMXAuthorisationHeaders } from './imx/libs/sign';
-import { getItemIdByTokenId } from './imx/libs/utils';
 import { handleIMXMint } from './imx/minting/mint';
+import { generateIMXAuthorisationHeaders } from './utils/sign';
+import { getItemIdByTokenId } from './utils/getItemIdByTokenId';
 
 import { getBurnedDegens } from './utils/degensBurned';
 import { getItemsRecursive, resolveDegenMetadata, pipeRequest } from './utils/api';
@@ -17,11 +16,14 @@ import { handleDepositConfirmation } from './utils/deposit';
 import { handleNameChangeByInput } from './utils/handleNameChange';
 import { handleWithdrawConfirmation } from './utils/withdraw';
 import { resolveCirculatingSupply, resolveMaxSupply, resolveTotalSupply, resolveUnclaimedSupply } from './utils/nftl';
+import { getWallet } from './utils/wallet';
 
 import { CONTRACT_METHODS } from './constants/contracts';
 import { LEGGIES } from './constants/degenMetadata';
 import { S3_BASE_URL, DEGENS_S3_BUCKET, COMICS_S3_BUCKET, ITEMS_S3_BUCKET } from './constants/aws';
 import type { Attribute, Metadata, TargetNetwork } from './types';
+
+const network = config.eth.network as TargetNetwork;
 
 const __dirname = path.resolve();
 
@@ -128,8 +130,9 @@ app.get('/imx/items/image/:token_id', async function (req: Request, res: Respons
 
 app.get('/imx/items', async function (req: Request, res: Response) {
   const { cursor } = req.query;
-  const assetsURL = `${config.imx.client.publicApiUrl}/assets?collection=${
-    config.imx.collection.contractAddress
+  const { collection, client } = config.imx[network];
+  const assetsURL = `${client.publicApiUrl}/assets?collection=${
+    collection.contractAddress
   }&order_by=updated_at&page_size=200${cursor ? `&cursor=${cursor}` : ''}`;
   pipeRequest(assetsURL, res);
 });
@@ -169,24 +172,21 @@ app.get('/imx/items/overview', async function (req: Request, res: Response) {
 
 app.get('/imx/metadata-refresh/:token_id', async function (req: Request, res: Response) {
   const tokenId = req.params.token_id;
-
-  const privateKey = config.imx.owner.pk;
-  const provider = new AlchemyProvider(config.eth.network, config.eth.alchemy);
-  const wallet = new Wallet(privateKey);
-  const signer = wallet.connect(provider);
+  const signer = getWallet();
+  const { collection, client } = config.imx[network];
   const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
 
   const headers = {
-    'x-imx-eth-address': config.imx.owner.address,
+    'x-imx-eth-address': signer.address,
     'x-imx-eth-signature': signature,
     'x-imx-eth-timestamp': timestamp,
   };
   const body = JSON.stringify({
-    collection_address: config.imx.collection.contractAddress,
+    collection_address: collection.contractAddress,
     token_ids: [tokenId],
   });
 
-  const response = await fetch(`${config.imx.client.publicApiUrl}/metadata-refreshes`, {
+  const response = await fetch(`${client.publicApiUrl}/metadata-refreshes`, {
     method: 'POST',
     headers,
     body,
@@ -198,23 +198,21 @@ app.get('/imx/metadata-refresh-all/:max_token_id', async function (req: Request,
   const maxTokenId = req.params.max_token_id;
   const tokenIds = Array.from({ length: Number(maxTokenId) }, (_, index) => (index + 1).toString());
 
-  const privateKey = config.imx.owner.pk;
-  const provider = new AlchemyProvider(config.eth.network, config.eth.alchemy);
-  const wallet = new Wallet(privateKey);
-  const signer = wallet.connect(provider);
+  const signer = getWallet();
+  const { collection, client } = config.imx[network];
   const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
 
   const headers = {
-    'x-imx-eth-address': config.imx.owner.address,
+    'x-imx-eth-address': signer.address,
     'x-imx-eth-signature': signature,
     'x-imx-eth-timestamp': timestamp,
   };
   const body = JSON.stringify({
-    collection_address: config.imx.collection.contractAddress,
+    collection_address: collection.contractAddress,
     token_ids: tokenIds,
   });
 
-  const response = await fetch(`${config.imx.client.publicApiUrl}/metadata-refreshes`, {
+  const response = await fetch(`${client.publicApiUrl}/metadata-refreshes`, {
     method: 'POST',
     headers,
     body,

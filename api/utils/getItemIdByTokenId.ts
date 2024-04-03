@@ -1,13 +1,13 @@
-import { Contract, JsonRpcProvider } from 'ethers';
+import { Contract } from 'ethers';
 import { config } from 'node-config-ts';
-import { COMICS_BURNER_CONTRACT_NAME } from '../../constants/contracts';
-import { getDeployedContract } from '../../contracts';
-import type { TargetNetwork } from '../../types';
+import type { TargetNetwork } from '../types';
+import { COMICS_BURNER_CONTRACT_NAME } from '../constants/contracts';
+import { getDeployedContract } from '../contracts';
+import { getProvider } from './wallet';
 
 export async function getItemIdByTokenId(tokenId: string): Promise<string> {
   const targetNetwork = config.eth.network as TargetNetwork;
-  const providerUrl = `https://${targetNetwork}.infura.io/v3/${config.eth.infura}`;
-  const provider = new JsonRpcProvider(providerUrl);
+  const provider = getProvider();
   const { address, abi } = getDeployedContract(targetNetwork, COMICS_BURNER_CONTRACT_NAME);
   const contract = new Contract(address, abi, provider);
   const itemId = await contract['itemIdByTokenId'](tokenId);
