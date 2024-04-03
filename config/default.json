@@ -4,7 +4,19 @@
     "sepolia": "https://niftyleague-dev.herokuapp.com"
   },
   "port": "@@PORT",
-  "secret": "@@BE_API_SECRET",
+  "aws": {
+    "apiSecret": "@@BE_API_SECRET",
+    "s3": {
+      "bucket": "nifty-league",
+      "clientConfig": {
+        "region": "us-east-1",
+        "credentials": {
+          "accessKeyId": "@@S3_ACCESS_ID",
+          "secretAccessKey": "@@S3_SECRET"
+        }
+      }
+    }
+  },
   "blocknative": {
     "apiKey": {
       "comics": "@@BLOCKNATIVE_API_KEY_COMICS",
@@ -14,55 +26,22 @@
     "webhookSecret": "@@WEBHOOK_SECRET"
   },
   "eth": {
-    "pk": "@@OWNER_ACCOUNT_PRIVATE_KEY",
+    "account": {
+      "pk": "@@ETH_ACCOUNT_PRIVATE_KEY"
+    },
     "network": "@@ETH_NETWORK",
     "infura": "@@INFURA_PROJECT_ID",
     "etherscan": "@@ETHERSCAN_API_KEY",
-    "alchemy": "@@ALCHEMY_API_KEY",
+    "alchemy": {
+      "mainnet": "@@MAINNET_ALCHEMY_API_KEY",
+      "sepolia": "@@TESTNET_ALCHEMY_API_KEY"
+    },
     "opensea": "@@OPENSEA_API_KEY"
-  },
-  "imx": {
-    "client": {
-      "publicApiUrl": "@@PUBLIC_API_URL",
-      "starkContractAddress": "@@STARK_CONTRACT_ADDRESS",
-      "registrationContractAddress": "@@REGISTRATION_ADDRESS",
-      "gasLimit": "@@GAS_LIMIT",
-      "gasPrice": "@@GAS_PRICE",
-      "enableDebug": true
-    },
-    "owner": {
-      "address": "@@OWNER_ACCOUNT_ADDRESS",
-      "publicKey": "@@OWNER_ACCOUNT_PUBLIC_KEY",
-      "pk": "@@OWNER_ACCOUNT_PRIVATE_KEY"
-    },
-    "company": {
-      "name": "Nifty League",
-      "contact": "info@niftyleague.com"
-    },
-    "project": {
-      "name": "Nifty League: Marketplace"
-    },
-    "collection": {
-      "contractAddress": "@@COLLECTION_CONTRACT_ADDRESS",
-      "name": "Nifty League: Items",
-      "description": "A collection of unique and rare items used in Nifty League games.",
-      "projectId": "@@COLLECTION_PROJECT_ID"
-    }
   },
   "imageGenerator": {
     "baseURL": "@@UNITY_IMAGE_GENERATOR_BASE_URL",
     "secret": "@@UNITY_IMAGE_GENERATOR_SECRET",
     "version": "@@UNITY_IMAGE_GENERATOR_VERSION"
-  },
-  "s3": {
-    "bucket": "nifty-league",
-    "clientConfig": {
-      "region": "us-east-1",
-      "credentials": {
-        "accessKeyId": "@@S3_ACCESS_ID",
-        "secretAccessKey": "@@S3_SECRET"
-      }
-    }
   },
   "ipfs": {
     "authorization": "@@NFT_STORAGE_KEY",
@@ -74,6 +53,64 @@
     "pinata": {
       "pinataApiKey": "@@PINATA_API_KEY",
       "pinataSecretApiKey": "@@PINATA_API_SECRET"
+    }
+  },
+  "imx": {
+    "mainnet": {
+      "apiKey": "@@MAINNET_IMX_API_KEY",
+      "client": {
+        "publicApiUrl": "https://api.x.immutable.com/v1",
+        "starkContractAddress": "0x5FDCCA53617f4d2b9134B29090C87D01058e27e9",
+        "registrationContractAddress": "0x72a06bf2a1CE5e39cBA06c0CAb824960B587d64c",
+        "gasLimit": "7000000",
+        "gasPrice": "40000000000",
+        "enableDebug": false
+      },
+      "company": {
+        "name": "Nifty League",
+        "contact": "info@niftyleague.com",
+        "organizationId": "@@ORGANIZATION_ID"
+      },
+      "project": {
+        "name": "Nifty League Marketplace",
+        "legacyId": "@@MAINNET_LEGACY_PROJECT_ID"
+      },
+      "collection": {
+        "contractAddress": "@@MAINNET_COLLECTION_CONTRACT_ADDRESS",
+        "name": "Nifty League: Items",
+        "description": "A collection of unique and rare items used in Nifty League games.",
+        "iconUrl": "https://github.com/NiftyLeague/Nifty-League-Images/blob/main/NL-32x32.png",
+        "imageUrl": "https://github.com/NiftyLeague/Nifty-League-Images/blob/main/Nifty%20League%20Digital_Lettermark%20Circle%20White%20Gradient.png",
+        "metadataApiUrl": "https://api.niftyleague.com/imx/items/metadata"
+      }
+    },
+    "sepolia": {
+      "apiKey": "@@TESTNET_IMX_API_KEY",
+      "client": {
+        "publicApiUrl": "https://api.sandbox.x.immutable.com/v1",
+        "starkContractAddress": "0x2d5C349fD8464DA06a3f90b4B0E9195F3d1b7F98",
+        "registrationContractAddress": "0xDbA6129C02E69405622fAdc3d5A7f8d23eac3b97",
+        "gasLimit": "7000000",
+        "gasPrice": "40000000000",
+        "enableDebug": true
+      },
+      "company": {
+        "name": "Nifty League",
+        "contact": "info@niftyleague.com",
+        "organizationId": "@@ORGANIZATION_ID"
+      },
+      "project": {
+        "name": "Nifty League Marketplace",
+        "legacyId": "@@TESTNET_LEGACY_PROJECT_ID"
+      },
+      "collection": {
+        "contractAddress": "@@TESTNET_COLLECTION_CONTRACT_ADDRESS",
+        "name": "Nifty League: Items",
+        "description": "A collection of unique and rare items used in Nifty League games.",
+        "iconUrl": "https://github.com/NiftyLeague/Nifty-League-Images/blob/main/NL-32x32.png",
+        "imageUrl": "https://github.com/NiftyLeague/Nifty-League-Images/blob/main/Nifty%20League%20Digital_Lettermark%20Circle%20White%20Gradient.png",
+        "metadataApiUrl": "https://niftyleague-dev.herokuapp.com/imx/items/metadata"
+      }
     }
   }
 }

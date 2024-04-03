@@ -1,28 +1,19 @@
 import { config } from 'node-config-ts';
-import { AlchemyProvider, Wallet } from 'ethers';
-import { ImLogger, WinstonLogger } from '@imtbl/imlogging';
 import { AddMetadataSchemaToCollectionParams, ImmutableXClient, MetadataTypes } from '@imtbl/imx-sdk';
+import type { Signer, TargetNetwork } from '../../types';
+import { getWallet } from '../../utils/wallet';
 
-import { loggerConfig } from '../config/logging';
-
-const provider = new AlchemyProvider(config.eth.network, config.eth.alchemy);
-const log: ImLogger = new WinstonLogger(loggerConfig);
-
-const component = '[IMX-ADD-COLLECTION-METADATA-SCHEMA]';
+const network = config.eth.network as TargetNetwork;
 
 (async (): Promise<void> => {
-  const privateKey = config.imx.owner.pk;
-  const collectionContractAddress = config.imx.collection.contractAddress;
+  console.group('IMX-ADD-COLLECTION-METADATA-SCHEMA');
+  const { collection, client } = config.imx[network];
+  const collectionContractAddress = collection.contractAddress;
 
-  const signer = new Wallet(privateKey).connect(provider);
+  const signer = getWallet<Signer>();
+  const user = await ImmutableXClient.build({ ...client, signer });
 
-  const user = await ImmutableXClient.build({
-    ...config.imx.client,
-    // @ts-expect-error - Wallet is assingable to Signer
-    signer,
-  });
-
-  log.info(component, 'Adding metadata schema to collection', collectionContractAddress);
+  console.log('Adding metadata schema to collection...', collectionContractAddress);
 
   /**
    * Edit your values here
@@ -67,11 +58,13 @@ const component = '[IMX-ADD-COLLECTION-METADATA-SCHEMA]';
     ],
   };
 
-  const collection = await user.addMetadataSchemaToCollection(collectionContractAddress, params);
+  const newCollection = await user.addMetadataSchemaToCollection(collectionContractAddress, params);
 
-  log.info(component, 'Added metadata schema to collection', collectionContractAddress);
-  console.log(JSON.stringify(collection, null, 2));
+  console.log('✅ Added metadata schema to collection', collectionContractAddress);
+  console.log(JSON.stringify(newCollection, null, 2));
+  console.groupEnd();
 })().catch(e => {
-  log.error(component, e);
+  console.error(`❌ ${e} - ${e.response?.data?.message}`);
+  console.groupEnd();
   process.exit(1);
 });

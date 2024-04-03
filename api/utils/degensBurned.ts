@@ -16,8 +16,8 @@ type NftOwned = {
 
 export async function getBurnedDegens(): Promise<number[]> {
   try {
-    const apiKey = config.eth.alchemy;
     const targetNetwork = config.eth.network as TargetNetwork;
+    const apiKey = config.eth.alchemy[targetNetwork];
     const degenAddress = getContractAddress(targetNetwork, DEGEN_CONTRACT_NAME);
     const baseURI = `https://eth-${targetNetwork}.g.alchemy.com/nft/v3/${apiKey}`;
     const endpoint = `${baseURI}/getNFTsForOwner?contractAddresses[]=${degenAddress}&withMetadata=false&pageSize=100`;

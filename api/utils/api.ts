@@ -1,8 +1,10 @@
 import { config } from 'node-config-ts';
 import fetch from 'node-fetch';
 import https from 'https';
-import type { Metadata } from '../types';
 import type { Request, Response } from 'express';
+import type { Metadata, TargetNetwork } from '../types';
+
+const network = config.eth.network as TargetNetwork;
 
 export async function fetchMetadata(URI: string): Promise<Metadata | null> {
   try {
@@ -33,8 +35,9 @@ export function sleep(ms: number) {
 }
 
 export async function getItemsRecursive(cursor: string | null = null, result = []): Promise<any[]> {
-  const assetsURL = `${config.imx.client.publicApiUrl}/assets?collection=${
-    config.imx.collection.contractAddress
+  const { collection, client } = config.imx[network];
+  const assetsURL = `${client.publicApiUrl}/assets?collection=${
+    collection.contractAddress
   }&order_by=updated_at&page_size=200${cursor ? `&cursor=${cursor}` : ''}`;
   const response = await fetch(assetsURL, {});
   const json = (await response.json()) as {

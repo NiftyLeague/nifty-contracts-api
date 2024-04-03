@@ -4,13 +4,48 @@ declare module 'node-config-ts' {
   interface IConfig {
     host: Host;
     port: string;
-    secret: string;
+    aws: Aws;
     blocknative: Blocknative;
     eth: Eth;
-    imx: Imx;
     imageGenerator: ImageGenerator;
-    s3: S3;
     ipfs: Ipfs;
+    imx: Imx;
+  }
+  interface Imx {
+    mainnet: Mainnet;
+    sepolia: Mainnet;
+  }
+  interface Mainnet {
+    apiKey: string;
+    client: Client;
+    company: Company;
+    project: Project;
+    collection: Collection;
+  }
+  interface Collection {
+    contractAddress: string;
+    name: string;
+    description: string;
+    iconUrl: string;
+    imageUrl: string;
+    metadataApiUrl: string;
+  }
+  interface Project {
+    name: string;
+    legacyId: string;
+  }
+  interface Company {
+    name: string;
+    contact: string;
+    organizationId: string;
+  }
+  interface Client {
+    publicApiUrl: string;
+    starkContractAddress: string;
+    registrationContractAddress: string;
+    gasLimit: string;
+    gasPrice: string;
+    enableDebug: boolean;
   }
   interface Ipfs {
     authorization: string;
@@ -25,6 +60,35 @@ declare module 'node-config-ts' {
     pinataApiKey: string;
     pinataSecretApiKey: string;
   }
+  interface ImageGenerator {
+    baseURL: string;
+    secret: string;
+    version: string;
+  }
+  interface Eth {
+    account: Account;
+    network: string;
+    infura: string;
+    etherscan: string;
+    alchemy: Host;
+    opensea: string;
+  }
+  interface Account {
+    pk: string;
+  }
+  interface Blocknative {
+    apiKey: ApiKey;
+    webhookSecret: string;
+  }
+  interface ApiKey {
+    comics: string;
+    degens: string;
+    p2e: string;
+  }
+  interface Aws {
+    apiSecret: string;
+    s3: S3;
+  }
   interface S3 {
     bucket: string;
     clientConfig: ClientConfig;
@@ -36,61 +100,6 @@ declare module 'node-config-ts' {
   interface Credentials {
     accessKeyId: string;
     secretAccessKey: string;
-  }
-  interface ImageGenerator {
-    baseURL: string;
-    secret: string;
-    version: string;
-  }
-  interface Imx {
-    client: Client;
-    owner: Owner;
-    company: Company;
-    project: Project;
-    collection: Collection;
-  }
-  interface Collection {
-    contractAddress: string;
-    name: string;
-    description: string;
-    projectId: string;
-  }
-  interface Project {
-    name: string;
-  }
-  interface Company {
-    name: string;
-    contact: string;
-  }
-  interface Owner {
-    address: string;
-    publicKey: string;
-    pk: string;
-  }
-  interface Client {
-    publicApiUrl: string;
-    starkContractAddress: string;
-    registrationContractAddress: string;
-    gasLimit: string;
-    gasPrice: string;
-    enableDebug: boolean;
-  }
-  interface Eth {
-    pk: string;
-    network: string;
-    infura: string;
-    etherscan: string;
-    alchemy: string;
-    opensea: string;
-  }
-  interface Blocknative {
-    apiKey: ApiKey;
-    webhookSecret: string;
-  }
-  interface ApiKey {
-    comics: string;
-    degens: string;
-    p2e: string;
   }
   interface Host {
     mainnet: string;

@@ -1,37 +1,12 @@
 import { config } from 'node-config-ts';
-import { AlchemyProvider, Wallet } from 'ethers';
 import { ImmutableXClient, ImmutableMethodResults } from '@imtbl/imx-sdk';
-import type { TargetNetwork } from '../../types';
+import { Signer, type TargetNetwork } from '../../types';
+import { getWallet } from '../../utils/wallet';
 
-function get_provider(network: string) {
-  return new AlchemyProvider(network, config.eth.alchemy);
-}
-
-function get_wallet_from_private_key(network: string, private_key: string): Wallet {
-  const provider = get_provider(network);
-
-  return new Wallet(private_key, provider);
-}
-
-function get_wallet(network: string): Wallet {
-  const private_key = config.eth.pk;
-  if (private_key) {
-    return get_wallet_from_private_key(network, private_key);
-  }
-
-  return get_wallet_from_private_key(network, '');
-}
-
-function get_imx_client(network: string) {
-  return get_imx_client_from_wallet(get_wallet(network));
-}
-
-async function get_imx_client_from_wallet(wallet: Wallet): Promise<ImmutableXClient> {
-  return ImmutableXClient.build({
-    ...config.imx.client,
-    // @ts-expect-error - Wallet is assingable to Signer
-    signer: wallet,
-  });
+async function get_imx_client(network: TargetNetwork): Promise<ImmutableXClient> {
+  const { client } = config.imx[network];
+  const signer = getWallet<Signer>(network);
+  return ImmutableXClient.build({ ...client, signer });
 }
 
 async function mint_L2(

@@ -1,26 +1,17 @@
 import { config } from 'node-config-ts';
-import { AlchemyProvider, Wallet } from 'ethers';
-import { ImLogger, WinstonLogger } from '@imtbl/imlogging';
 import { ImmutableXClient } from '@imtbl/imx-sdk';
+import type { TargetNetwork, Signer } from '../../types';
+import { getWallet } from '../../utils/wallet';
 
-import { loggerConfig } from '../config/logging';
-
-const provider = new AlchemyProvider(config.eth.network, config.eth.alchemy);
-const log: ImLogger = new WinstonLogger(loggerConfig);
-
-const component = '[IMX-USER-REGISTRATION]';
+const network = config.eth.network as TargetNetwork;
 
 (async (): Promise<void> => {
-  const privateKey = config.imx.owner.pk;
-  const signer = new Wallet(privateKey).connect(provider);
+  console.group('IMX-USER-REGISTRATION');
+  const { client } = config.imx[network];
+  const signer = getWallet<Signer>();
+  const user = await ImmutableXClient.build({ ...client, signer });
 
-  const user = await ImmutableXClient.build({
-    ...config.imx.client,
-    // @ts-expect-error - Wallet is assingable to Signer
-    signer,
-  });
-
-  log.info(component, 'Registering user...');
+  console.log('Registering user...');
 
   let existingUser;
   let newUser;
@@ -42,12 +33,14 @@ const component = '[IMX-USER-REGISTRATION]';
   }
 
   if (existingUser) {
-    log.info(component, 'User already exists', user.address);
+    console.log(`❌ User already exists ${user.address}:`);
   } else {
-    log.info(component, 'User has been created', user.address);
+    console.log(`✅ User has been created ${user.address}:`);
   }
   console.log(JSON.stringify({ newUser, existingUser }, null, 2));
+  console.groupEnd();
 })().catch(e => {
-  log.error(component, e);
+  console.error(`❌ ${e} - ${e.response?.data?.message}`);
+  console.groupEnd();
   process.exit(1);
 });
