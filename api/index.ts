@@ -33,7 +33,7 @@ const app = express()
   .set('view engine', 'ejs');
 
 app.get('/', function (req: Request, res: Response) {
-  res.send('Smart Contract API for the Nifty League!');
+  res.send('Smart Contract API for Nifty League!');
 });
 
 app.use(bodyParser.json());
@@ -272,3 +272,5 @@ app.post(`/:network/webhooks/comics/${config.blocknative.webhookSecret}`, async 
 app.listen(app.get('port'), function () {
   console.log('Node app is running on port', app.get('port'));
 });
+
+export default app;

@@ -32,7 +32,7 @@ export async function MakeDegen(targetNetwork: TargetNetwork) {
  * Minty requires async initialization, so the Minty class (and its constructor) are not exported.
  * To make one, use the async {@link MakeDegen} function.
  */
-class Degen extends Minty {
+export class Degen extends Minty {
   //////////////////////////////////////////////
   // ------ DEGEN NFT Generation
   //////////////////////////////////////////////
