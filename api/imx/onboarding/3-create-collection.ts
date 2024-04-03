@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { config } from 'node-config-ts';
-import { generateIMXAuthorisationHeaders } from '../../utils/sign';
+import { generateIMXAuthorisationHeaders } from '@/utils/sign';
 import type { CreateCollectionParams } from '@imtbl/imx-sdk';
-import type { TargetNetwork } from '../../types';
-import { getWallet } from '../../utils/wallet';
+import type { TargetNetwork } from '@/types';
+import { getWallet } from '@/utils/wallet';
 
 const network = config.eth.network as TargetNetwork;
 

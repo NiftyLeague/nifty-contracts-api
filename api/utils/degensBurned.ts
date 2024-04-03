@@ -1,9 +1,9 @@
 import { config } from 'node-config-ts';
 import fetch from 'node-fetch';
 
-import { getContractAddress } from '../contracts';
-import { DEGEN_CONTRACT_NAME } from '../constants/contracts';
-import type { TargetNetwork } from '../types';
+import { getContractAddress } from '@/contracts';
+import { DEGEN_CONTRACT_NAME } from '@/constants/contracts';
+import type { TargetNetwork } from '@/types';
 
 const BURN_ADDY1 = '0x000000000000000000000000000000000000dEaD';
 const BURN_ADDY2 = '0x0000000000000000000000000000000000000001';

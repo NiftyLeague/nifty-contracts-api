@@ -1,18 +1,18 @@
 import path from 'path';
 import fs from 'fs';
 
-import { Metadata, TargetNetwork } from '../types';
-import { downloadImage, generateImageURL, raritySelector } from '../utils/imageGenerator';
-// import { makeGatewayURL } from '../utils/uriHelpers';
+import { Metadata, TargetNetwork } from '@/types';
+import { downloadImage, generateImageURL, raritySelector } from '@/utils/imageGenerator';
+// import { makeGatewayURL } from '@/utils/uriHelpers';
 
 import {
   CHARACTER_BACKGROUNDS,
   CHARACTER_TRAIT_TYPES,
   DEGEN_METADATA,
   TRAIT_VALUE_MAP,
-} from '../constants/degenMetadata';
-import { DEGEN_CONTRACT_NAME } from '../constants/contracts';
-import { DEGENS_S3_BUCKET } from '../constants/aws';
+} from '@/constants/degenMetadata';
+import { DEGEN_CONTRACT_NAME } from '@/constants/contracts';
+import { DEGENS_S3_BUCKET } from '@/constants/aws';
 import { Minty } from './minty';
 
 /**

@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { DEGEN_METADATA } from './degenMetadata';
-import { Attribute, Rarity } from '../types';
+import { Attribute, Rarity } from '@/types';
 
 export enum HydraClan {
   b = 'Battalion',

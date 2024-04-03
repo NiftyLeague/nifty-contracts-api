@@ -1,12 +1,12 @@
 import path from 'path';
 import fs from 'fs';
 
-import type { TargetNetwork } from '../types';
-import { ITEMS_CONTRACT_NAME } from '../constants/contracts';
-import { ITEMS_S3_BUCKET } from '../constants/aws';
-import { ITEMS_METADATA } from '../constants/itemsMetadata';
-import { ITEMS_IMAGES_CID } from '../constants/ipfs';
-import { makeGatewayURL } from '../utils/uriHelpers';
+import type { TargetNetwork } from '@/types';
+import { ITEMS_CONTRACT_NAME } from '@/constants/contracts';
+import { ITEMS_S3_BUCKET } from '@/constants/aws';
+import { ITEMS_METADATA } from '@/constants/itemsMetadata';
+import { ITEMS_IMAGES_CID } from '@/constants/ipfs';
+import { makeGatewayURL } from '@/utils/uriHelpers';
 import { Minty } from './minty';
 
 /**

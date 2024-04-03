@@ -1,8 +1,8 @@
 import { config } from 'node-config-ts';
 import fetch from 'node-fetch';
-import { ContractName, TargetNetwork } from '../types';
-import { DEGEN_CONTRACT_NAME } from '../constants/contracts';
-import { getContractAddress } from '../contracts';
+import { ContractName, TargetNetwork } from '@/types';
+import { DEGEN_CONTRACT_NAME } from '@/constants/contracts';
+import { getContractAddress } from '@/contracts';
 
 export default async function refreshOpenSea(
   targetNetwork: TargetNetwork,

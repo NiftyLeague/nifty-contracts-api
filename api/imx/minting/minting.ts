@@ -1,7 +1,7 @@
 import { config } from 'node-config-ts';
 import { ImmutableXClient, ImmutableMethodResults } from '@imtbl/imx-sdk';
-import { Signer, type TargetNetwork } from '../../types';
-import { getWallet } from '../../utils/wallet';
+import { Signer, type TargetNetwork } from '@/types';
+import { getWallet } from '@/utils/wallet';
 
 async function get_imx_client(network: TargetNetwork): Promise<ImmutableXClient> {
   const { client } = config.imx[network];
