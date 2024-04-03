@@ -1,18 +1,49 @@
+import { ImmutableXClient, ImmutableMethodResults } from '@imtbl/imx-sdk';
 import type { Log, TransactionResponse, Result } from 'ethers';
 import { JsonRpcProvider, Interface } from 'ethers';
 import { config } from 'node-config-ts';
 
-import type { TargetNetwork } from '@/types';
-import { mint } from './minting';
+import type { Signer, TargetNetwork } from '@/types';
 import { getTxReceipt } from '@/utils/txReceipt';
 import { COMICS_BURNER_CONTRACT_NAME } from '@/constants/contracts';
 import { getContractABI } from '@/contracts';
+import { getWallet } from '@/utils/wallet';
 
-function parseTopics(targetNetwork: TargetNetwork, log: Log, eventName: string) {
+async function get_imx_client(network: TargetNetwork): Promise<ImmutableXClient> {
+  const { client } = config.imx[network];
+  const signer = getWallet<Signer>(network);
+  return ImmutableXClient.build({ ...client, signer });
+}
+
+function parseTopics(targetNetwork: TargetNetwork, log: Log, eventName: string): Result {
   const abi = getContractABI(targetNetwork, COMICS_BURNER_CONTRACT_NAME);
   const iface = new Interface(abi);
   const inputData = iface.decodeEventLog(eventName, log.data, log.topics);
   return inputData;
+}
+
+async function mint(
+  targetNetwork: TargetNetwork,
+  contractAddress: string,
+  to: string,
+  tokenIds: string[],
+  itemId: string,
+): Promise<ImmutableMethodResults.ImmutableOffchainMintV2Result | undefined> {
+  if (tokenIds.length === 0) return;
+  // Get configuration for the network
+  const client = await get_imx_client(targetNetwork);
+
+  console.log('Minting on L2...');
+  const tokens = tokenIds.map(x => ({ id: x.toString(), blueprint: itemId }));
+  const mint_result = await client.mintV2([
+    {
+      users: [{ etherKey: to, tokens }],
+      contractAddress,
+    },
+  ]);
+  console.log(`✅ Minting of tokenId(s) ${tokenIds} for collection ${contractAddress.toLowerCase()} successful!`);
+
+  return mint_result.results[0];
 }
 
 function proceedIMXMint(targetNetwork: TargetNetwork, topics: Result, isKey: boolean) {
