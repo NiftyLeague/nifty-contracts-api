@@ -11,12 +11,12 @@
   "scripts": {
     "build": "npx tsc && tsc-alias",
     "start": "node dist/api/index.js",
-    "postinstall": "node-config-ts",
     "dev": "tsx watch api/index.ts",
     "test": "tsx api/index.test.ts",
     "lint": "eslint --ignore-path .eslintignore . --ext .ts,.js",
     "format": "prettier --ignore-path .prettierignore --write .",
     "type-check": "tsc --noEmit",
+    "update-env": "node-config-ts",
     "onboarding:user-registration": "tsx ./api/imx/onboarding/1-user-registration.ts",
     "onboarding:create-project": "tsx ./api/imx/onboarding/2-create-project.ts",
     "onboarding:create-collection": "tsx ./api/imx/onboarding/3-create-collection.ts",
