@@ -1,8 +1,8 @@
 import { Contract } from 'ethers';
 import { config } from 'node-config-ts';
-import type { TargetNetwork } from '../types';
-import { COMICS_BURNER_CONTRACT_NAME } from '../constants/contracts';
-import { getDeployedContract } from '../contracts';
+import type { TargetNetwork } from '@/types';
+import { COMICS_BURNER_CONTRACT_NAME } from '@/constants/contracts';
+import { getDeployedContract } from '@/contracts';
 import { getProvider } from './wallet';
 
 export async function getItemIdByTokenId(tokenId: string): Promise<string> {

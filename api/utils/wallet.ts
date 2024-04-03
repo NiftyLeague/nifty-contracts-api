@@ -1,6 +1,6 @@
 import { config } from 'node-config-ts';
 import { AlchemyProvider, Wallet } from 'ethers';
-import type { TargetNetwork } from '../types';
+import type { TargetNetwork } from '@/types';
 
 /**
  * Get Ethers Provider

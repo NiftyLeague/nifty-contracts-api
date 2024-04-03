@@ -2,7 +2,7 @@ import { config } from 'node-config-ts';
 import fetch from 'node-fetch';
 import https from 'https';
 import type { Request, Response } from 'express';
-import type { Metadata, TargetNetwork } from '../types';
+import type { Metadata, TargetNetwork } from '@/types';
 
 const network = config.eth.network as TargetNetwork;
 

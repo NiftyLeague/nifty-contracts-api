@@ -1,10 +1,10 @@
 import colorize from 'json-colorizer';
 import { ethers, BytesLike } from 'ethers';
-import type { TargetNetwork } from '../types';
-import { COLORIZE_OPTIONS } from '../constants/commandLine';
-import { DEGEN_CONTRACT_NAME } from '../constants/contracts';
-import { MakeDegen } from '../classes/degen';
-import { getContractABI } from '../contracts';
+import type { TargetNetwork } from '@/types';
+import { COLORIZE_OPTIONS } from '@/constants/commandLine';
+import { DEGEN_CONTRACT_NAME } from '@/constants/contracts';
+import { MakeDegen } from '@/classes/degen';
+import { getContractABI } from '@/contracts';
 
 export async function handleNameChangeById(targetNetwork: TargetNetwork, tokenId: string | number) {
   const degen = await MakeDegen(targetNetwork);
