@@ -37,7 +37,7 @@ function deserializeSignature(sig: string, size = 64): SignatureOptions {
   };
 }
 
-export async function signRaw(payload: string, signer: Signer): Promise<string> {
+async function signRaw(payload: string, signer: Signer): Promise<string> {
   const signature = deserializeSignature(await signer.signMessage(payload));
   return serializeEthSignature(signature);
 }

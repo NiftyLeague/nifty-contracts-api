@@ -23,7 +23,7 @@ export async function handleDepositConfirmation(tx: any) {
   });
   console.log('body', body);
   try {
-    const response = await fetch(`${API_BASE_URL}/accounts/deposit?secret=${config.secret}`, {
+    const response = await fetch(`${API_BASE_URL}/accounts/deposit?secret=${config.aws.apiSecret}`, {
       method: 'POST',
       body,
     });
