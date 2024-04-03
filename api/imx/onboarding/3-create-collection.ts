@@ -1,56 +1,50 @@
+import axios from 'axios';
 import { config } from 'node-config-ts';
-import { AlchemyProvider, Wallet } from 'ethers';
-import { ImLogger, WinstonLogger } from '@imtbl/imlogging';
-import { CreateCollectionParams, ImmutableXClient } from '@imtbl/imx-sdk';
+import { generateIMXAuthorisationHeaders } from '../../utils/sign';
+import type { CreateCollectionParams } from '@imtbl/imx-sdk';
+import type { TargetNetwork } from '../../types';
+import { getWallet } from '../../utils/wallet';
 
-import { loggerConfig } from '../config/logging';
-
-const provider = new AlchemyProvider(config.eth.network, config.eth.alchemy);
-const log: ImLogger = new WinstonLogger(loggerConfig);
-
-const component = '[IMX-CREATE-COLLECTION]';
+const network = config.eth.network as TargetNetwork;
 
 (async (): Promise<void> => {
-  const privateKey = config.imx.owner.pk;
-  const collectionContractAddress = config.imx.collection.contractAddress;
-  const projectId = config.imx.collection.projectId;
+  console.group('IMX-CREATE-COLLECTION');
+  const { apiKey, client, collection, project } = config.imx[network];
+  const collectionContractAddress = collection.contractAddress;
+  const projectId = project.legacyId;
+  const signer = getWallet();
 
-  const signer = new Wallet(privateKey).connect(provider);
+  console.log('Creating collection...', collectionContractAddress);
 
-  const user = await ImmutableXClient.build({
-    ...config.imx.client,
-    // @ts-expect-error - Wallet is assingable to Signer
-    signer,
+  const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
+
+  const createCollectionRequest: CreateCollectionParams = {
+    name: collection.name,
+    description: collection.description,
+    contract_address: collection.contractAddress,
+    owner_public_key: signer.signingKey.publicKey,
+    icon_url: collection.iconUrl,
+    metadata_api_url: collection.metadataApiUrl,
+    collection_image_url: collection.imageUrl,
+    project_id: parseInt(projectId, 10),
+  };
+
+  const headers: Record<string, string> = {
+    'Content-type': 'application/json',
+    'IMX-Signature': signature,
+    'IMX-Timestamp': timestamp,
+    'x-immutable-api-key': apiKey,
+  };
+
+  const resp = await axios.post(`${client.publicApiUrl}/collections`, createCollectionRequest, {
+    headers,
   });
 
-  log.info(component, 'Creating collection...', collectionContractAddress);
-
-  /**
-   * Edit your values here
-   */
-  const params: Array<CreateCollectionParams> = [
-    {
-      name: config.imx.collection.name,
-      description: config.imx.collection.description,
-      contract_address: config.imx.collection.contractAddress,
-      owner_public_key: config.imx.owner.publicKey,
-      icon_url: 'https://cdn.madskullz.io/madskullz/images/5359.png',
-      metadata_api_url: `${config.host[config.eth.network]}/imx/items/metadata`,
-      collection_image_url: 'https://cdn.madskullz.io/madskullz/images/1000.png',
-      project_id: parseInt(projectId, 10),
-    },
-  ];
-
-  let collection;
-  try {
-    for (let i = 0; i < params.length; i++) collection = await user.createCollection(params[i]);
-  } catch (error) {
-    throw new Error(JSON.stringify(error, null, 2));
-  }
-
-  log.info(component, 'Created collection');
-  console.log(JSON.stringify(collection, null, 2));
+  console.log('✅ Created collection!');
+  console.log(JSON.stringify(resp.data, null, 2));
+  console.groupEnd();
 })().catch(e => {
-  log.error(component, e);
+  console.error(`❌ ${e} - ${e.response?.data?.message}`);
+  console.groupEnd();
   process.exit(1);
 });

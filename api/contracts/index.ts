@@ -22,6 +22,6 @@ export const getContractABI = (targetNetwork: TargetNetwork, contractName: Contr
  */
 export async function getContractFactory(targetNetwork: TargetNetwork, contractName: ContractName): Promise<Contract> {
   const { address, abi } = getDeployedContract(targetNetwork, contractName);
-  const wallet = await getWallet();
+  const wallet = getWallet();
   return new Contract(address, abi, wallet);
 }

@@ -16,7 +16,8 @@ function parseTopics(targetNetwork: TargetNetwork, log: Log, eventName: string) 
 }
 
 function proceedIMXMint(targetNetwork: TargetNetwork, topics: Result, isKey: boolean) {
-  const itemAddress = config.imx.collection.contractAddress;
+  const network = config.eth.network as TargetNetwork;
+  const itemAddress = config.imx[network].collection.contractAddress;
   const by = topics[0];
   // const tokenIds = topics[1];
   const values = topics[2];
