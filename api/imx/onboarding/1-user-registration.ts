@@ -1,7 +1,7 @@
 import { config } from 'node-config-ts';
 import { ImmutableXClient } from '@imtbl/imx-sdk';
-import type { TargetNetwork, Signer } from '../../types';
-import { getWallet } from '../../utils/wallet';
+import type { TargetNetwork, Signer } from '@/types';
+import { getWallet } from '@/utils/wallet';
 
 const network = config.eth.network as TargetNetwork;
 

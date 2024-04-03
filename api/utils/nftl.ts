@@ -2,9 +2,9 @@ import { config } from 'node-config-ts';
 import fetch from 'node-fetch';
 import { parseEther } from 'ethers';
 
-import { NFTL_ADDRESS, NFTL_CONTRACT_NAME } from '../constants/contracts';
-import { getContractFactory } from '../contracts';
-import type { TargetNetwork } from '../types';
+import { NFTL_ADDRESS, NFTL_CONTRACT_NAME } from '@/constants/contracts';
+import { getContractFactory } from '@/contracts';
+import type { TargetNetwork } from '@/types';
 import { getBurnedDegens } from './degensBurned';
 
 export async function resolveCirculatingSupply(): Promise<string | null> {

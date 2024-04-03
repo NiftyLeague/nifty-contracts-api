@@ -1,7 +1,7 @@
 import colorize from 'json-colorizer';
-import { COLORIZE_OPTIONS } from '../constants/commandLine';
-import { TargetNetwork } from '../types';
-import { MakeDegen } from '../classes/degen';
+import { COLORIZE_OPTIONS } from '@/constants/commandLine';
+import { TargetNetwork } from '@/types';
+import { MakeDegen } from '@/classes/degen';
 
 export default async function handleMetadataUpdate(targetNetwork: TargetNetwork, tokenId: number) {
   const minty = await MakeDegen(targetNetwork);

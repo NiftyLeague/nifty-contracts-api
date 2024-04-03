@@ -1,9 +1,9 @@
 import { config } from 'node-config-ts';
 import fetch from 'node-fetch';
 import { type BytesLike, formatEther, Interface } from 'ethers';
-import { API_BASE_URL } from '../constants/aws';
-import { getContractABI } from '../contracts';
-import { BALANCE_MANAGER_CONTRACT_NAME } from '../constants/contracts';
+import { API_BASE_URL } from '@/constants/aws';
+import { getContractABI } from '@/contracts';
+import { BALANCE_MANAGER_CONTRACT_NAME } from '@/constants/contracts';
 
 async function parseInputData(input: BytesLike) {
   const abi = getContractABI('mainnet', BALANCE_MANAGER_CONTRACT_NAME);

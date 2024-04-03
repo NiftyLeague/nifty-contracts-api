@@ -1,8 +1,8 @@
 import { config } from 'node-config-ts';
 import { ImmutableXClient, UpdateMetadataSchemaByNameParams, MetadataTypes } from '@imtbl/imx-sdk';
 import { parse } from 'ts-command-line-args';
-import type { Signer, TargetNetwork } from '../../types';
-import { getWallet } from '../../utils/wallet';
+import type { Signer, TargetNetwork } from '@/types';
+import { getWallet } from '@/utils/wallet';
 
 const network = config.eth.network as TargetNetwork;
 

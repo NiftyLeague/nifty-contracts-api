@@ -2,11 +2,11 @@ import type { Log, TransactionResponse, Result } from 'ethers';
 import { JsonRpcProvider, Interface } from 'ethers';
 import { config } from 'node-config-ts';
 
-import type { TargetNetwork } from '../../types';
+import type { TargetNetwork } from '@/types';
 import { mint } from './minting';
-import { getTxReceipt } from '../../utils/txReceipt';
-import { COMICS_BURNER_CONTRACT_NAME } from '../../constants/contracts';
-import { getContractABI } from '../../contracts';
+import { getTxReceipt } from '@/utils/txReceipt';
+import { COMICS_BURNER_CONTRACT_NAME } from '@/constants/contracts';
+import { getContractABI } from '@/contracts';
 
 function parseTopics(targetNetwork: TargetNetwork, log: Log, eventName: string) {
   const abi = getContractABI(targetNetwork, COMICS_BURNER_CONTRACT_NAME);

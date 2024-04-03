@@ -8,13 +8,13 @@ import { concat } from 'uint8arrays/concat';
 import { toString } from 'uint8arrays/to-string';
 import pinataSDK from '@pinata/sdk';
 
-import { ContractName, TargetNetwork, NFTInfo } from '../types';
-import { getContractFactory } from '../contracts';
-import refreshOpenSea from '../utils/refreshOpenSea';
-import { uploadToS3 } from '../utils/uploadToS3';
-import all from '../utils/it-all';
-import { stripIpfsUriPrefix, makeGatewayURL, extractCID, ensureIpfsUriPrefix } from '../utils/uriHelpers';
-import { IPFS_OPTIONS } from '../constants/ipfs';
+import { ContractName, TargetNetwork, NFTInfo } from '@/types';
+import { getContractFactory } from '@/contracts';
+import refreshOpenSea from '@/utils/refreshOpenSea';
+import { uploadToS3 } from '@/utils/uploadToS3';
+import all from '@/utils/it-all';
+import { stripIpfsUriPrefix, makeGatewayURL, extractCID, ensureIpfsUriPrefix } from '@/utils/uriHelpers';
+import { IPFS_OPTIONS } from '@/constants/ipfs';
 
 const pinata = new pinataSDK(config.ipfs.pinata);
 
