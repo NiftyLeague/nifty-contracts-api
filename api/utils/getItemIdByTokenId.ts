@@ -5,12 +5,26 @@ import { COMICS_BURNER_CONTRACT_NAME } from '@/constants/contracts';
 import { getDeployedContract } from '@/contracts';
 import { getProvider } from './wallet';
 
-export async function getItemIdByTokenId(tokenId: string): Promise<bigint> {
-  const targetNetwork = config.eth.network as TargetNetwork;
+const network = config.eth.network as TargetNetwork;
+
+function getBurnerContract() {
   const provider = getProvider();
-  const { address, abi } = getDeployedContract(targetNetwork, COMICS_BURNER_CONTRACT_NAME);
-  const contract = new Contract(address, abi, provider) as BaseContract;
+  const { address, abi } = getDeployedContract(network, COMICS_BURNER_CONTRACT_NAME);
+  return new Contract(address, abi, provider) as BaseContract;
+}
+
+async function getItemIdByTokenId(tokenId: string): Promise<bigint> {
+  const contract = getBurnerContract();
   const itemId: bigint = await contract['itemIdByTokenId'](tokenId);
+  return itemId;
+}
+
+export async function getItemIdByTokenId_SAFE(tokenId: string): Promise<bigint> {
+  const contract = getBurnerContract();
+  const itemIndex: bigint = await contract['itemIndex']();
+  if (BigInt(tokenId) > itemIndex) throw new Error(`Item ID not found for token ID: ${tokenId}`);
+
+  const itemId: bigint = await getItemIdByTokenId(tokenId);
 
   // fix if itemId is zero
   if (itemId === 0n) {
