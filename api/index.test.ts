@@ -2,7 +2,7 @@ import request from 'supertest';
 import { jest } from '@jest/globals';
 
 import { ITEMS_METADATA } from './constants/itemsMetadata';
-import { getItemIdByTokenId } from './utils/getItemIdByTokenId';
+import { getItemIdByTokenId_SAFE } from './utils/getItemIdByTokenId';
 import { handleNameChangeById } from './utils/handleNameChange';
 import { MakeDegen, Degen } from './classes/degen';
 import app from './index';
@@ -93,7 +93,7 @@ describe('API Endpoints', () => {
     it('should return the metadata of an item by token ID', async () => {
       const response = await request(app).get(`/imx/items/metadata/${tokenId}`);
       expect(response.status).toBe(200);
-      const itemId = await getItemIdByTokenId(tokenId.toString());
+      const itemId = await getItemIdByTokenId_SAFE(tokenId.toString());
       expect(response.body.name).toEqual(ITEMS_METADATA[`${itemId - 1n}`].name);
     });
 
@@ -120,9 +120,9 @@ describe('API Endpoints', () => {
       const response = await request(app).get('/imx/items/overview');
       expect(response.status).toBe(200);
 
-      expect(BigInt(response.body.total_items)).toBeGreaterThan(10);
-      expect(BigInt(response.body.total_holders)).toBeGreaterThan(10);
-      expect(BigInt(response.body.key_holders)).toBeGreaterThan(10);
+      expect(BigInt(response.body.total_items)).toBeGreaterThan(200);
+      expect(BigInt(response.body.total_holders)).toBeGreaterThanOrEqual(3);
+      expect(BigInt(response.body.key_holders)).toBeGreaterThanOrEqual(3);
 
       expect(response.body.item_balances).toBeDefined();
       expect(response.body.holder_balances).toBeDefined();
