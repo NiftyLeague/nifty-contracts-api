@@ -5,9 +5,9 @@
   "website": "https://api.niftyleague.com/",
   "repository": "https://github.com/NiftyLeague/GameAccountWebhooks",
   "env": {
-    "HARDHAT_NETWORK": {
+    "ETH_NETWORK": {
       "description": "Determine which Ethereum network to run app on for web3 calls.",
-      "value": "mainnet | goerli"
+      "value": "sepolia | mainnet"
     },
     "ETHERSCAN_API_KEY": {
       "description": "API key created on Etherscan.",
