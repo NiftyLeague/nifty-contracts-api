@@ -13,12 +13,15 @@ import path from 'path';
 
 import { COLORIZE_OPTIONS } from './api/constants/commandLine';
 import { handleNameChangeById } from './api/utils/handleNameChange';
+import { getItemIdByTokenId_SAFE } from './api/utils/getItemIdByTokenId';
+import { mint } from './api/imx/minting/mint';
 import alignOutput from './api/utils/alignOutput';
 import handleMetadataUpdate from './api/utils/handleMetadataUpdate';
 import refreshOpenSea from './api/utils/refreshOpenSea';
 import { MakeDegen } from './api/classes/degen';
 import { MakeItem } from './api/classes/item';
 import { MakeComic } from './api/classes/comic';
+import { getWallet } from './api/utils/wallet';
 import { sleep } from './api/utils/api';
 
 const targetNetwork = config.eth.network as TargetNetwork;
@@ -60,6 +63,9 @@ async function main() {
   program.command('pin-items').description('"pins" imx items metadata').action(pinItems);
 
   program.command('update-imx').description('"update" imx items & comics metadata').action(updateIMX);
+
+  program.command('mint-item <token-id>').description('"mint" imx item').action(mintItem);
+  program.command('mint-items').description('"mint" imx items').action(mintItems);
 
   // The getconfig modules expect to be running from the root directory of the project,
   // so we change the current directory to the parent dir of this script file to make things work
@@ -173,6 +179,24 @@ async function updateItem(tokenId: number) {
 async function updateItems() {
   for (let i = 1; i <= TOTAL_ITEMS; i++) {
     await updateItem(i);
+  }
+}
+
+async function mintItem(tokenId: number) {
+  if (targetNetwork !== 'mainnet') {
+    const itemId = await getItemIdByTokenId_SAFE(`${tokenId}`);
+    console.log(`⚠️  Minting new IMX item tokenID:`, tokenId);
+    const deployer = getWallet(targetNetwork);
+    const { contractAddress } = config.imx[targetNetwork].collection;
+    await mint(targetNetwork, contractAddress, deployer.address, [`${tokenId}`], `${itemId}`);
+  }
+}
+
+async function mintItems() {
+  const START_INDEX = 120;
+  const END_INDEX = 210;
+  for (let i = START_INDEX; i <= END_INDEX; i++) {
+    await mintItem(i);
   }
 }
 
