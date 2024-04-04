@@ -1,14 +1,14 @@
 import { config } from 'node-config-ts';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import express, { type Request, type Response } from 'express';
+import express, { NextFunction, type Request, type Response } from 'express';
 import fetch from 'node-fetch';
 import { groupBy, mapValues } from 'lodash-es';
 import path from 'path';
 
 import { handleIMXMint } from './imx/minting/mint';
 import { generateIMXAuthorisationHeaders } from './utils/sign';
-import { getItemIdByTokenId } from './utils/getItemIdByTokenId';
+import { getItemIdByTokenId_SAFE } from './utils/getItemIdByTokenId';
 
 import { getBurnedDegens } from './utils/degensBurned';
 import { getItemsRecursive, resolveDegenMetadata, pipeRequest } from './utils/api';
@@ -44,44 +44,44 @@ app.use(cors());
 // ------ NFTL
 //////////////////////////////////////////////
 
-app.get('/NFTL/supply', async function (req: Request, res: Response) {
+app.get('/NFTL/supply', async function (req: Request, res: Response, next: NextFunction) {
   const supply = await resolveCirculatingSupply();
   if (supply) res.send(supply);
-  else res.sendStatus(404);
+  else next(new Error('Unable to resolve supply.'));
 });
 
-app.get('/NFTL/supply/circulating', async function (req: Request, res: Response) {
+app.get('/NFTL/supply/circulating', async function (req: Request, res: Response, next: NextFunction) {
   const supply = await resolveCirculatingSupply();
   if (supply) res.send(supply);
-  else res.sendStatus(404);
+  else next(new Error('Unable to resolve supply.'));
 });
 
-app.get('/NFTL/supply/unclaimed', async function (req: Request, res: Response) {
+app.get('/NFTL/supply/unclaimed', async function (req: Request, res: Response, next: NextFunction) {
   const supply = await resolveUnclaimedSupply();
   if (supply) res.send(supply);
-  else res.sendStatus(404);
+  else next(new Error('Unable to resolve supply.'));
 });
 
-app.get('/NFTL/supply/total', async function (req: Request, res: Response) {
+app.get('/NFTL/supply/total', async function (req: Request, res: Response, next: NextFunction) {
   const supply = await resolveTotalSupply();
   if (supply) res.send(supply);
-  else res.sendStatus(404);
+  else next(new Error('Unable to resolve supply.'));
 });
 
-app.get('/NFTL/supply/max', async function (req: Request, res: Response) {
+app.get('/NFTL/supply/max', async function (req: Request, res: Response, next: NextFunction) {
   const supply = await resolveMaxSupply();
   if (supply) res.send(supply);
-  else res.sendStatus(404);
+  else next(new Error('Unable to resolve supply.'));
 });
 
 //////////////////////////////////////////////
 // ------ DEGENs
 //////////////////////////////////////////////
 
-app.get('/degens/burn-list', async function (req: Request, res: Response) {
+app.get('/degens/burn-list', async function (req: Request, res: Response, next: NextFunction) {
   const burnList = await getBurnedDegens();
   if (burnList) res.send(burnList);
-  else res.sendStatus(404);
+  else next(new Error('Unable to resolve burn list.'));
 });
 
 //////////////////////////////////////////////
@@ -103,7 +103,7 @@ app.get('/:network/degen/:token_id/background', async function (req: Request, re
   const metadata = await resolveDegenMetadata(req);
   const background = metadata?.attributes?.find((a: Attribute) => a.trait_type === 'Background');
   if (background) res.send(background.value);
-  else res.sendStatus(404);
+  else res.status(404).send({ errors: [{ message: 'Background not found' }] });
 });
 
 app.get('/imx/comics/metadata/:token_id', async function (req: Request, res: Response) {
@@ -116,16 +116,24 @@ app.get('/imx/comics/image/:token_id', async function (req: Request, res: Respon
   pipeRequest(`${S3_BASE_URL}/${COMICS_S3_BUCKET}/images/${tokenId}.png`, res);
 });
 
-app.get('/imx/items/metadata/:token_id', async function (req: Request, res: Response) {
-  const tokenId = req.params.token_id;
-  const itemId = await getItemIdByTokenId(tokenId);
-  pipeRequest(`${S3_BASE_URL}/${ITEMS_S3_BUCKET}/metadata/${itemId}.json`, res);
+app.get('/imx/items/metadata/:token_id', async function (req: Request, res: Response, next: NextFunction) {
+  try {
+    const tokenId = req.params.token_id;
+    const itemId = await getItemIdByTokenId_SAFE(tokenId);
+    pipeRequest(`${S3_BASE_URL}/${ITEMS_S3_BUCKET}/metadata/${itemId}.json`, res);
+  } catch (e) {
+    next(e);
+  }
 });
 
-app.get('/imx/items/image/:token_id', async function (req: Request, res: Response) {
-  const tokenId = req.params.token_id;
-  const itemId = await getItemIdByTokenId(tokenId);
-  pipeRequest(`${S3_BASE_URL}/${ITEMS_S3_BUCKET}/images/${itemId}.gif`, res);
+app.get('/imx/items/image/:token_id', async function (req: Request, res: Response, next: NextFunction) {
+  try {
+    const tokenId = req.params.token_id;
+    const itemId = await getItemIdByTokenId_SAFE(tokenId);
+    pipeRequest(`${S3_BASE_URL}/${ITEMS_S3_BUCKET}/images/${itemId}.gif`, res);
+  } catch (e) {
+    next(e);
+  }
 });
 
 app.get('/imx/items', async function (req: Request, res: Response) {
@@ -137,17 +145,17 @@ app.get('/imx/items', async function (req: Request, res: Response) {
   pipeRequest(assetsURL, res);
 });
 
-app.get('/imx/null-items', async function (req: Request, res: Response) {
+app.get('/imx/null-items', async function (req: Request, res: Response, next: NextFunction) {
   try {
     const result = await getItemsRecursive();
     const filtered = result.filter((item: { metadata: Metadata; name?: string }) => !item.metadata || !item.name);
     res.send({ total: filtered.length, result: filtered });
   } catch (e) {
-    res.send(e);
+    next(e);
   }
 });
 
-app.get('/imx/items/overview', async function (req: Request, res: Response) {
+app.get('/imx/items/overview', async function (req: Request, res: Response, next: NextFunction) {
   try {
     const result = await getItemsRecursive();
     const itemBalances = Object.values(groupBy(result, 'metadata.item_id')).map(group => ({
@@ -166,108 +174,145 @@ app.get('/imx/items/overview', async function (req: Request, res: Response) {
       holder_key_balances: removeNullBal,
     });
   } catch (e) {
-    res.send(e);
+    next(e);
   }
 });
 
-app.get('/imx/metadata-refresh/:token_id', async function (req: Request, res: Response) {
-  const tokenId = req.params.token_id;
-  const signer = getWallet();
-  const { collection, client } = config.imx[network];
-  const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
+app.get('/imx/metadata-refresh/:token_id', async function (req: Request, res: Response, next: NextFunction) {
+  try {
+    const tokenId = req.params.token_id;
+    const signer = getWallet();
+    const { collection, client } = config.imx[network];
+    const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
 
-  const headers = {
-    'x-imx-eth-address': signer.address,
-    'x-imx-eth-signature': signature,
-    'x-imx-eth-timestamp': timestamp,
-  };
-  const body = JSON.stringify({
-    collection_address: collection.contractAddress,
-    token_ids: [tokenId],
-  });
+    const headers = {
+      'x-imx-eth-address': signer.address,
+      'x-imx-eth-signature': signature,
+      'x-imx-eth-timestamp': timestamp,
+    };
+    const body = JSON.stringify({
+      collection_address: collection.contractAddress,
+      token_ids: [tokenId],
+    });
 
-  const response = await fetch(`${client.publicApiUrl}/metadata-refreshes`, {
-    method: 'POST',
-    headers,
-    body,
-  });
-  res.send(response);
+    const response = await fetch(`${client.publicApiUrl}/metadata-refreshes`, {
+      method: 'POST',
+      headers,
+      body,
+    });
+    res.send(response);
+  } catch (e) {
+    next(e);
+  }
 });
 
-app.get('/imx/metadata-refresh-all/:max_token_id', async function (req: Request, res: Response) {
-  const maxTokenId = req.params.max_token_id;
-  const tokenIds = Array.from({ length: Number(maxTokenId) }, (_, index) => (index + 1).toString());
+app.get('/imx/metadata-refresh-all/:max_token_id', async function (req: Request, res: Response, next: NextFunction) {
+  try {
+    const maxTokenId = req.params.max_token_id;
+    const tokenIds = Array.from({ length: Number(maxTokenId) }, (_, index) => (index + 1).toString());
 
-  const signer = getWallet();
-  const { collection, client } = config.imx[network];
-  const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
+    const signer = getWallet();
+    const { collection, client } = config.imx[network];
+    const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
 
-  const headers = {
-    'x-imx-eth-address': signer.address,
-    'x-imx-eth-signature': signature,
-    'x-imx-eth-timestamp': timestamp,
-  };
-  const body = JSON.stringify({
-    collection_address: collection.contractAddress,
-    token_ids: tokenIds,
-  });
+    const headers = {
+      'x-imx-eth-address': signer.address,
+      'x-imx-eth-signature': signature,
+      'x-imx-eth-timestamp': timestamp,
+    };
+    const body = JSON.stringify({
+      collection_address: collection.contractAddress,
+      token_ids: tokenIds,
+    });
 
-  const response = await fetch(`${client.publicApiUrl}/metadata-refreshes`, {
-    method: 'POST',
-    headers,
-    body,
-  });
-  res.send(response);
+    const response = await fetch(`${client.publicApiUrl}/metadata-refreshes`, {
+      method: 'POST',
+      headers,
+      body,
+    });
+    res.send(response);
+  } catch (e) {
+    next(e);
+  }
 });
 
 //////////////////////////////////////////////
 // ------ WEBHOOKS
 //////////////////////////////////////////////
 
-app.post(`/:network/webhooks/degen/${config.blocknative.webhookSecret}`, async function (req: Request, res: Response) {
-  const targetNetwork = req.params.network as TargetNetwork;
-  const tx = req.body;
-  if (
-    targetNetwork === 'mainnet' &&
-    tx.status === 'confirmed' &&
-    tx.direction === 'incoming' &&
-    tx.apiKey === config.blocknative.apiKey.degens
-  ) {
-    if (tx.input.startsWith(CONTRACT_METHODS.RENAME)) {
-      console.log('DEGEN RENAME WEBHOOK TX:', tx);
-      await handleNameChangeByInput(targetNetwork, tx.input);
+app.post(
+  `/:network/webhooks/degen/${config.blocknative.webhookSecret}`,
+  async function (req: Request, res: Response, next: NextFunction) {
+    try {
+      const targetNetwork = req.params.network as TargetNetwork;
+      const tx = req.body;
+      if (
+        targetNetwork === 'mainnet' &&
+        tx.status === 'confirmed' &&
+        tx.direction === 'incoming' &&
+        tx.apiKey === config.blocknative.apiKey.degens
+      ) {
+        if (tx.input.startsWith(CONTRACT_METHODS.RENAME)) {
+          console.log('DEGEN RENAME WEBHOOK TX:', tx);
+          await handleNameChangeByInput(targetNetwork, tx.input);
+        }
+      }
+      res.sendStatus(200);
+    } catch (e) {
+      next(e);
     }
-  }
-  res.sendStatus(200);
-});
+  },
+);
 
-app.post(`/:network/webhooks/p2e/${config.blocknative.webhookSecret}`, async function (req: Request, res: Response) {
-  const targetNetwork = req.params.network as TargetNetwork;
-  const tx = req.body;
-  if (
-    targetNetwork === 'mainnet' &&
-    tx.status === 'confirmed' &&
-    tx.direction === 'incoming' &&
-    tx.apiKey === config.blocknative.apiKey.p2e
-  ) {
-    console.log('P2E WEBHOOK TX:', tx);
-    if (tx.input.startsWith(CONTRACT_METHODS.DEPOSIT)) await handleDepositConfirmation(tx);
-    if (tx.input.startsWith(CONTRACT_METHODS.WITHDRAW)) await handleWithdrawConfirmation(tx);
-  }
-  res.sendStatus(200);
-});
+app.post(
+  `/:network/webhooks/p2e/${config.blocknative.webhookSecret}`,
+  async function (req: Request, res: Response, next: NextFunction) {
+    try {
+      const targetNetwork = req.params.network as TargetNetwork;
+      const tx = req.body;
+      if (
+        targetNetwork === 'mainnet' &&
+        tx.status === 'confirmed' &&
+        tx.direction === 'incoming' &&
+        tx.apiKey === config.blocknative.apiKey.p2e
+      ) {
+        console.log('P2E WEBHOOK TX:', tx);
+        if (tx.input.startsWith(CONTRACT_METHODS.DEPOSIT)) await handleDepositConfirmation(tx);
+        if (tx.input.startsWith(CONTRACT_METHODS.WITHDRAW)) await handleWithdrawConfirmation(tx);
+      }
+      res.sendStatus(200);
+    } catch (e) {
+      next(e);
+    }
+  },
+);
 
-app.post(`/:network/webhooks/comics/${config.blocknative.webhookSecret}`, async function (req: Request, res: Response) {
-  const targetNetwork = req.params.network as TargetNetwork;
-  const tx = req.body;
-  if (tx.status === 'confirmed' && tx.direction === 'incoming' && tx.apiKey === config.blocknative.apiKey.comics) {
-    console.log('COMICS WEBHOOK TX:', targetNetwork, tx);
-    handleIMXMint(tx, targetNetwork);
-  }
-  res.sendStatus(200);
-});
+app.post(
+  `/:network/webhooks/comics/${config.blocknative.webhookSecret}`,
+  async function (req: Request, res: Response, next: NextFunction) {
+    try {
+      const targetNetwork = req.params.network as TargetNetwork;
+      const tx = req.body;
+      if (tx.status === 'confirmed' && tx.direction === 'incoming' && tx.apiKey === config.blocknative.apiKey.comics) {
+        console.log('COMICS WEBHOOK TX:', targetNetwork, tx);
+        handleIMXMint(tx, targetNetwork);
+      }
+      res.sendStatus(200);
+    } catch (e) {
+      next(e);
+    }
+  },
+);
 
 //////////////////////////////////////////////
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const errorHandler = (err: Error, req: Request, res: Response, _: NextFunction) => {
+  console.error(err);
+  res.status(500).send({ errors: [{ message: err.message ?? 'Something went wrong' }] });
+};
+
+app.use(errorHandler);
 
 app.listen(app.get('port'), function () {
   console.log('Node app is running on port', app.get('port'));
