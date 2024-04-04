@@ -3,7 +3,8 @@ name: Validate, build, and test on every push
 on: [push]
 
 jobs:
-  build:
+  test:
+    name: Test & Build Code
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -11,16 +12,12 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 16.18.1
+          node-version: 20.x
           cache: 'yarn'
       - name: Install dependencies
         uses: borales/actions-yarn@v4
         with:
           cmd: install
-      - name: Build
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: build
       - name: Run prettier
         uses: borales/actions-yarn@v4
         with:
@@ -32,4 +29,8 @@ jobs:
       - name: Check TypeScript
         uses: borales/actions-yarn@v4
         with:
-          cmd: tsc --noEmit
+          cmd: type-check
+      - name: Build
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: build

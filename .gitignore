@@ -71,6 +71,7 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
+!.env.example
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -84,6 +85,7 @@ dist
 
 # Gatsby files
 .cache/
+cache/*
 # Comment in the public line in if your project uses Gatsby and *not* Next.js
 # https://nextjs.org/blog/next-9-1#public-directory-support
 # public
@@ -104,3 +106,5 @@ dist
 .tern-port
 
 public/images/degens/
+.vercel
+api/types/typechain

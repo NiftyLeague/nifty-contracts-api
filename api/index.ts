@@ -1,39 +1,39 @@
-import dotenv from 'dotenv';
+import { config } from 'node-config-ts';
 import bodyParser from 'body-parser';
-import config from 'config';
 import cors from 'cors';
+import express, { type Request, type Response } from 'express';
 import fetch from 'node-fetch';
-import express, { Request, Response } from 'express';
+import { groupBy, mapValues } from 'lodash-es';
 import path from 'path';
-import { AlchemyProvider } from '@ethersproject/providers';
-import { Wallet } from '@ethersproject/wallet';
-import { groupBy, mapValues } from 'lodash';
 
-dotenv.config();
+import { handleIMXMint } from './imx/minting/mint';
+import { generateIMXAuthorisationHeaders } from './utils/sign';
+import { getItemIdByTokenId } from './utils/getItemIdByTokenId';
 
-import { getItemsRecursive, resolveDegenMetadata, pipeRequest } from './scripts/utils/api';
-import { Attribute, Metadata, TargetNetwork } from './types';
-import { CONTRACT_METHODS } from './constants';
-import { S3_BASE_URL, DEGENS_S3_BUCKET, COMICS_S3_BUCKET, ITEMS_S3_BUCKET } from './constants/aws';
+import { getBurnedDegens } from './utils/degensBurned';
+import { getItemsRecursive, resolveDegenMetadata, pipeRequest } from './utils/api';
+import { handleDepositConfirmation } from './utils/deposit';
+import { handleNameChangeByInput } from './utils/handleNameChange';
+import { handleWithdrawConfirmation } from './utils/withdraw';
+import { resolveCirculatingSupply, resolveMaxSupply, resolveTotalSupply, resolveUnclaimedSupply } from './utils/nftl';
+import { getWallet } from './utils/wallet';
 
-import { handleNameChangeByInput } from './scripts/handleNameChange';
-import { handleDepositConfirmation } from './scripts/deposit';
-import { handleWithdrawConfirmation } from './scripts/withdraw';
-import { resolveCirculatingSupply, resolveMaxSupply, resolveTotalSupply, resolveUnclaimedSupply } from './scripts/nftl';
-import { handleIMXMint } from './scripts/imx-mint';
-import { generateIMXAuthorisationHeaders } from './scripts/imx/libs/sign';
-import env from './scripts/imx/config/client';
-import { getItemIdByTokenId } from './scripts/imx/libs/utils';
-import { getBurnedDegens } from './scripts/degensBurned';
+import { CONTRACT_METHODS } from './constants/contracts';
 import { LEGGIES } from './constants/degenMetadata';
+import { S3_BASE_URL, DEGENS_S3_BUCKET, COMICS_S3_BUCKET, ITEMS_S3_BUCKET } from './constants/aws';
+import type { Attribute, Metadata, TargetNetwork } from './types';
+
+const network = config.eth.network as TargetNetwork;
+
+const __dirname = path.resolve();
 
 const app = express()
-  .set('port', config.get('port'))
+  .set('port', config.port || 5005)
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs');
 
 app.get('/', function (req: Request, res: Response) {
-  res.send('Smart Contract API for the Nifty League!');
+  res.send('Smart Contract API for Nifty League!');
 });
 
 app.use(bodyParser.json());
@@ -130,8 +130,9 @@ app.get('/imx/items/image/:token_id', async function (req: Request, res: Respons
 
 app.get('/imx/items', async function (req: Request, res: Response) {
   const { cursor } = req.query;
-  const assetsURL = `${env.client.publicApiUrl}/assets?collection=${
-    env.collectionContractAddress
+  const { collection, client } = config.imx[network];
+  const assetsURL = `${client.publicApiUrl}/assets?collection=${
+    collection.contractAddress
   }&order_by=updated_at&page_size=200${cursor ? `&cursor=${cursor}` : ''}`;
   pipeRequest(assetsURL, res);
 });
@@ -171,24 +172,21 @@ app.get('/imx/items/overview', async function (req: Request, res: Response) {
 
 app.get('/imx/metadata-refresh/:token_id', async function (req: Request, res: Response) {
   const tokenId = req.params.token_id;
-
-  const privateKey = env.ownerAccountPrivateKey;
-  const provider = new AlchemyProvider(env.ethNetwork, env.alchemyApiKey);
-  const wallet = new Wallet(privateKey);
-  const signer = wallet.connect(provider);
+  const signer = getWallet();
+  const { collection, client } = config.imx[network];
   const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
 
   const headers = {
-    'x-imx-eth-address': env.ownerAccountPublicKey,
+    'x-imx-eth-address': signer.address,
     'x-imx-eth-signature': signature,
     'x-imx-eth-timestamp': timestamp,
   };
   const body = JSON.stringify({
-    collection_address: env.collectionContractAddress,
+    collection_address: collection.contractAddress,
     token_ids: [tokenId],
   });
 
-  const response = await fetch(`${env.client.publicApiUrl}/metadata-refreshes`, {
+  const response = await fetch(`${client.publicApiUrl}/metadata-refreshes`, {
     method: 'POST',
     headers,
     body,
@@ -200,23 +198,21 @@ app.get('/imx/metadata-refresh-all/:max_token_id', async function (req: Request,
   const maxTokenId = req.params.max_token_id;
   const tokenIds = Array.from({ length: Number(maxTokenId) }, (_, index) => (index + 1).toString());
 
-  const privateKey = env.ownerAccountPrivateKey;
-  const provider = new AlchemyProvider(env.ethNetwork, env.alchemyApiKey);
-  const wallet = new Wallet(privateKey);
-  const signer = wallet.connect(provider);
+  const signer = getWallet();
+  const { collection, client } = config.imx[network];
   const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
 
   const headers = {
-    'x-imx-eth-address': env.ownerAccountPublicKey,
+    'x-imx-eth-address': signer.address,
     'x-imx-eth-signature': signature,
     'x-imx-eth-timestamp': timestamp,
   };
   const body = JSON.stringify({
-    collection_address: env.collectionContractAddress,
+    collection_address: collection.contractAddress,
     token_ids: tokenIds,
   });
 
-  const response = await fetch(`${env.client.publicApiUrl}/metadata-refreshes`, {
+  const response = await fetch(`${client.publicApiUrl}/metadata-refreshes`, {
     method: 'POST',
     headers,
     body,
@@ -228,64 +224,53 @@ app.get('/imx/metadata-refresh-all/:max_token_id', async function (req: Request,
 // ------ WEBHOOKS
 //////////////////////////////////////////////
 
-app.post(
-  `/:network/webhooks/degen/${config.get('blocknative.webhookSecret')}`,
-  async function (req: Request, res: Response) {
-    const targetNetwork = req.params.network as TargetNetwork;
-    const tx = req.body;
-    if (
-      targetNetwork === 'mainnet' &&
-      tx.status === 'confirmed' &&
-      tx.direction === 'incoming' &&
-      tx.apiKey === config.get('blocknative.apiKey.degens')
-    ) {
-      if (tx.input.startsWith(CONTRACT_METHODS.RENAME)) {
-        console.log('DEGEN RENAME WEBHOOK TX:', tx);
-        await handleNameChangeByInput(targetNetwork, tx.input);
-      }
+app.post(`/:network/webhooks/degen/${config.blocknative.webhookSecret}`, async function (req: Request, res: Response) {
+  const targetNetwork = req.params.network as TargetNetwork;
+  const tx = req.body;
+  if (
+    targetNetwork === 'mainnet' &&
+    tx.status === 'confirmed' &&
+    tx.direction === 'incoming' &&
+    tx.apiKey === config.blocknative.apiKey.degens
+  ) {
+    if (tx.input.startsWith(CONTRACT_METHODS.RENAME)) {
+      console.log('DEGEN RENAME WEBHOOK TX:', tx);
+      await handleNameChangeByInput(targetNetwork, tx.input);
     }
-    res.sendStatus(200);
-  },
-);
+  }
+  res.sendStatus(200);
+});
 
-app.post(
-  `/:network/webhooks/p2e/${config.get('blocknative.webhookSecret')}`,
-  async function (req: Request, res: Response) {
-    const targetNetwork = req.params.network as TargetNetwork;
-    const tx = req.body;
-    if (
-      targetNetwork === 'mainnet' &&
-      tx.status === 'confirmed' &&
-      tx.direction === 'incoming' &&
-      tx.apiKey === config.get('blocknative.apiKey.p2e')
-    ) {
-      console.log('P2E WEBHOOK TX:', tx);
-      if (tx.input.startsWith(CONTRACT_METHODS.DEPOSIT)) await handleDepositConfirmation(tx);
-      if (tx.input.startsWith(CONTRACT_METHODS.WITHDRAW)) await handleWithdrawConfirmation(tx);
-    }
-    res.sendStatus(200);
-  },
-);
+app.post(`/:network/webhooks/p2e/${config.blocknative.webhookSecret}`, async function (req: Request, res: Response) {
+  const targetNetwork = req.params.network as TargetNetwork;
+  const tx = req.body;
+  if (
+    targetNetwork === 'mainnet' &&
+    tx.status === 'confirmed' &&
+    tx.direction === 'incoming' &&
+    tx.apiKey === config.blocknative.apiKey.p2e
+  ) {
+    console.log('P2E WEBHOOK TX:', tx);
+    if (tx.input.startsWith(CONTRACT_METHODS.DEPOSIT)) await handleDepositConfirmation(tx);
+    if (tx.input.startsWith(CONTRACT_METHODS.WITHDRAW)) await handleWithdrawConfirmation(tx);
+  }
+  res.sendStatus(200);
+});
 
-app.post(
-  `/:network/webhooks/comics/${config.get('blocknative.webhookSecret')}`,
-  async function (req: Request, res: Response) {
-    const targetNetwork = req.params.network as TargetNetwork;
-    const tx = req.body;
-    if (
-      tx.status === 'confirmed' &&
-      tx.direction === 'incoming' &&
-      tx.apiKey === config.get('blocknative.apiKey.comics')
-    ) {
-      console.log('COMICS WEBHOOK TX:', targetNetwork, tx);
-      handleIMXMint(tx, targetNetwork);
-    }
-    res.sendStatus(200);
-  },
-);
+app.post(`/:network/webhooks/comics/${config.blocknative.webhookSecret}`, async function (req: Request, res: Response) {
+  const targetNetwork = req.params.network as TargetNetwork;
+  const tx = req.body;
+  if (tx.status === 'confirmed' && tx.direction === 'incoming' && tx.apiKey === config.blocknative.apiKey.comics) {
+    console.log('COMICS WEBHOOK TX:', targetNetwork, tx);
+    handleIMXMint(tx, targetNetwork);
+  }
+  res.sendStatus(200);
+});
 
 //////////////////////////////////////////////
 
 app.listen(app.get('port'), function () {
   console.log('Node app is running on port', app.get('port'));
 });
+
+export default app;
