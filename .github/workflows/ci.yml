@@ -34,3 +34,14 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: build
+      - name: Test
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: test
+        env:
+          ETH_NETWORK: 'sepolia'
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+          TESTNET_ALCHEMY_API_KEY: ${{ secrets.TESTNET_ALCHEMY_API_KEY }}
+          ETH_ACCOUNT_PRIVATE_KEY: ${{ secrets.ETH_ACCOUNT_PRIVATE_KEY }}
+          INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+          TESTNET_COLLECTION_CONTRACT_ADDRESS: 0xF1863D85095AA932de5BccEBE02Dac0b67303383
