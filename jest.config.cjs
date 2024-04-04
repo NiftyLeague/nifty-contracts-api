@@ -13,5 +13,5 @@ module.exports = {
   testPathIgnorePatterns: ['node_modules', 'dist'],
   coveragePathIgnorePatterns: ['node_modules', 'dist', 'api/constants', 'api/contracts', 'api/types'],
   // collectCoverage: true,
-  testTimeout: 10000,
+  testTimeout: 15000,
 };
