@@ -22,7 +22,7 @@ function parseTopics(targetNetwork: TargetNetwork, log: Log, eventName: string):
   return inputData;
 }
 
-async function mint(
+export async function mint(
   targetNetwork: TargetNetwork,
   contractAddress: string,
   to: string,
