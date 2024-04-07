@@ -10,9 +10,9 @@ import {
   CHARACTER_TRAIT_TYPES,
   DEGEN_METADATA,
   TRAIT_VALUE_MAP,
-} from '@/constants/degenMetadata';
+} from '@/constants/metadata/degens';
 import { DEGEN_CONTRACT_NAME } from '@/constants/contracts';
-import { DEGENS_S3_BUCKET } from '@/constants/aws';
+import { S3_DEGENS_BUCKET } from '@/constants/aws';
 import { Minty } from './minty';
 
 /**
@@ -55,12 +55,12 @@ export class Degen extends Minty {
     let rarity = raritySelector(tokenId);
     rarity = 1;
     // const filePath = await this.generateImage(tokenId, traits, rarity);
-    const filePath = `./public/images/degens/${tokenId}.${rarity < 3 ? 'png' : 'gif'}`;
+    const filePath = `ContractsAPI/public/images/degens/${tokenId}.${rarity < 3 ? 'png' : 'gif'}`;
     const content = await fs.promises.readFile(filePath);
     // Upload NFT asset from file
     const basename = path.basename(filePath);
     const { assetURI, assetGatewayURL } = await this.pinImage(`/degens/${basename}`, content);
-    await this.uploadToS3(`${this.targetNetwork}/images/${basename}`, content, DEGENS_S3_BUCKET);
+    await this.uploadToS3(`${this.targetNetwork}/images/${basename}`, content, S3_DEGENS_BUCKET);
     const metadata = await this.makeNFTMetadata(tokenId, traits, rarity, assetGatewayURL);
     await this.refreshOpenSea(tokenId);
 
@@ -130,7 +130,7 @@ export class Degen extends Minty {
     await this.uploadToS3(
       `${this.targetNetwork}/metadata/${tokenId}.json`,
       JSON.stringify(metadata, null, 2),
-      DEGENS_S3_BUCKET,
+      S3_DEGENS_BUCKET,
     );
     return metadata;
   }
@@ -155,7 +155,7 @@ export class Degen extends Minty {
     await this.uploadToS3(
       `${this.targetNetwork}/metadata/${tokenId}.json`,
       JSON.stringify(newMetadata, null, 2),
-      DEGENS_S3_BUCKET,
+      S3_DEGENS_BUCKET,
     );
     await this.refreshOpenSea(tokenId);
     return { newMetadata };
@@ -183,7 +183,7 @@ export class Degen extends Minty {
     await this.uploadToS3(
       `${this.targetNetwork}/metadata/${tokenId}.json`,
       JSON.stringify(newMetadata, null, 2),
-      DEGENS_S3_BUCKET,
+      S3_DEGENS_BUCKET,
     );
     await this.refreshOpenSea(tokenId);
     return { newMetadata };
@@ -201,16 +201,16 @@ export class Degen extends Minty {
   async updateDegenImage(tokenId: number, metadata: Metadata) {
     // Upload new image to IPFS
     const background = metadata.attributes.find(attr => attr.trait_type === 'Background');
-    const filePath = `./public/images/degens/${tokenId}.${background?.value === 'Legendary' ? 'gif' : 'png'}`;
+    const filePath = `ContractsAPI/public/images/degens/${tokenId}.${background?.value === 'Legendary' ? 'gif' : 'png'}`;
     const content = await fs.promises.readFile(filePath);
     const basename = path.basename(filePath);
     const { assetURI } = await this.pinImage(`/degens/${basename}`, content);
-    await this.uploadToS3(`${this.targetNetwork}/images/${basename}`, content, DEGENS_S3_BUCKET);
+    await this.uploadToS3(`${this.targetNetwork}/images/${basename}`, content, S3_DEGENS_BUCKET);
     // Update S3 metadata with new image URI
     const newMetadata = { ...metadata };
     newMetadata.image = assetURI;
     const s3MetadataPath = `${this.targetNetwork}/metadata/${tokenId}.json`;
-    await this.uploadToS3(s3MetadataPath, JSON.stringify(newMetadata, null, 2), DEGENS_S3_BUCKET);
+    await this.uploadToS3(s3MetadataPath, JSON.stringify(newMetadata, null, 2), S3_DEGENS_BUCKET);
     await this.refreshOpenSea(tokenId);
     return { newMetadata };
   }
