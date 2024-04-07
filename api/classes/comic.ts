@@ -1,9 +1,10 @@
 import path from 'path';
 import fs from 'fs';
 
-import type { TargetNetwork } from '@/types';
+import type { Metadata, TargetNetwork } from '@/types';
+import { COMICS_METADATA } from '@/constants/metadata/comics';
 import { COMICS_CONTRACT_NAME } from '@/constants/contracts';
-import { COMICS_S3_BUCKET } from '@/constants/aws';
+import { S3_MARKETPLACE_BUCKET } from '@/constants/aws';
 import { COMICS_IMAGES_CID } from '@/constants/ipfs';
 import { makeGatewayURL } from '@/utils/uriHelpers';
 import { Minty } from './minty';
@@ -44,13 +45,11 @@ class Comic extends Minty {
    * @returns {Promise<CreateMetadataResult>}
    */
   async makeComicMetadata(tokenId: number, assetGatewayURL: string) {
-    const metadata = {
-      name: `COMIC #${tokenId}`,
-      image: assetGatewayURL,
-      description:
-        'Nifty League Launch Comics!! 📚  Each comic is burnable for a wearable but you might want to keep a full collection for when you get to the Citadel...',
-    };
-    await this.uploadToS3(`metadata/${tokenId}.json`, JSON.stringify(metadata, null, 2), COMICS_S3_BUCKET);
+    const comic = COMICS_METADATA.find(c => c.id === Number(tokenId));
+    if (!comic) throw new Error(`Comic ID ${tokenId} not found`);
+    const metadata: Metadata = { ...comic };
+    metadata.image = assetGatewayURL;
+    await this.uploadToS3(`metadata/${tokenId}.json`, JSON.stringify(metadata, null, 2), S3_MARKETPLACE_BUCKET);
     return metadata;
   }
 
@@ -68,13 +67,13 @@ class Comic extends Minty {
    * @returns {Promise<GenerateNFTResult>}
    */
   async generateComic(tokenId: number) {
-    const filePath = `./public/images/comics/${tokenId}.png`;
+    const filePath = `ContractsAPI/public/images/comics/${tokenId}.png`;
     const content = await fs.promises.readFile(filePath);
     const basename = path.basename(filePath);
     const { assetURI, assetGatewayURL } = await this.pinImage(`/nifty-launch-comics/${basename}`, content);
-    await this.uploadToS3(`images/${basename}`, content, COMICS_S3_BUCKET);
+    await this.uploadToS3(`images/${basename}`, content, S3_MARKETPLACE_BUCKET);
     const metadata = await this.makeComicMetadata(tokenId, assetGatewayURL);
-    await this.refreshOpenSea(tokenId);
+    // await this.refreshOpenSea(tokenId);
 
     return {
       tokenId,

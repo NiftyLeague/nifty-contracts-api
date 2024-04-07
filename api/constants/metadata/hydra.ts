@@ -1,17 +1,7 @@
 import fs from 'fs';
-import { DEGEN_METADATA } from './degenMetadata';
-import { Attribute, Rarity } from '@/types';
-
-export enum HydraClan {
-  b = 'Battalion',
-  n = 'Naked',
-  o = 'Outlier',
-  r = 'Royalty',
-  s = 'Shadowclan',
-  t = 'Traditionalist',
-}
-
-export const HYDRA_EGG_IPFS = 'ipfs://bafybeicawvt3acmrrenmesvflib73xbfihexncseybcljuruwtr44hzca4/nifty-degens/egg.mp4';
+import type { Attribute, Rarity } from '@/types';
+import { DEGEN_METADATA } from './degens';
+import { HYDRA_EGG_IPFS } from '../ipfs';
 
 export const UNHATCHED_METADATA = {
   name: 'HYDRA',
@@ -33,5 +23,5 @@ export const UNHATCHED_METADATA = {
   ],
 };
 
-const HYDRAS = fs.readFileSync('./api/constants/hydras.json', { encoding: 'utf8' });
+const HYDRAS = fs.readFileSync('./api/constants/metadata/hydras.json', { encoding: 'utf8' });
 export const HYDRA_ATTRIBUTES: { [tokenId: string]: { rarity: Rarity; attributes: Attribute[] } } = JSON.parse(HYDRAS);
