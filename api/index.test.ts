@@ -1,7 +1,8 @@
 import request from 'supertest';
 import { jest } from '@jest/globals';
 
-import { ITEMS_METADATA } from './constants/itemsMetadata';
+import { ITEMS_METADATA } from './constants/metadata/items';
+import { MARKETPLACE_COLLECTION_METADATA } from './constants/metadata/marketplace';
 import { getItemIdByTokenId_SAFE } from './utils/getItemIdByTokenId';
 import { handleNameChangeById } from './utils/handleNameChange';
 import { MakeDegen, Degen } from './classes/degen';
@@ -68,6 +69,41 @@ describe('API Endpoints', () => {
       const response = await request(app).get(`/${network}/degen/${tokenId}/background`);
       expect(response.status).toBe(200);
       expect(response.text).toMatch('Common');
+    });
+  });
+
+  describe('MARKETPLACE', () => {
+    const comicId = 2;
+    const itemId = 101;
+
+    it('should return the collection metadata of the marketplace', async () => {
+      const response = await request(app).get('/imx/marketplace/collection.json');
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(MARKETPLACE_COLLECTION_METADATA);
+    });
+
+    it('should return the metadata of a comic by token ID', async () => {
+      const response = await request(app).get(`/imx/marketplace/metadata/${comicId}`);
+      expect(response.status).toBe(200);
+      expect(response.body.name).toEqual(`Comic #${comicId}`);
+    });
+
+    it('should return the image of a comic by token ID', async () => {
+      const response = await request(app).get(`/imx/marketplace/images/${comicId}`);
+      expect(response.status).toBe(200);
+      expect(response.header['content-type']).toMatch(/image\/png/);
+    });
+
+    it('should return the metadata of an item by token ID', async () => {
+      const response = await request(app).get(`/imx/marketplace/metadata/${itemId}`);
+      expect(response.status).toBe(200);
+      expect(response.body.name).toEqual(ITEMS_METADATA[itemId - 100 - 1].name);
+    });
+
+    it('should return the image of an item by token ID', async () => {
+      const response = await request(app).get(`/imx/marketplace/images/${itemId}`);
+      expect(response.status).toBe(200);
+      expect(response.header['content-type']).toMatch(/image\/gif/);
     });
   });
 
@@ -139,6 +175,8 @@ describe('API Webhooks', () => {
     const tokenId = 1;
 
     const metadata = {
+      id: tokenId,
+      token_id: tokenId.toString(),
       name: 'Old Name',
       image: `ipfs://bafybeih75ntopwuggljajz3p2y2mh2ylxfv6joqlbvo2wxtabxkxm6igaa/degens/${tokenId}.png`,
       description: 'Original collection of your favorite 10k DEGENs 🎮',
