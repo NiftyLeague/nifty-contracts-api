@@ -1,5 +1,7 @@
 import { BytesLike } from 'ethers';
 import type { ImmutableXClientParams } from '@imtbl/imx-sdk';
+
+export * from './metadata';
 export type ContractName =
   | 'NiftyDegen'
   | 'NiftyLaunchComics'
@@ -15,33 +17,6 @@ export type TargetNetwork = 'mainnet' | 'sepolia';
 export type Signer = NonNullable<ImmutableXClientParams['signer']>;
 
 export type ChainId = '1' | '11155111';
-
-export type Rarity = '???' | 'Common' | 'Rare' | 'Meta' | 'Legendary' | 'Mythic';
-
-export type Attribute = { trait_type?: string; value: string };
-
-export type Metadata = {
-  name: string;
-  image: string;
-  description: string;
-  external_url: string;
-  animation_url?: string;
-  attributes: Attribute[];
-};
-
-export type CreationInfo = { blockNumber: number; creatorAddress: string };
-
-export type NFTInfo = {
-  tokenId: string | number;
-  metadata: Metadata;
-  metadataURI?: string;
-  metadataGatewayURL?: string;
-  ownerAddress?: string;
-  assetURI?: string;
-  assetGatewayURL?: string;
-  assetDataBase64?: string;
-  creationInfo?: CreationInfo;
-};
 
 export type InternalTransactions = {
   type: string;

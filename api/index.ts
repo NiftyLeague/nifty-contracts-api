@@ -19,8 +19,15 @@ import { resolveCirculatingSupply, resolveMaxSupply, resolveTotalSupply, resolve
 import { getWallet } from './utils/wallet';
 
 import { CONTRACT_METHODS } from './constants/contracts';
-import { LEGGIES } from './constants/degenMetadata';
-import { S3_BASE_URL, DEGENS_S3_BUCKET, COMICS_S3_BUCKET, ITEMS_S3_BUCKET } from './constants/aws';
+import { LEGGIES } from './constants/metadata/degens';
+import {
+  S3_BASE_URL,
+  S3_COMICS_BUCKET,
+  S3_DEGENS_BUCKET,
+  S3_ITEMS_BUCKET,
+  S3_MARKETPLACE_BUCKET,
+} from './constants/aws';
+import { MARKETPLACE_COLLECTION_METADATA } from './constants/metadata/marketplace';
 import type { Attribute, Metadata, TargetNetwork } from './types';
 
 const network = config.eth.network as TargetNetwork;
@@ -84,19 +91,15 @@ app.get('/degens/burn-list', async function (req: Request, res: Response, next: 
   else next(new Error('Unable to resolve burn list.'));
 });
 
-//////////////////////////////////////////////
-// ------ METADATA
-//////////////////////////////////////////////
-
 app.get('/:network/degen/metadata/:token_id', async function (req: Request, res: Response) {
   const { network, token_id } = req.params;
-  pipeRequest(`${S3_BASE_URL}/${DEGENS_S3_BUCKET}/${network}/metadata/${token_id}.json`, res);
+  pipeRequest(`${S3_BASE_URL}/${S3_DEGENS_BUCKET}/${network}/metadata/${token_id}.json`, res);
 });
 
 app.get('/:network/degen/image/:token_id', async function (req: Request, res: Response) {
   const { network, token_id } = req.params;
   const type = LEGGIES.includes(Number(token_id)) ? 'gif' : 'png';
-  pipeRequest(`${S3_BASE_URL}/${DEGENS_S3_BUCKET}/${network}/images/${token_id}.${type}`, res);
+  pipeRequest(`${S3_BASE_URL}/${S3_DEGENS_BUCKET}/${network}/images/${token_id}.${type}`, res);
 });
 
 app.get('/:network/degen/:token_id/background', async function (req: Request, res: Response) {
@@ -106,21 +109,49 @@ app.get('/:network/degen/:token_id/background', async function (req: Request, re
   else res.status(404).send({ errors: [{ message: 'Background not found' }] });
 });
 
+//////////////////////////////////////////////
+// ------ MARKETPLACE
+//////////////////////////////////////////////
+
+app.get('/imx/marketplace/collection.json', async function (req: Request, res: Response) {
+  res.send(MARKETPLACE_COLLECTION_METADATA);
+});
+
+app.get('/imx/marketplace/metadata/:token_id', async function (req: Request, res: Response) {
+  const tokenId = req.params.token_id;
+  pipeRequest(`${S3_BASE_URL}/${S3_MARKETPLACE_BUCKET}/metadata/${tokenId}.json`, res);
+});
+
+app.get('/imx/marketplace/images/:token_id', async function (req: Request, res: Response) {
+  const tokenId = req.params.token_id;
+  // COMICS 1-100 are PNG, Items 101+ are GIF
+  const fileType = Number(tokenId) <= 100 ? 'png' : 'gif';
+  pipeRequest(`${S3_BASE_URL}/${S3_MARKETPLACE_BUCKET}/images/${tokenId}.${fileType}`, res);
+});
+
+//////////////////////////////////////////////
+// ------ COMICS (DEPRECATED)
+//////////////////////////////////////////////
+
 app.get('/imx/comics/metadata/:token_id', async function (req: Request, res: Response) {
   const tokenId = req.params.token_id;
-  pipeRequest(`${S3_BASE_URL}/${COMICS_S3_BUCKET}/metadata/${tokenId}.json`, res);
+  pipeRequest(`${S3_BASE_URL}/${S3_COMICS_BUCKET}/metadata/${tokenId}.json`, res);
 });
 
 app.get('/imx/comics/image/:token_id', async function (req: Request, res: Response) {
   const tokenId = req.params.token_id;
-  pipeRequest(`${S3_BASE_URL}/${COMICS_S3_BUCKET}/images/${tokenId}.png`, res);
+  pipeRequest(`${S3_BASE_URL}/${S3_COMICS_BUCKET}/images/${tokenId}.png`, res);
 });
+
+//////////////////////////////////////////////
+// ------ ITEMS (DEPRECATED)
+//////////////////////////////////////////////
 
 app.get('/imx/items/metadata/:token_id', async function (req: Request, res: Response, next: NextFunction) {
   try {
     const tokenId = req.params.token_id;
     const itemId = await getItemIdByTokenId_SAFE(tokenId);
-    pipeRequest(`${S3_BASE_URL}/${ITEMS_S3_BUCKET}/metadata/${itemId}.json`, res);
+    pipeRequest(`${S3_BASE_URL}/${S3_ITEMS_BUCKET}/metadata/${itemId}.json`, res);
   } catch (e) {
     next(e);
   }
@@ -130,7 +161,7 @@ app.get('/imx/items/image/:token_id', async function (req: Request, res: Respons
   try {
     const tokenId = req.params.token_id;
     const itemId = await getItemIdByTokenId_SAFE(tokenId);
-    pipeRequest(`${S3_BASE_URL}/${ITEMS_S3_BUCKET}/images/${itemId}.gif`, res);
+    pipeRequest(`${S3_BASE_URL}/${S3_ITEMS_BUCKET}/images/${itemId}.gif`, res);
   } catch (e) {
     next(e);
   }
