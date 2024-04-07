@@ -77,10 +77,10 @@
       },
       "collection": {
         "contractAddress": "@@MAINNET_COLLECTION_CONTRACT_ADDRESS",
-        "name": "Nifty League: Items",
-        "description": "A collection of unique and rare items used in Nifty League games.",
-        "iconUrl": "https://github.com/NiftyLeague/Nifty-League-Images/blob/main/NL-32x32.png",
-        "imageUrl": "https://github.com/NiftyLeague/Nifty-League-Images/blob/main/Nifty%20League%20Digital_Lettermark%20Circle%20White%20Gradient.png",
+        "name": "Nifty Marketplace",
+        "description": "A collection of unique and rare items used in Nifty League games!",
+        "iconUrl": "https://niftyleague.com/img/logo/purple-filled.png",
+        "imageUrl": "https://niftyleague.com/img/logo/full-bg.png",
         "metadataApiUrl": "https://api.niftyleague.com/imx/items/metadata"
       }
     },
@@ -105,10 +105,10 @@
       },
       "collection": {
         "contractAddress": "@@TESTNET_COLLECTION_CONTRACT_ADDRESS",
-        "name": "Nifty League: Items",
+        "name": "Nifty Marketplace",
         "description": "A collection of unique and rare items used in Nifty League games.",
-        "iconUrl": "https://github.com/NiftyLeague/Nifty-League-Images/blob/main/NL-32x32.png",
-        "imageUrl": "https://github.com/NiftyLeague/Nifty-League-Images/blob/main/Nifty%20League%20Digital_Lettermark%20Circle%20White%20Gradient.png",
+        "iconUrl": "https://niftyleague.com/img/logo/purple-filled.png",
+        "imageUrl": "https://niftyleague.com/img/logo/full-bg.png",
         "metadataApiUrl": "https://niftyleague-dev.herokuapp.com/imx/items/metadata"
       }
     }

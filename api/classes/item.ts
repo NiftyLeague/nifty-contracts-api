@@ -1,10 +1,10 @@
 import path from 'path';
 import fs from 'fs';
 
-import type { TargetNetwork } from '@/types';
+import type { Metadata, TargetNetwork } from '@/types';
+import { ITEMS_METADATA } from '@/constants/metadata/items';
 import { ITEMS_CONTRACT_NAME } from '@/constants/contracts';
-import { ITEMS_S3_BUCKET } from '@/constants/aws';
-import { ITEMS_METADATA } from '@/constants/itemsMetadata';
+import { S3_MARKETPLACE_BUCKET } from '@/constants/aws';
 import { ITEMS_IMAGES_CID } from '@/constants/ipfs';
 import { makeGatewayURL } from '@/utils/uriHelpers';
 import { Minty } from './minty';
@@ -45,11 +45,11 @@ class Item extends Minty {
    * @returns {Promise<CreateMetadataResult>}
    */
   async makeItemMetadata(tokenId: number, assetGatewayURL: string) {
-    const metadata = {
-      ...ITEMS_METADATA[tokenId - 1],
-      image_url: assetGatewayURL,
-    };
-    await this.uploadToS3(`metadata/${tokenId}.json`, JSON.stringify(metadata, null, 2), ITEMS_S3_BUCKET);
+    const item = ITEMS_METADATA.find(i => i.id === Number(tokenId));
+    if (!item) throw new Error(`Item ID ${tokenId} not found`);
+    const metadata: Metadata = { ...item };
+    metadata.image = assetGatewayURL;
+    await this.uploadToS3(`metadata/${tokenId}.json`, JSON.stringify(metadata, null, 2), S3_MARKETPLACE_BUCKET);
     return metadata;
   }
 
@@ -67,11 +67,11 @@ class Item extends Minty {
    * @returns {Promise<GenerateNFTResult>}
    */
   async generateItem(tokenId: number) {
-    const filePath = `./public/images/items/${tokenId}.gif`;
+    const filePath = `ContractsAPI/public/images/items/${tokenId}.gif`;
     const content = await fs.promises.readFile(filePath);
     const basename = path.basename(filePath);
     const { assetURI, assetGatewayURL } = await this.pinImage(`/items/${basename}`, content);
-    await this.uploadToS3(`images/${basename}`, content, ITEMS_S3_BUCKET);
+    await this.uploadToS3(`images/${basename}`, content, S3_MARKETPLACE_BUCKET);
     const metadata = await this.makeItemMetadata(tokenId, assetGatewayURL);
 
     return {

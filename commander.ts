@@ -12,17 +12,16 @@ import { config } from 'node-config-ts';
 import path from 'path';
 
 import { COLORIZE_OPTIONS } from './api/constants/commandLine';
-import { handleNameChangeById } from './api/utils/handleNameChange';
+import { createComic, createItem, updateComic, updateItem } from '@/utils/marketplace';
 import { getItemIdByTokenId_SAFE } from './api/utils/getItemIdByTokenId';
+import { getWallet } from './api/utils/wallet';
+import { handleNameChangeById } from './api/utils/handleNameChange';
+import { MakeDegen } from './api/classes/degen';
 import { mint } from './api/imx/minting/mint';
+import { sleep } from './api/utils/api';
 import alignOutput from './api/utils/alignOutput';
 import handleMetadataUpdate from './api/utils/handleMetadataUpdate';
 import refreshOpenSea from './api/utils/refreshOpenSea';
-import { MakeDegen } from './api/classes/degen';
-import { MakeItem } from './api/classes/item';
-import { MakeComic } from './api/classes/comic';
-import { getWallet } from './api/utils/wallet';
-import { sleep } from './api/utils/api';
 
 const targetNetwork = config.eth.network as TargetNetwork;
 
@@ -59,13 +58,16 @@ async function main() {
     .option('-c, --creation-info', 'include the creator address and block number the NFT was minted')
     .action(getDegen);
 
-  program.command('pin-item <token-id>').description('"pins" imx item metadata').action(pinItem);
-  program.command('pin-items').description('"pins" imx items metadata').action(pinItems);
+  program.command('mint-item <token-id>').description('"mints" imx item on-chain').action(mintItem);
+  program.command('mint-items').description('"mints" imx items on-chain').action(mintItems);
+
+  program.command('create-item <token-id>').description('"pins" imx item metadata').action(createItem);
+  program.command('create-items').description('"pins" imx items metadata').action(createItems);
+
+  program.command('create-comic <token-id>').description('"pins" imx comic metadata').action(createComic);
+  program.command('create-comics').description('"pins" imx comics metadata').action(createComics);
 
   program.command('update-imx').description('"update" imx items & comics metadata').action(updateIMX);
-
-  program.command('mint-item <token-id>').description('"mint" imx item').action(mintItem);
-  program.command('mint-items').description('"mint" imx items').action(mintItems);
 
   // The getconfig modules expect to be running from the root directory of the project,
   // so we change the current directory to the parent dir of this script file to make things work
@@ -141,43 +143,22 @@ async function getDegen(tokenId: number, options: { creationInfo: any }) {
   console.log(colorize(JSON.stringify(nft.metadata), COLORIZE_OPTIONS));
 }
 
+//////////////////////////////////////////////
+// -------- Marketplace
+//////////////////////////////////////////////
+
 // ---- ITEMS
 
 const TOTAL_ITEMS = 7;
 
-async function pinItem(tokenId: number) {
-  const minty = await MakeItem(targetNetwork);
-  console.log(`⚠️  Generating asset and metadata for item id ${tokenId}:`);
-  const nft = await minty.generateItem(tokenId);
-  console.log('');
-  alignOutput([
-    ['Token ID:', chalk.green(`${nft.tokenId}`)],
-    ['Asset Address:', chalk.blue(nft.assetURI)],
-    ['Asset Gateway URL:', chalk.blue(nft.assetGatewayURL)],
-  ]);
-  console.log('NFT Metadata:');
-  console.log(colorize(JSON.stringify(nft.metadata), COLORIZE_OPTIONS));
-  return;
-}
-
-async function pinItems() {
-  for (let i = 1; i <= TOTAL_ITEMS; i++) {
-    await pinItem(i);
+async function createItems() {
+  for (let i = 101; i <= 100 + TOTAL_ITEMS; i++) {
+    await createItem(i);
   }
 }
 
-async function updateItem(tokenId: number) {
-  const minty = await MakeItem(targetNetwork);
-  console.log(`⚠️  Updating Metadata for item tokenID:`, tokenId);
-  const { newMetadata } = await minty.updateItemMetadata(tokenId);
-  console.log('');
-  console.log('Updated NFT Metadata:');
-  console.log(colorize(JSON.stringify(newMetadata), COLORIZE_OPTIONS));
-  return { metadata: newMetadata };
-}
-
 async function updateItems() {
-  for (let i = 1; i <= TOTAL_ITEMS; i++) {
+  for (let i = 101; i <= 100 + TOTAL_ITEMS; i++) {
     await updateItem(i);
   }
 }
@@ -203,15 +184,10 @@ async function mintItems() {
 // ---- Comics
 
 const TOTAL_COMICS = 6;
-
-async function updateComic(tokenId: number) {
-  const minty = await MakeComic(targetNetwork);
-  console.log(`⚠️  Updating Metadata for comic tokenID:`, tokenId);
-  const { newMetadata } = await minty.updateComicMetadata(tokenId);
-  console.log('');
-  console.log('Updated NFT Metadata:');
-  console.log(colorize(JSON.stringify(newMetadata), COLORIZE_OPTIONS));
-  return { metadata: newMetadata };
+async function createComics() {
+  for (let i = 1; i <= TOTAL_COMICS; i++) {
+    await createComic(i);
+  }
 }
 
 async function updateComics() {
