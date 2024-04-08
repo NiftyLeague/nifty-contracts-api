@@ -2,6 +2,7 @@ import { BytesLike } from 'ethers';
 import type { ImmutableXClientParams } from '@imtbl/imx-sdk';
 
 export * from './metadata';
+export * from './snapshot';
 export type ContractName =
   | 'NiftyDegen'
   | 'NiftyLaunchComics'

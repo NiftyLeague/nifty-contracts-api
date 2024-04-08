@@ -105,6 +105,16 @@ describe('API Endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.header['content-type']).toMatch(/image\/gif/);
     });
+
+    it('should return a snapshot list for comics', async () => {
+      const response = await request(app).get(`/imx/snapshot/comics`);
+      expect(response.status).toBe(200);
+    });
+
+    it('should return a snapshot list for items', async () => {
+      const response = await request(app).get(`/imx/snapshot/items`);
+      expect(response.status).toBe(200);
+    });
   });
 
   describe('COMICS', () => {

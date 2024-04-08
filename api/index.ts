@@ -11,11 +11,13 @@ import { generateIMXAuthorisationHeaders } from './utils/sign';
 import { getItemIdByTokenId_SAFE } from './utils/getItemIdByTokenId';
 
 import { getBurnedDegens } from './utils/degensBurned';
-import { getItemsRecursive, resolveDegenMetadata, pipeRequest } from './utils/api';
+import { resolveDegenMetadata, pipeRequest } from './utils/api';
+import { getItemsRecursive } from './utils/getItemsRecursive';
 import { handleDepositConfirmation } from './utils/deposit';
 import { handleNameChangeByInput } from './utils/handleNameChange';
 import { handleWithdrawConfirmation } from './utils/withdraw';
 import { resolveCirculatingSupply, resolveMaxSupply, resolveTotalSupply, resolveUnclaimedSupply } from './utils/nftl';
+import { getComicsHolderSnapshot, getItemsHolderSnapshot, getCombinedSnapshot } from './utils/snapshots';
 import { getWallet } from './utils/wallet';
 
 import { CONTRACT_METHODS } from './constants/contracts';
@@ -118,7 +120,8 @@ app.get('/imx/marketplace/collection.json', async function (req: Request, res: R
 });
 
 app.get('/imx/marketplace/metadata/:token_id', async function (req: Request, res: Response) {
-  const tokenId = req.params.token_id;
+  let tokenId = req.params.token_id;
+  if (tokenId.endsWith('.json')) tokenId = tokenId.slice(0, -5);
   pipeRequest(`${S3_BASE_URL}/${S3_MARKETPLACE_BUCKET}/metadata/${tokenId}.json`, res);
 });
 
@@ -127,6 +130,24 @@ app.get('/imx/marketplace/images/:token_id', async function (req: Request, res: 
   // COMICS 1-100 are PNG, Items 101+ are GIF
   const fileType = Number(tokenId) <= 100 ? 'png' : 'gif';
   pipeRequest(`${S3_BASE_URL}/${S3_MARKETPLACE_BUCKET}/images/${tokenId}.${fileType}`, res);
+});
+
+app.get('/imx/snapshot/comics', async function (req: Request, res: Response, next: NextFunction) {
+  const snapshot = await getComicsHolderSnapshot();
+  if (snapshot) res.send(snapshot);
+  else next(new Error('Unable to resolve comics snapshot.'));
+});
+
+app.get('/imx/snapshot/items', async function (req: Request, res: Response, next: NextFunction) {
+  const snapshot = await getItemsHolderSnapshot();
+  if (snapshot) res.send(snapshot);
+  else next(new Error('Unable to resolve items snapshot.'));
+});
+
+app.get('/imx/snapshot/combined', async function (req: Request, res: Response, next: NextFunction) {
+  const snapshot = await getCombinedSnapshot();
+  if (snapshot) res.send(snapshot);
+  else next(new Error('Unable to resolve snapshot.'));
 });
 
 //////////////////////////////////////////////
