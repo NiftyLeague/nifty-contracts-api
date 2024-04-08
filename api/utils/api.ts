@@ -1,10 +1,7 @@
-import { config } from 'node-config-ts';
 import fetch from 'node-fetch';
 import https from 'https';
 import type { Request, Response } from 'express';
-import type { Metadata, TargetNetwork } from '@/types';
-
-const network = config.eth.network as TargetNetwork;
+import type { Metadata } from '@/types';
 
 export async function fetchMetadata(URI: string): Promise<Metadata | null> {
   try {
@@ -35,27 +32,4 @@ export const pipeRequest = (url: string, res: Response) =>
 // http://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
 export function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-export async function getItemsRecursive(cursor: string | null = null, result = []): Promise<any[]> {
-  const { collection, client } = config.imx[network];
-  const assetsURL = `${client.publicApiUrl}/assets?collection=${
-    collection.contractAddress
-  }&order_by=updated_at&page_size=200${cursor ? `&cursor=${cursor}` : ''}`;
-  const response = await fetch(assetsURL, {});
-  const json = (await response.json()) as {
-    result: never[];
-    remaining?: boolean;
-    cursor: string | null;
-  };
-  // add page to result array
-  result = result.concat(json.result);
-  // check is this the end
-  if (!json.remaining) {
-    // return result array
-    return result;
-  } else {
-    // or use cursor and continue processing
-    return getItemsRecursive(json.cursor, result);
-  }
 }

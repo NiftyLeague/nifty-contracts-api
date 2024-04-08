@@ -107,4 +107,3 @@ cache/*
 
 public/images/degens/
 .vercel
-api/types/typechain
