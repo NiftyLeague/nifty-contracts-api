@@ -10,7 +10,7 @@ import pinataSDK from '@pinata/sdk';
 
 import { ContractName, TargetNetwork, NFTInfo } from '@/types';
 import { getContractFactory } from '@/contracts';
-import refreshOpenSea from '@/utils/refreshOpenSea';
+import { refreshOpenSea } from '@/utils/refreshMetadata';
 import { uploadToS3 } from '@/utils/uploadToS3';
 import all from '@/utils/it-all';
 import { stripIpfsUriPrefix, makeGatewayURL, extractCID, ensureIpfsUriPrefix } from '@/utils/uriHelpers';
