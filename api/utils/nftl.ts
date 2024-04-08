@@ -6,6 +6,7 @@ import { NFTL_ADDRESS, NFTL_CONTRACT_NAME } from '@/constants/contracts';
 import { getContractFactory } from '@/contracts';
 import type { TargetNetwork } from '@/types';
 import { getBurnedDegens } from './degensBurned';
+import { NFTLToken } from '@/types/typechain';
 
 export async function resolveCirculatingSupply(): Promise<string | null> {
   try {
@@ -27,7 +28,7 @@ export async function resolveCirculatingSupply(): Promise<string | null> {
 export async function resolveUnclaimedSupply(): Promise<string | null> {
   try {
     const targetNetwork = config.eth.network as TargetNetwork;
-    const nftlContract = await getContractFactory(targetNetwork, NFTL_CONTRACT_NAME);
+    const nftlContract = await getContractFactory<NFTLToken>(targetNetwork, NFTL_CONTRACT_NAME);
     if (nftlContract) {
       const burnedDegens = await getBurnedDegens();
       const activeDegens = Array.from({ length: 10000 }, (_, i) => i + 1).filter(num => !burnedDegens.includes(num));
