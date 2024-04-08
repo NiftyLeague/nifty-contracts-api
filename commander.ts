@@ -21,7 +21,7 @@ import { mint } from './api/imx/minting/mint';
 import { sleep } from './api/utils/api';
 import alignOutput from './api/utils/alignOutput';
 import handleMetadataUpdate from './api/utils/handleMetadataUpdate';
-import refreshOpenSea from './api/utils/refreshOpenSea';
+import { refreshImmutable, refreshOpenSea } from './api/utils/refreshMetadata';
 
 const targetNetwork = config.eth.network as TargetNetwork;
 
@@ -68,6 +68,7 @@ async function main() {
   program.command('create-comics').description('"pins" imx comics metadata').action(createComics);
 
   program.command('update-imx').description('"update" imx items & comics metadata').action(updateIMX);
+  program.command('refresh-imx').description('"refresh" imx items & comics metadata').action(refreshIMX);
 
   // The getconfig modules expect to be running from the root directory of the project,
   // so we change the current directory to the parent dir of this script file to make things work
@@ -201,6 +202,10 @@ async function updateComics() {
 async function updateIMX() {
   await updateComics();
   await updateItems();
+}
+
+async function refreshIMX() {
+  await refreshImmutable(targetNetwork);
 }
 
 // ---- main entry point when running as a script
