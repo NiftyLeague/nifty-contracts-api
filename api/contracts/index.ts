@@ -20,8 +20,11 @@ export const getContractABI = (targetNetwork: TargetNetwork, contractName: Contr
 /**
  * Get NFT contract initialized with ABI & target address
  */
-export async function getContractFactory(targetNetwork: TargetNetwork, contractName: ContractName): Promise<Contract> {
+export async function getContractFactory<T = Contract>(
+  targetNetwork: TargetNetwork,
+  contractName: ContractName,
+): Promise<T> {
   const { address, abi } = getDeployedContract(targetNetwork, contractName);
   const wallet = getWallet();
-  return new Contract(address, abi, wallet);
+  return new Contract(address, abi, wallet) as T;
 }
