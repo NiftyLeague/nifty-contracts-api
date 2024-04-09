@@ -18,7 +18,7 @@ To set up a development environment, please follow these steps:
    git clone https://github.com/NiftyLeague/NiftySmartContracts
    ```
 
-2. Install development dependencies `yarn`
+2. Install development dependencies `pnpm`
 
 ## Issues and feature requests
 

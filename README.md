@@ -21,7 +21,7 @@ If you want to do a Heroku deployment, download and install the [Heroku CLI](htt
 
 ## API Quick Start
 
-Run `yarn dev` to start up your local API on post 5005 in watchmode
+Run `pnpm dev` to start up your local API on post 5005 in watchmode
 
 ## Commander Quick Start
 
@@ -63,7 +63,7 @@ const network = config.eth.network;
 If changes are made to `default.json` you can regenerte types using:
 
 ```
-yarn update-env
+pnpm update-env
 ```
 
 ---
