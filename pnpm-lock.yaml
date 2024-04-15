@@ -9,8 +9,8 @@ dependencies:
     specifier: ^3.550.0
     version: 3.550.0
   '@aws-sdk/lib-storage':
-    specifier: ^3.550.0
-    version: 3.550.0(@aws-sdk/client-s3@3.550.0)
+    specifier: ^3.554.0
+    version: 3.554.0(@aws-sdk/client-s3@3.550.0)
   '@imtbl/imx-sdk':
     specifier: ^3.8.0
     version: 3.8.0
@@ -560,8 +560,8 @@ packages:
       - aws-crt
     dev: false
 
-  /@aws-sdk/lib-storage@3.550.0(@aws-sdk/client-s3@3.550.0):
-    resolution: {integrity: sha512-zDUM4hV/t148DCXschwDusH9tzg7U1MpuUaUPJlklx9Va+NnjrjtWHwL/JeZ5sfGR/1wTZIg3sKho/4P2oAYrQ==}
+  /@aws-sdk/lib-storage@3.554.0(@aws-sdk/client-s3@3.550.0):
+    resolution: {integrity: sha512-WMn2EObllRKI0ELi31SoUGPowQ23/LCAXkG1o1VEas5kqobwgVgp9D8zqs9A/MEaZYl0yDqd94uKQJd7rUM/yg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@aws-sdk/client-s3': ^3.0.0
