@@ -39,8 +39,8 @@ dependencies:
     specifier: ^3.0.0
     version: 3.0.0
   ethers:
-    specifier: ^6.11.1
-    version: 6.11.1
+    specifier: ^6.12.1
+    version: 6.12.1
   express:
     specifier: ^4.19.2
     version: 4.19.2
@@ -4753,8 +4753,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /ethers@6.11.1:
-    resolution: {integrity: sha512-mxTAE6wqJQAbp5QAe/+o+rXOID7Nw91OZXvgpjDa1r4fAbq2Nu314oEZSbjoRLacuCzs7kUC3clEvkCQowffGg==}
+  /ethers@6.12.1:
+    resolution: {integrity: sha512-j6wcVoZf06nqEcBbDWkKg8Fp895SS96dSnTCjiXT+8vt2o02raTn4Lo9ERUuIVU5bAjoPYeA+7ytQFexFmLuVw==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@adraffy/ens-normalize': 1.10.1
