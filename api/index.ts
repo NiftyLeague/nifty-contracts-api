@@ -25,6 +25,7 @@ import { LEGGIES } from './constants/metadata/degens';
 import {
   S3_BASE_URL,
   S3_COMICS_BUCKET,
+  S3_COMICS_DISABLED_BUCKET,
   S3_DEGENS_BUCKET,
   S3_ITEMS_BUCKET,
   S3_MARKETPLACE_BUCKET,
@@ -156,7 +157,7 @@ app.get('/imx/snapshot/combined', async function (req: Request, res: Response, n
 
 app.get('/imx/comics/metadata/:token_id', async function (req: Request, res: Response) {
   const tokenId = req.params.token_id;
-  pipeRequest(`${S3_BASE_URL}/${S3_COMICS_BUCKET}/metadata/${tokenId}.json`, res);
+  pipeRequest(`${S3_BASE_URL}/${S3_COMICS_DISABLED_BUCKET}/metadata/${tokenId}.json`, res);
 });
 
 app.get('/imx/comics/image/:token_id', async function (req: Request, res: Response) {
