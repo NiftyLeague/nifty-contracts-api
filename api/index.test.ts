@@ -123,7 +123,7 @@ describe('API Endpoints', () => {
     it('should return the metadata of a comic by token ID', async () => {
       const response = await request(app).get(`/imx/comics/metadata/${tokenId}`);
       expect(response.status).toBe(200);
-      expect(response.body.name).toEqual(`COMIC #${tokenId}`);
+      expect(response.body.name).toEqual(`(DEPRECATED) COMIC #${tokenId}`);
     });
 
     it('should return the image of a comic by token ID', async () => {
