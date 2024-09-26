@@ -1,3 +1,5 @@
+// Deprecated
+
 import { config } from 'node-config-ts';
 import fetch from 'node-fetch';
 import { type BytesLike, formatEther, Interface } from 'ethers';
