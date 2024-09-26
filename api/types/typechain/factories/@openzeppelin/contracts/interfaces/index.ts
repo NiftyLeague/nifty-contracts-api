@@ -4,3 +4,5 @@
 export { IERC1271__factory } from './IERC1271__factory';
 export { IERC2981__factory } from './IERC2981__factory';
 export { IERC5267__factory } from './IERC5267__factory';
+export { IERC5805__factory } from './IERC5805__factory';
+export { IERC6372__factory } from './IERC6372__factory';
