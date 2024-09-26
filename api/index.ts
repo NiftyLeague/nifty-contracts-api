@@ -6,16 +6,13 @@ import fetch from 'node-fetch';
 import { groupBy, mapValues } from 'lodash-es';
 import path from 'path';
 
-import { handleIMXMint } from './imx/minting/mint';
 import { generateIMXAuthorisationHeaders } from './utils/sign';
 import { getItemIdByTokenId_SAFE } from './utils/getItemIdByTokenId';
 
 import { getBurnedDegens } from './utils/degensBurned';
 import { resolveDegenMetadata, pipeRequest } from './utils/api';
 import { getItemsRecursive } from './utils/getItemsRecursive';
-import { handleDepositConfirmation } from './utils/deposit';
 import { handleNameChangeByInput } from './utils/handleNameChange';
-import { handleWithdrawConfirmation } from './utils/withdraw';
 import { resolveCirculatingSupply, resolveMaxSupply, resolveTotalSupply, resolveUnclaimedSupply } from './utils/nftl';
 import { getComicsHolderSnapshot, getItemsHolderSnapshot, getCombinedSnapshot } from './utils/snapshots';
 import { getWallet } from './utils/wallet';
@@ -25,7 +22,6 @@ import { LEGGIES } from './constants/metadata/degens';
 import {
   S3_BASE_URL,
   S3_COMICS_BUCKET,
-  S3_COMICS_DISABLED_BUCKET,
   S3_DEGENS_BUCKET,
   S3_ITEMS_BUCKET,
   S3_MARKETPLACE_BUCKET,
@@ -133,6 +129,10 @@ app.get('/imx/marketplace/images/:token_id', async function (req: Request, res: 
   pipeRequest(`${S3_BASE_URL}/${S3_MARKETPLACE_BUCKET}/images/${tokenId}.${fileType}`, res);
 });
 
+//////////////////////////////////////////////
+// ------ MIGRATION SNAPSHOT (DEPRECATED)
+//////////////////////////////////////////////
+
 app.get('/imx/snapshot/comics', async function (req: Request, res: Response, next: NextFunction) {
   const snapshot = await getComicsHolderSnapshot();
   if (snapshot) res.send(snapshot);
@@ -157,7 +157,7 @@ app.get('/imx/snapshot/combined', async function (req: Request, res: Response, n
 
 app.get('/imx/comics/metadata/:token_id', async function (req: Request, res: Response) {
   const tokenId = req.params.token_id;
-  pipeRequest(`${S3_BASE_URL}/${S3_COMICS_DISABLED_BUCKET}/metadata/${tokenId}.json`, res);
+  pipeRequest(`${S3_BASE_URL}/${S3_COMICS_BUCKET}/metadata/${tokenId}.json`, res);
 });
 
 app.get('/imx/comics/image/:token_id', async function (req: Request, res: Response) {
@@ -317,45 +317,45 @@ app.post(
   },
 );
 
-app.post(
-  `/:network/webhooks/p2e/${config.blocknative.webhookSecret}`,
-  async function (req: Request, res: Response, next: NextFunction) {
-    try {
-      const targetNetwork = req.params.network as TargetNetwork;
-      const tx = req.body;
-      if (
-        targetNetwork === 'mainnet' &&
-        tx.status === 'confirmed' &&
-        tx.direction === 'incoming' &&
-        tx.apiKey === config.blocknative.apiKey.p2e
-      ) {
-        console.log('P2E WEBHOOK TX:', tx);
-        if (tx.input.startsWith(CONTRACT_METHODS.DEPOSIT)) await handleDepositConfirmation(tx);
-        if (tx.input.startsWith(CONTRACT_METHODS.WITHDRAW)) await handleWithdrawConfirmation(tx);
-      }
-      res.sendStatus(200);
-    } catch (e) {
-      next(e);
-    }
-  },
-);
+// app.post(
+//   `/:network/webhooks/p2e/${config.blocknative.webhookSecret}`,
+//   async function (req: Request, res: Response, next: NextFunction) {
+//     try {
+//       const targetNetwork = req.params.network as TargetNetwork;
+//       const tx = req.body;
+//       if (
+//         targetNetwork === 'mainnet' &&
+//         tx.status === 'confirmed' &&
+//         tx.direction === 'incoming' &&
+//         tx.apiKey === config.blocknative.apiKey.p2e
+//       ) {
+//         console.log('P2E WEBHOOK TX:', tx);
+//         if (tx.input.startsWith(CONTRACT_METHODS.DEPOSIT)) await handleDepositConfirmation(tx);
+//         if (tx.input.startsWith(CONTRACT_METHODS.WITHDRAW)) await handleWithdrawConfirmation(tx);
+//       }
+//       res.sendStatus(200);
+//     } catch (e) {
+//       next(e);
+//     }
+//   },
+// );
 
-app.post(
-  `/:network/webhooks/comics/${config.blocknative.webhookSecret}`,
-  async function (req: Request, res: Response, next: NextFunction) {
-    try {
-      const targetNetwork = req.params.network as TargetNetwork;
-      const tx = req.body;
-      if (tx.status === 'confirmed' && tx.direction === 'incoming' && tx.apiKey === config.blocknative.apiKey.comics) {
-        console.log('COMICS WEBHOOK TX:', targetNetwork, tx);
-        handleIMXMint(tx, targetNetwork);
-      }
-      res.sendStatus(200);
-    } catch (e) {
-      next(e);
-    }
-  },
-);
+// app.post(
+//   `/:network/webhooks/comics/${config.blocknative.webhookSecret}`,
+//   async function (req: Request, res: Response, next: NextFunction) {
+//     try {
+//       const targetNetwork = req.params.network as TargetNetwork;
+//       const tx = req.body;
+//       if (tx.status === 'confirmed' && tx.direction === 'incoming' && tx.apiKey === config.blocknative.apiKey.comics) {
+//         console.log('COMICS WEBHOOK TX:', targetNetwork, tx);
+//         handleIMXMint(tx, targetNetwork);
+//       }
+//       res.sendStatus(200);
+//     } catch (e) {
+//       next(e);
+//     }
+//   },
+// );
 
 //////////////////////////////////////////////
 

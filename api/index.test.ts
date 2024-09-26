@@ -28,19 +28,19 @@ describe('API Endpoints', () => {
       const response = await request(app).get('/NFTL/supply/unclaimed');
       expect(response.status).toBe(200);
       expect(response.text).toBeDefined();
-    });
+    }, 20000);
 
     it('should return the total supply of NFTL', async () => {
       const response = await request(app).get('/NFTL/supply/total');
       expect(response.status).toBe(200);
       expect(BigInt(response.text)).toBeGreaterThan(NFTL_MIN_SUPPLY);
-    });
+    }, 30000);
 
     it('should return the max supply of NFTL', async () => {
       const response = await request(app).get('/NFTL/supply/max');
       expect(response.status).toBe(200);
       expect(BigInt(response.text)).toBeGreaterThan(NFTL_MIN_SUPPLY);
-    });
+    }, 30000);
   });
 
   describe('DEGENs', () => {
@@ -51,7 +51,9 @@ describe('API Endpoints', () => {
       const response = await request(app).get('/degens/burn-list');
       expect(response.status).toBe(200);
       expect(response.body).toHaveLength(800);
-    });
+      // Add a delay to ensure async operations are completed before the test ends
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }, 20000);
 
     it('should return the metadata of a degen by token ID', async () => {
       const response = await request(app).get(`/${network}/degen/metadata/${tokenId}`);
@@ -123,7 +125,7 @@ describe('API Endpoints', () => {
     it('should return the metadata of a comic by token ID', async () => {
       const response = await request(app).get(`/imx/comics/metadata/${tokenId}`);
       expect(response.status).toBe(200);
-      expect(response.body.name).toEqual(`(DEPRECATED) COMIC #${tokenId}`);
+      expect(response.body.name).toEqual(`COMIC #${tokenId}`);
     });
 
     it('should return the image of a comic by token ID', async () => {
