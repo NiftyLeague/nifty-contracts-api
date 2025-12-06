@@ -8,7 +8,7 @@ export async function fetchMetadata(URI: string): Promise<Metadata | null> {
     const response = await fetch(URI, {});
     if (response.status < 400) return response.json() as unknown as Metadata;
     return null;
-  } catch (e) {
+  } catch {
     return null;
   }
 }

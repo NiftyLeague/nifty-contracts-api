@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import colorize from 'json-colorizer';
+import { colorize } from 'json-colorizer';
 import { config } from 'node-config-ts';
 
 import type { TargetNetwork } from '@/types';
