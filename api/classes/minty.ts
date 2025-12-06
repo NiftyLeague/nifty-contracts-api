@@ -345,8 +345,7 @@ export class Minty {
       const opts = {
         cid: [[typeof cid === 'string' ? new CID(cid) : cid]], // ls expects an array of cids
       } as ListOptions;
-      // eslint-disable-next-line no-unused-vars, no-unsafe-optional-chaining, @typescript-eslint/no-unused-vars
-      for await (const result of this.ipfs?.pin.ls(opts)) {
+      for await (const result of this.ipfs.pin.ls(opts)) {
         return true;
       }
     }

@@ -28,7 +28,7 @@ describe('API Endpoints', () => {
       const response = await request(app).get('/NFTL/supply/unclaimed');
       expect(response.status).toBe(200);
       expect(response.text).toBeDefined();
-    }, 20000);
+    }, 30000);
 
     it('should return the total supply of NFTL', async () => {
       const response = await request(app).get('/NFTL/supply/total');

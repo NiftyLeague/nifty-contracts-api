@@ -7,7 +7,7 @@ import type { NFTInfo, TargetNetwork } from './api/types';
 
 import { Command } from 'commander';
 import chalk from 'chalk';
-import colorize from 'json-colorizer';
+import { colorize } from 'json-colorizer';
 import { config } from 'node-config-ts';
 import path from 'path';
 
