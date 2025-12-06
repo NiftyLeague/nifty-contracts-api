@@ -2,34 +2,19 @@ import { config } from 'node-config-ts';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express, { NextFunction, type Request, type Response } from 'express';
-import fetch from 'node-fetch';
-import { groupBy, mapValues } from 'lodash-es';
 import path from 'path';
-
-import { generateIMXAuthorisationHeaders } from './utils/sign';
-import { getItemIdByTokenId_SAFE } from './utils/getItemIdByTokenId';
 
 import { getBurnedDegens } from './utils/degensBurned';
 import { resolveDegenMetadata, pipeRequest } from './utils/api';
-import { getItemsRecursive } from './utils/getItemsRecursive';
 import { handleNameChangeByInput } from './utils/handleNameChange';
 import { resolveCirculatingSupply, resolveMaxSupply, resolveTotalSupply, resolveUnclaimedSupply } from './utils/nftl';
-import { getComicsHolderSnapshot, getItemsHolderSnapshot, getCombinedSnapshot } from './utils/snapshots';
-import { getWallet } from './utils/wallet';
 
+import { DEFAULTS, getEndpoints } from './constants/api';
 import { CONTRACT_METHODS } from './constants/contracts';
 import { LEGGIES } from './constants/metadata/degens';
-import {
-  S3_BASE_URL,
-  S3_COMICS_BUCKET,
-  S3_DEGENS_BUCKET,
-  S3_ITEMS_BUCKET,
-  S3_MARKETPLACE_BUCKET,
-} from './constants/aws';
+import { S3_BASE_URL, S3_DEGENS_BUCKET, S3_MARKETPLACE_BUCKET } from './constants/aws';
 import { MARKETPLACE_COLLECTION_METADATA } from './constants/metadata/marketplace';
-import type { Attribute, Metadata, TargetNetwork } from './types';
-
-const network = config.eth.network as TargetNetwork;
+import type { Attribute, TargetNetwork } from './types';
 
 const __dirname = path.resolve();
 
@@ -39,7 +24,11 @@ const app = express()
   .set('view engine', 'ejs');
 
 app.get('/', function (req: Request, res: Response) {
-  res.send('Smart Contract API for Nifty League!');
+  const baseUrl = `${req.protocol}://${req.get('host')}`;
+  res.json({
+    ...DEFAULTS,
+    endpoints: getEndpoints(baseUrl),
+  });
 });
 
 app.use(bodyParser.json());
@@ -133,161 +122,161 @@ app.get('/imx/marketplace/images/:token_id', async function (req: Request, res: 
 // ------ MIGRATION SNAPSHOT (DEPRECATED)
 //////////////////////////////////////////////
 
-app.get('/imx/snapshot/comics', async function (req: Request, res: Response, next: NextFunction) {
-  const snapshot = await getComicsHolderSnapshot();
-  if (snapshot) res.send(snapshot);
-  else next(new Error('Unable to resolve comics snapshot.'));
-});
+// app.get('/imx/snapshot/comics', async function (req: Request, res: Response, next: NextFunction) {
+//   const snapshot = await getComicsHolderSnapshot();
+//   if (snapshot) res.send(snapshot);
+//   else next(new Error('Unable to resolve comics snapshot.'));
+// });
 
-app.get('/imx/snapshot/items', async function (req: Request, res: Response, next: NextFunction) {
-  const snapshot = await getItemsHolderSnapshot();
-  if (snapshot) res.send(snapshot);
-  else next(new Error('Unable to resolve items snapshot.'));
-});
+// app.get('/imx/snapshot/items', async function (req: Request, res: Response, next: NextFunction) {
+//   const snapshot = await getItemsHolderSnapshot();
+//   if (snapshot) res.send(snapshot);
+//   else next(new Error('Unable to resolve items snapshot.'));
+// });
 
-app.get('/imx/snapshot/combined', async function (req: Request, res: Response, next: NextFunction) {
-  const snapshot = await getCombinedSnapshot();
-  if (snapshot) res.send(snapshot);
-  else next(new Error('Unable to resolve snapshot.'));
-});
+// app.get('/imx/snapshot/combined', async function (req: Request, res: Response, next: NextFunction) {
+//   const snapshot = await getCombinedSnapshot();
+//   if (snapshot) res.send(snapshot);
+//   else next(new Error('Unable to resolve snapshot.'));
+// });
 
 //////////////////////////////////////////////
 // ------ COMICS (DEPRECATED)
 //////////////////////////////////////////////
 
-app.get('/imx/comics/metadata/:token_id', async function (req: Request, res: Response) {
-  const tokenId = req.params.token_id;
-  pipeRequest(`${S3_BASE_URL}/${S3_COMICS_BUCKET}/metadata/${tokenId}.json`, res);
-});
+// app.get('/imx/comics/metadata/:token_id', async function (req: Request, res: Response) {
+//   const tokenId = req.params.token_id;
+//   pipeRequest(`${S3_BASE_URL}/${S3_COMICS_BUCKET}/metadata/${tokenId}.json`, res);
+// });
 
-app.get('/imx/comics/image/:token_id', async function (req: Request, res: Response) {
-  const tokenId = req.params.token_id;
-  pipeRequest(`${S3_BASE_URL}/${S3_COMICS_BUCKET}/images/${tokenId}.png`, res);
-});
+// app.get('/imx/comics/image/:token_id', async function (req: Request, res: Response) {
+//   const tokenId = req.params.token_id;
+//   pipeRequest(`${S3_BASE_URL}/${S3_COMICS_BUCKET}/images/${tokenId}.png`, res);
+// });
 
 //////////////////////////////////////////////
 // ------ ITEMS (DEPRECATED)
 //////////////////////////////////////////////
 
-app.get('/imx/items/metadata/:token_id', async function (req: Request, res: Response, next: NextFunction) {
-  try {
-    const tokenId = req.params.token_id;
-    const itemId = await getItemIdByTokenId_SAFE(tokenId);
-    pipeRequest(`${S3_BASE_URL}/${S3_ITEMS_BUCKET}/metadata/${itemId}.json`, res);
-  } catch (e) {
-    next(e);
-  }
-});
+// app.get('/imx/items/metadata/:token_id', async function (req: Request, res: Response, next: NextFunction) {
+//   try {
+//     const tokenId = req.params.token_id;
+//     const itemId = await getItemIdByTokenId_SAFE(tokenId);
+//     pipeRequest(`${S3_BASE_URL}/${S3_ITEMS_BUCKET}/metadata/${itemId}.json`, res);
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
-app.get('/imx/items/image/:token_id', async function (req: Request, res: Response, next: NextFunction) {
-  try {
-    const tokenId = req.params.token_id;
-    const itemId = await getItemIdByTokenId_SAFE(tokenId);
-    pipeRequest(`${S3_BASE_URL}/${S3_ITEMS_BUCKET}/images/${itemId}.gif`, res);
-  } catch (e) {
-    next(e);
-  }
-});
+// app.get('/imx/items/image/:token_id', async function (req: Request, res: Response, next: NextFunction) {
+//   try {
+//     const tokenId = req.params.token_id;
+//     const itemId = await getItemIdByTokenId_SAFE(tokenId);
+//     pipeRequest(`${S3_BASE_URL}/${S3_ITEMS_BUCKET}/images/${itemId}.gif`, res);
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
-app.get('/imx/items', async function (req: Request, res: Response) {
-  const { cursor } = req.query;
-  const { collection, client } = config.imx[network];
-  const assetsURL = `${client.publicApiUrl}/assets?collection=${
-    collection.contractAddress
-  }&order_by=updated_at&page_size=200${cursor ? `&cursor=${cursor}` : ''}`;
-  pipeRequest(assetsURL, res);
-});
+// app.get('/imx/items', async function (req: Request, res: Response) {
+//   const { cursor } = req.query;
+//   const { collection, client } = config.imx[network];
+//   const assetsURL = `${client.publicApiUrl}/assets?collection=${
+//     collection.contractAddress
+//   }&order_by=updated_at&page_size=200${cursor ? `&cursor=${cursor}` : ''}`;
+//   pipeRequest(assetsURL, res);
+// });
 
-app.get('/imx/null-items', async function (req: Request, res: Response, next: NextFunction) {
-  try {
-    const result = await getItemsRecursive();
-    const filtered = result.filter((item: { metadata: Metadata; name?: string }) => !item.metadata || !item.name);
-    res.send({ total: filtered.length, result: filtered });
-  } catch (e) {
-    next(e);
-  }
-});
+// app.get('/imx/null-items', async function (req: Request, res: Response, next: NextFunction) {
+//   try {
+//     const result = await getItemsRecursive();
+//     const filtered = result.filter((item: { metadata: Metadata; name?: string }) => !item.metadata || !item.name);
+//     res.send({ total: filtered.length, result: filtered });
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
-app.get('/imx/items/overview', async function (req: Request, res: Response, next: NextFunction) {
-  try {
-    const result = await getItemsRecursive();
-    const itemBalances = Object.values(groupBy(result, 'metadata.item_id')).map(group => ({
-      [group[0].metadata.name]: group.length,
-    }));
-    const holders = groupBy(result, 'user');
-    const holderBalances = mapValues(holders, v => v.length);
-    const holderKeyBalances = mapValues(holders, v => v.filter(item => item.metadata.item_id === 7).length);
-    const removeNullBal = Object.fromEntries(Object.entries(holderKeyBalances).filter(([, v]) => v !== 0));
-    res.send({
-      total_items: result.length,
-      total_holders: Object.keys(holderBalances).length,
-      key_holders: Object.keys(removeNullBal).length,
-      item_balances: Object.assign({}, ...itemBalances),
-      holder_balances: holderBalances,
-      holder_key_balances: removeNullBal,
-    });
-  } catch (e) {
-    next(e);
-  }
-});
+// app.get('/imx/items/overview', async function (req: Request, res: Response, next: NextFunction) {
+//   try {
+//     const result = await getItemsRecursive();
+//     const itemBalances = Object.values(groupBy(result, 'metadata.item_id')).map(group => ({
+//       [group[0].metadata.name]: group.length,
+//     }));
+//     const holders = groupBy(result, 'user');
+//     const holderBalances = mapValues(holders, v => v.length);
+//     const holderKeyBalances = mapValues(holders, v => v.filter(item => item.metadata.item_id === 7).length);
+//     const removeNullBal = Object.fromEntries(Object.entries(holderKeyBalances).filter(([, v]) => v !== 0));
+//     res.send({
+//       total_items: result.length,
+//       total_holders: Object.keys(holderBalances).length,
+//       key_holders: Object.keys(removeNullBal).length,
+//       item_balances: Object.assign({}, ...itemBalances),
+//       holder_balances: holderBalances,
+//       holder_key_balances: removeNullBal,
+//     });
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
-app.get('/imx/metadata-refresh/:token_id', async function (req: Request, res: Response, next: NextFunction) {
-  try {
-    const tokenId = req.params.token_id;
-    const signer = getWallet();
-    const { collection, client } = config.imx[network];
-    const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
+// app.get('/imx/metadata-refresh/:token_id', async function (req: Request, res: Response, next: NextFunction) {
+//   try {
+//     const tokenId = req.params.token_id;
+//     const signer = getWallet();
+//     const { collection, client } = config.imx[network];
+//     const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
 
-    const headers = {
-      'x-imx-eth-address': signer.address,
-      'x-imx-eth-signature': signature,
-      'x-imx-eth-timestamp': timestamp,
-    };
-    const body = JSON.stringify({
-      collection_address: collection.contractAddress,
-      token_ids: [tokenId],
-    });
+//     const headers = {
+//       'x-imx-eth-address': signer.address,
+//       'x-imx-eth-signature': signature,
+//       'x-imx-eth-timestamp': timestamp,
+//     };
+//     const body = JSON.stringify({
+//       collection_address: collection.contractAddress,
+//       token_ids: [tokenId],
+//     });
 
-    const response = await fetch(`${client.publicApiUrl}/metadata-refreshes`, {
-      method: 'POST',
-      headers,
-      body,
-    });
-    res.send(response);
-  } catch (e) {
-    next(e);
-  }
-});
+//     const response = await fetch(`${client.publicApiUrl}/metadata-refreshes`, {
+//       method: 'POST',
+//       headers,
+//       body,
+//     });
+//     res.send(response);
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
-app.get('/imx/metadata-refresh-all/:max_token_id', async function (req: Request, res: Response, next: NextFunction) {
-  try {
-    const maxTokenId = req.params.max_token_id;
-    const tokenIds = Array.from({ length: Number(maxTokenId) }, (_, index) => (index + 1).toString());
+// app.get('/imx/metadata-refresh-all/:max_token_id', async function (req: Request, res: Response, next: NextFunction) {
+//   try {
+//     const maxTokenId = req.params.max_token_id;
+//     const tokenIds = Array.from({ length: Number(maxTokenId) }, (_, index) => (index + 1).toString());
 
-    const signer = getWallet();
-    const { collection, client } = config.imx[network];
-    const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
+//     const signer = getWallet();
+//     const { collection, client } = config.imx[network];
+//     const { timestamp, signature } = await generateIMXAuthorisationHeaders(signer);
 
-    const headers = {
-      'x-imx-eth-address': signer.address,
-      'x-imx-eth-signature': signature,
-      'x-imx-eth-timestamp': timestamp,
-    };
-    const body = JSON.stringify({
-      collection_address: collection.contractAddress,
-      token_ids: tokenIds,
-    });
+//     const headers = {
+//       'x-imx-eth-address': signer.address,
+//       'x-imx-eth-signature': signature,
+//       'x-imx-eth-timestamp': timestamp,
+//     };
+//     const body = JSON.stringify({
+//       collection_address: collection.contractAddress,
+//       token_ids: tokenIds,
+//     });
 
-    const response = await fetch(`${client.publicApiUrl}/metadata-refreshes`, {
-      method: 'POST',
-      headers,
-      body,
-    });
-    res.send(response);
-  } catch (e) {
-    next(e);
-  }
-});
+//     const response = await fetch(`${client.publicApiUrl}/metadata-refreshes`, {
+//       method: 'POST',
+//       headers,
+//       body,
+//     });
+//     res.send(response);
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
 //////////////////////////////////////////////
 // ------ WEBHOOKS

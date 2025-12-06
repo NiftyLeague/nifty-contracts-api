@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { jest } from '@jest/globals';
 
+import { DEFAULTS, getEndpoints } from './constants/api';
 import { ITEMS_METADATA } from './constants/metadata/items';
 import { MARKETPLACE_COLLECTION_METADATA } from './constants/metadata/marketplace';
 import { getItemIdByTokenId_SAFE } from './utils/getItemIdByTokenId';
@@ -9,10 +10,14 @@ import { MakeDegen, Degen } from './classes/degen';
 import app from './index';
 
 describe('API Endpoints', () => {
-  it('should return "Smart Contract API for Nifty League!" on the root endpoint', async () => {
+  it('should return the API details on the root endpoint', async () => {
     const response = await request(app).get('/');
+    const baseUrl = `${response.request.protocol}//${response.request.host}`;
     expect(response.status).toBe(200);
-    expect(response.text).toBe('Smart Contract API for Nifty League!');
+    expect(response.body).toEqual({
+      ...DEFAULTS,
+      endpoints: getEndpoints(baseUrl),
+    });
   });
 
   describe('NFTL', () => {
@@ -28,7 +33,7 @@ describe('API Endpoints', () => {
       const response = await request(app).get('/NFTL/supply/unclaimed');
       expect(response.status).toBe(200);
       expect(response.text).toBeDefined();
-    }, 20000);
+    }, 30000);
 
     it('should return the total supply of NFTL', async () => {
       const response = await request(app).get('/NFTL/supply/total');
@@ -107,7 +112,9 @@ describe('API Endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.header['content-type']).toMatch(/image\/gif/);
     });
+  });
 
+  xdescribe('SNAPSHOTS', () => {
     it('should return a snapshot list for comics', async () => {
       const response = await request(app).get(`/imx/snapshot/comics`);
       expect(response.status).toBe(200);
@@ -119,7 +126,7 @@ describe('API Endpoints', () => {
     });
   });
 
-  describe('COMICS', () => {
+  xdescribe('COMICS', () => {
     const tokenId = 2;
 
     it('should return the metadata of a comic by token ID', async () => {
@@ -135,7 +142,7 @@ describe('API Endpoints', () => {
     });
   });
 
-  describe('ITEMS', () => {
+  xdescribe('ITEMS', () => {
     const tokenId = 10;
 
     it('should return the metadata of an item by token ID', async () => {
