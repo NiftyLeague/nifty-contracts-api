@@ -3,7 +3,6 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import express, { NextFunction, type Request, type Response } from 'express';
 import fetch from 'node-fetch';
-import { groupBy, mapValues } from 'lodash-es';
 import path from 'path';
 
 import { generateIMXAuthorisationHeaders } from './utils/sign';
@@ -17,6 +16,7 @@ import { resolveCirculatingSupply, resolveMaxSupply, resolveTotalSupply, resolve
 import { getComicsHolderSnapshot, getItemsHolderSnapshot, getCombinedSnapshot } from './utils/snapshots';
 import { getWallet } from './utils/wallet';
 
+import { DEFAULTS, getEndpoints } from './constants/api';
 import { CONTRACT_METHODS } from './constants/contracts';
 import { LEGGIES } from './constants/metadata/degens';
 import {
@@ -41,209 +41,8 @@ const app = express()
 app.get('/', function (req: Request, res: Response) {
   const baseUrl = `${req.protocol}://${req.get('host')}`;
   res.json({
-    name: 'Nifty League Contracts API',
-    description: 'Smart Contract API for Nifty League',
-    version: '1.0.0',
-    endpoints: {
-      NFTL: {
-        description: 'NFTL token supply information',
-        routes: [
-          {
-            method: 'GET',
-            path: '/NFTL/supply',
-            description: 'Get circulating supply of NFTL (alias for /NFTL/supply/circulating)',
-            example: `${baseUrl}/NFTL/supply`,
-          },
-          {
-            method: 'GET',
-            path: '/NFTL/supply/circulating',
-            description: 'Get circulating supply of NFTL',
-            example: `${baseUrl}/NFTL/supply/circulating`,
-          },
-          {
-            method: 'GET',
-            path: '/NFTL/supply/unclaimed',
-            description: 'Get unclaimed supply of NFTL',
-            example: `${baseUrl}/NFTL/supply/unclaimed`,
-          },
-          {
-            method: 'GET',
-            path: '/NFTL/supply/total',
-            description: 'Get total supply of NFTL (circulating + unclaimed)',
-            example: `${baseUrl}/NFTL/supply/total`,
-          },
-          {
-            method: 'GET',
-            path: '/NFTL/supply/max',
-            description: 'Get maximum supply of NFTL (total + remaining emissions)',
-            example: `${baseUrl}/NFTL/supply/max`,
-          },
-        ],
-      },
-      DEGENs: {
-        description: 'DEGEN NFT endpoints',
-        routes: [
-          {
-            method: 'GET',
-            path: '/degens/burn-list',
-            description: 'Get list of burned DEGEN token IDs',
-            example: `${baseUrl}/degens/burn-list`,
-          },
-          {
-            method: 'GET',
-            path: '/:network/degen/metadata/:token_id',
-            description: 'Get metadata for a DEGEN by token ID',
-            parameters: {
-              network: 'mainnet | sepolia',
-              token_id: 'Token ID number',
-            },
-            example: `${baseUrl}/sepolia/degen/metadata/123`,
-          },
-          {
-            method: 'GET',
-            path: '/:network/degen/image/:token_id',
-            description: 'Get image for a DEGEN by token ID',
-            parameters: {
-              network: 'mainnet | sepolia',
-              token_id: 'Token ID number',
-            },
-            example: `${baseUrl}/sepolia/degen/image/123`,
-          },
-          {
-            method: 'GET',
-            path: '/:network/degen/:token_id/background',
-            description: 'Get background attribute for a DEGEN by token ID',
-            parameters: {
-              network: 'mainnet | sepolia',
-              token_id: 'Token ID number',
-            },
-            example: `${baseUrl}/sepolia/degen/123/background`,
-          },
-        ],
-      },
-      MARKETPLACE: {
-        description: 'IMX Marketplace endpoints',
-        routes: [
-          {
-            method: 'GET',
-            path: '/imx/marketplace/collection.json',
-            description: 'Get marketplace collection metadata',
-            example: `${baseUrl}/imx/marketplace/collection.json`,
-          },
-          {
-            method: 'GET',
-            path: '/imx/marketplace/metadata/:token_id',
-            description: 'Get metadata for a marketplace item by token ID',
-            parameters: {
-              token_id: 'Token ID number (supports .json suffix)',
-            },
-            example: `${baseUrl}/imx/marketplace/metadata/1`,
-          },
-          {
-            method: 'GET',
-            path: '/imx/marketplace/images/:token_id',
-            description: 'Get image for a marketplace item by token ID',
-            parameters: {
-              token_id: 'Token ID number',
-            },
-            example: `${baseUrl}/imx/marketplace/images/1`,
-          },
-        ],
-      },
-      SNAPSHOTS: {
-        description: 'Migration snapshot endpoints (DEPRECATED)',
-        deprecated: true,
-        routes: [
-          {
-            method: 'GET',
-            path: '/imx/snapshot/comics',
-            description: 'Get snapshot of comics holders',
-            example: `${baseUrl}/imx/snapshot/comics`,
-          },
-          {
-            method: 'GET',
-            path: '/imx/snapshot/items',
-            description: 'Get snapshot of items holders',
-            example: `${baseUrl}/imx/snapshot/items`,
-          },
-          {
-            method: 'GET',
-            path: '/imx/snapshot/combined',
-            description: 'Get combined snapshot of comics and items holders',
-            example: `${baseUrl}/imx/snapshot/combined`,
-          },
-        ],
-      },
-      COMICS: {
-        description: 'v1 Comics endpoints (DEPRECATED)',
-        deprecated: true,
-        routes: [
-          {
-            method: 'GET',
-            path: '/imx/comics/metadata/:token_id',
-            description: 'Get metadata for a comic by token ID',
-            parameters: {
-              token_id: 'Token ID number',
-            },
-            example: `${baseUrl}/imx/comics/metadata/1`,
-          },
-          {
-            method: 'GET',
-            path: '/imx/comics/image/:token_id',
-            description: 'Get image for a comic by token ID',
-            parameters: {
-              token_id: 'Token ID number',
-            },
-            example: `${baseUrl}/imx/comics/image/1`,
-          },
-        ],
-      },
-      ITEMS: {
-        description: 'v1 Items endpoints (DEPRECATED)',
-        deprecated: true,
-        routes: [
-          {
-            method: 'GET',
-            path: '/imx/items/metadata/:token_id',
-            description: 'Get metadata for an item by token ID',
-            parameters: {
-              token_id: 'Token ID number',
-            },
-            example: `${baseUrl}/imx/items/metadata/101`,
-          },
-          {
-            method: 'GET',
-            path: '/imx/items/image/:token_id',
-            description: 'Get image for an item by token ID',
-            parameters: {
-              token_id: 'Token ID number',
-            },
-            example: `${baseUrl}/imx/items/image/101`,
-          },
-          {
-            method: 'GET',
-            path: '/imx/items',
-            description: 'Get paginated list of items',
-            queryParameters: {
-              cursor: 'Optional pagination cursor',
-            },
-            example: `${baseUrl}/imx/items?cursor=abc123`,
-          },
-          {
-            method: 'GET',
-            path: '/imx/null-items',
-            description: 'Get list of items with null metadata or name',
-            example: `${baseUrl}/imx/null-items`,
-          },
-          {
-            method: 'GET',
-            path: '/imx/items/overview',
-            description: 'Get full overview of items statistics',
-            example: `${baseUrl}/imx/items/overview`,
-          },
-        ],
-      },
-    },
+    ...DEFAULTS,
+    endpoints: getEndpoints(baseUrl),
   });
 });
 
@@ -413,28 +212,28 @@ app.get('/imx/null-items', async function (req: Request, res: Response, next: Ne
   }
 });
 
-app.get('/imx/items/overview', async function (req: Request, res: Response, next: NextFunction) {
-  try {
-    const result = await getItemsRecursive();
-    const itemBalances = Object.values(groupBy(result, 'metadata.item_id')).map(group => ({
-      [group[0].metadata.name]: group.length,
-    }));
-    const holders = groupBy(result, 'user');
-    const holderBalances = mapValues(holders, v => v.length);
-    const holderKeyBalances = mapValues(holders, v => v.filter(item => item.metadata.item_id === 7).length);
-    const removeNullBal = Object.fromEntries(Object.entries(holderKeyBalances).filter(([, v]) => v !== 0));
-    res.send({
-      total_items: result.length,
-      total_holders: Object.keys(holderBalances).length,
-      key_holders: Object.keys(removeNullBal).length,
-      item_balances: Object.assign({}, ...itemBalances),
-      holder_balances: holderBalances,
-      holder_key_balances: removeNullBal,
-    });
-  } catch (e) {
-    next(e);
-  }
-});
+// app.get('/imx/items/overview', async function (req: Request, res: Response, next: NextFunction) {
+//   try {
+//     const result = await getItemsRecursive();
+//     const itemBalances = Object.values(groupBy(result, 'metadata.item_id')).map(group => ({
+//       [group[0].metadata.name]: group.length,
+//     }));
+//     const holders = groupBy(result, 'user');
+//     const holderBalances = mapValues(holders, v => v.length);
+//     const holderKeyBalances = mapValues(holders, v => v.filter(item => item.metadata.item_id === 7).length);
+//     const removeNullBal = Object.fromEntries(Object.entries(holderKeyBalances).filter(([, v]) => v !== 0));
+//     res.send({
+//       total_items: result.length,
+//       total_holders: Object.keys(holderBalances).length,
+//       key_holders: Object.keys(removeNullBal).length,
+//       item_balances: Object.assign({}, ...itemBalances),
+//       holder_balances: holderBalances,
+//       holder_key_balances: removeNullBal,
+//     });
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
 app.get('/imx/metadata-refresh/:token_id', async function (req: Request, res: Response, next: NextFunction) {
   try {

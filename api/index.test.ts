@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { jest } from '@jest/globals';
 
+import { DEFAULTS, getEndpoints } from './constants/api';
 import { ITEMS_METADATA } from './constants/metadata/items';
 import { MARKETPLACE_COLLECTION_METADATA } from './constants/metadata/marketplace';
 import { getItemIdByTokenId_SAFE } from './utils/getItemIdByTokenId';
@@ -9,10 +10,14 @@ import { MakeDegen, Degen } from './classes/degen';
 import app from './index';
 
 describe('API Endpoints', () => {
-  it('should return "Smart Contract API for Nifty League!" on the root endpoint', async () => {
+  it('should return the API details on the root endpoint', async () => {
     const response = await request(app).get('/');
+    const baseUrl = `${response.request.protocol}//${response.request.host}`;
     expect(response.status).toBe(200);
-    expect(response.text).toBe('Smart Contract API for Nifty League!');
+    expect(response.body).toEqual({
+      ...DEFAULTS,
+      endpoints: getEndpoints(baseUrl),
+    });
   });
 
   describe('NFTL', () => {
@@ -162,19 +167,6 @@ describe('API Endpoints', () => {
       const response = await request(app).get('/imx/null-items');
       expect(response.status).toBe(200);
       expect(response.body.total).toEqual(0);
-    });
-
-    it('should return an full overview of items stats', async () => {
-      const response = await request(app).get('/imx/items/overview');
-      expect(response.status).toBe(200);
-
-      expect(BigInt(response.body.total_items)).toBeGreaterThan(200);
-      expect(BigInt(response.body.total_holders)).toBeGreaterThanOrEqual(3);
-      expect(BigInt(response.body.key_holders)).toBeGreaterThanOrEqual(3);
-
-      expect(response.body.item_balances).toBeDefined();
-      expect(response.body.holder_balances).toBeDefined();
-      expect(response.body.holder_key_balances).toBeDefined();
     });
   });
 });
