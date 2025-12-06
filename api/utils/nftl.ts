@@ -2,7 +2,7 @@ import { config } from 'node-config-ts';
 import fetch from 'node-fetch';
 import { parseEther } from 'ethers';
 
-import { NFTL_ADDRESS, NFTL_CONTRACT_NAME } from '@/constants/contracts';
+import { CHAIN_ID, NFTL_ADDRESS, NFTL_CONTRACT_NAME } from '@/constants/contracts';
 import { getContractFactory } from '@/contracts';
 import type { TargetNetwork } from '@/types';
 import { getBurnedDegens } from './degensBurned';
@@ -11,16 +11,50 @@ import { NFTLToken } from '@/types/typechain';
 export async function resolveCirculatingSupply(): Promise<string | null> {
   try {
     const secret = config.eth.etherscan;
-    const supplyURI = `https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress=${NFTL_ADDRESS}&apikey=${secret}`;
-    const supplyRes = await fetch(supplyURI, {});
-    if (supplyRes.status < 400) {
-      const { result: supply } = (await supplyRes.json()) as {
-        result: string;
-      };
-      return supply;
+    const targetNetwork = config.eth.network as TargetNetwork;
+    const chainId = CHAIN_ID[targetNetwork];
+    const contractaddress = NFTL_ADDRESS[targetNetwork];
+
+    // Etherscan API V2 unified endpoint
+    if (secret) {
+      const supplyURI = `https://api.etherscan.io/v2/api?module=stats&action=tokensupply&contractaddress=${contractaddress}&chainId=${chainId}&apikey=${secret}`;
+      try {
+        const supplyRes = await fetch(supplyURI, {});
+        if (supplyRes.status < 400) {
+          const response = (await supplyRes.json()) as { result?: string; status?: string; message?: string };
+          if (response.result && /^\d+$/.test(response.result)) {
+            return response.result;
+          }
+          console.warn('Etherscan v2 returned unexpected result, falling back to contract totalSupply:', response);
+        } else {
+          const text = await supplyRes.text();
+          console.warn('Etherscan v2 returned non-OK status, falling back to contract:', supplyRes.status, text);
+        }
+      } catch (e) {
+        console.warn('Etherscan v2 request failed, falling back to contract totalSupply:', (e as Error).message);
+      }
+    } else {
+      console.warn('No Etherscan API key configured; skipping Etherscan request.');
+    }
+    // Fallback: get totalSupply directly from the contract
+    const nftlContract = await getContractFactory<NFTLToken>(targetNetwork, NFTL_CONTRACT_NAME);
+    if (nftlContract) {
+      const totalSupply = await nftlContract.totalSupply();
+      return totalSupply.toString();
     }
     return null;
-  } catch (e) {
+  } catch {
+    // Final fallback: try contract totalSupply
+    try {
+      const targetNetwork = config.eth.network as TargetNetwork;
+      const nftlContract = await getContractFactory<NFTLToken>(targetNetwork, NFTL_CONTRACT_NAME);
+      if (nftlContract) {
+        const totalSupply = await nftlContract.totalSupply();
+        return totalSupply.toString();
+      }
+    } catch {
+      // Ignore
+    }
     return null;
   }
 }
@@ -36,7 +70,7 @@ export async function resolveUnclaimedSupply(): Promise<string | null> {
       return unclaimed.toString();
     }
     return null;
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -47,7 +81,7 @@ export async function resolveTotalSupply(): Promise<string | null> {
     const unclaimedSupply = await resolveUnclaimedSupply();
     if (!circulatingSupply || !unclaimedSupply) return null;
     return (BigInt(circulatingSupply) + BigInt(unclaimedSupply)).toString();
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -71,7 +105,7 @@ export async function resolveMaxSupply(): Promise<string | null> {
     if (!totalSupply) return null;
     const remainingEmissions = calculateRemainingEmissions();
     return (BigInt(totalSupply) + BigInt(remainingEmissions)).toString();
-  } catch (e) {
+  } catch {
     return null;
   }
 }

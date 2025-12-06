@@ -32,7 +32,6 @@ export async function getItemIdByTokenId_SAFE(tokenId: string): Promise<bigint> 
     let prevTokenId = Number(tokenId);
     let prevItemId: bigint;
 
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       prevTokenId -= 1;
       prevItemId = await contract['itemIdByTokenId'](prevTokenId);

@@ -1,4 +1,4 @@
-import colorize from 'json-colorizer';
+import { colorize } from 'json-colorizer';
 import { ethers, BytesLike } from 'ethers';
 import type { TargetNetwork } from '@/types';
 import { COLORIZE_OPTIONS } from '@/constants/commandLine';

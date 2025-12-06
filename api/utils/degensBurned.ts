@@ -36,7 +36,7 @@ export async function getBurnedDegens(): Promise<number[]> {
     inventoryRes = await fetchAndProcess(inventoryURI2, inventoryRes);
 
     return inventoryRes.sort((a, b) => a - b);
-  } catch (e) {
+  } catch {
     return [];
   }
 }
