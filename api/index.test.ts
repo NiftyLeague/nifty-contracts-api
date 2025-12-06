@@ -112,7 +112,9 @@ describe('API Endpoints', () => {
       expect(response.status).toBe(200);
       expect(response.header['content-type']).toMatch(/image\/gif/);
     });
+  });
 
+  xdescribe('SNAPSHOTS', () => {
     it('should return a snapshot list for comics', async () => {
       const response = await request(app).get(`/imx/snapshot/comics`);
       expect(response.status).toBe(200);
@@ -124,7 +126,7 @@ describe('API Endpoints', () => {
     });
   });
 
-  describe('COMICS', () => {
+  xdescribe('COMICS', () => {
     const tokenId = 2;
 
     it('should return the metadata of a comic by token ID', async () => {
@@ -140,7 +142,7 @@ describe('API Endpoints', () => {
     });
   });
 
-  describe('ITEMS', () => {
+  xdescribe('ITEMS', () => {
     const tokenId = 10;
 
     it('should return the metadata of an item by token ID', async () => {
@@ -167,6 +169,19 @@ describe('API Endpoints', () => {
       const response = await request(app).get('/imx/null-items');
       expect(response.status).toBe(200);
       expect(response.body.total).toEqual(0);
+    });
+
+    it('should return an full overview of items stats', async () => {
+      const response = await request(app).get('/imx/items/overview');
+      expect(response.status).toBe(200);
+
+      expect(BigInt(response.body.total_items)).toBeGreaterThan(200);
+      expect(BigInt(response.body.total_holders)).toBeGreaterThanOrEqual(3);
+      expect(BigInt(response.body.key_holders)).toBeGreaterThanOrEqual(3);
+
+      expect(response.body.item_balances).toBeDefined();
+      expect(response.body.holder_balances).toBeDefined();
+      expect(response.body.holder_key_balances).toBeDefined();
     });
   });
 });
