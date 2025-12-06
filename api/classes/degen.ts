@@ -81,7 +81,7 @@ export class Degen extends Minty {
    *
    * @returns {string} - NFT image filepath
    */
-  // eslint-disable-next-line class-methods-use-this
+
   async generateImage(tokenId: number, traits: number[], rarity: number) {
     const filePath = `./public/images/degens/${tokenId}.${rarity < 3 ? 'png' : 'gif'}`;
     const url = generateImageURL(traits, rarity, tokenId);

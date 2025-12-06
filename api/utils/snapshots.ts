@@ -43,7 +43,7 @@ export async function getComicsHolderSnapshot(): Promise<Snapshot> {
     }
 
     return snapshot;
-  } catch (e) {
+  } catch {
     return [];
   }
 }
@@ -84,7 +84,7 @@ async function getItemsMainnetHolders(): Promise<Snapshot> {
     }
 
     return snapshot;
-  } catch (e) {
+  } catch {
     return [];
   }
 }
@@ -129,7 +129,7 @@ async function getItemsImmutableHolders(): Promise<Snapshot> {
     }
 
     return snapshot;
-  } catch (e) {
+  } catch {
     return [];
   }
 }
@@ -162,7 +162,7 @@ export async function getItemsHolderSnapshot(): Promise<Snapshot> {
     const snapshot = combineItemSnapshots([...ethSnapshot, ...imxSnapshot]);
 
     return snapshot;
-  } catch (e) {
+  } catch {
     return [];
   }
 }
@@ -187,7 +187,7 @@ export const getCombinedSnapshot = async (): Promise<Snapshot> => {
         return acc;
       }, {}),
     );
-  } catch (e) {
+  } catch {
     return [];
   }
 };

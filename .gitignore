@@ -106,3 +106,6 @@ cache/*
 
 public/images/degens/
 .vercel
+
+.cursor/rules/kluster-code-verify.mdc
+.kluster

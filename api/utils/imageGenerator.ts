@@ -65,7 +65,7 @@ export async function downloadImage(url: string, dest: fs.PathLike) {
     res.body?.on('error', reject);
     fileStream.on('finish', async () => {
       console.log(`✅ The file is finished downloading.`);
-      resolve;
+      resolve(undefined);
     });
   });
 }
