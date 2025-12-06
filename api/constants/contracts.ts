@@ -1,3 +1,6 @@
+import MAINNET_DEPLOYMENTS from '../contracts/deployments.mainnet';
+import TESTNET_DEPLOYMENTS from '../contracts/deployments.sepolia';
+
 export const CONTRACT_METHODS = {
   DEPOSIT: '0xb6b55f25',
   WITHDRAW: '0xfe55892d',
@@ -6,7 +9,15 @@ export const CONTRACT_METHODS = {
   HYDRA_CLAIM: '0xb741465f',
 };
 
-export const NFTL_ADDRESS = '0x3c8d2fce49906e11e71cb16fa0ffeb2b16c29638';
+export const CHAIN_ID = {
+  mainnet: 1,
+  sepolia: 11155111,
+};
+
+export const NFTL_ADDRESS = {
+  mainnet: MAINNET_DEPLOYMENTS.contracts.NFTLToken.address,
+  sepolia: TESTNET_DEPLOYMENTS.contracts.NFTLToken.address,
+};
 export const NFTL_CONTRACT_NAME = 'NFTLToken';
 export const DEGEN_CONTRACT_NAME = 'NiftyDegen';
 export const COMICS_CONTRACT_NAME = 'NiftyLaunchComics';
