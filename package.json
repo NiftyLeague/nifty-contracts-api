@@ -30,7 +30,7 @@
     "@aws-sdk/lib-storage": "^3.946.0",
     "@imtbl/imx-sdk": "^3.8.2",
     "@pinata/sdk": "^2.1.0",
-    "axios": "^1.13.2",
+    "axios": "^1.13.5",
     "bn.js": "^5.2.2",
     "body-parser": "^2.2.1",
     "cids": "^1.1.9",
