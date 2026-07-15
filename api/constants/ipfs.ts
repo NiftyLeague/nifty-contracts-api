@@ -1,4 +1,4 @@
-import type { AddOptions } from 'ipfs-core-types/dist/src/root';
+import type { AddOptions } from '@/types';
 
 // ipfs parameters for more deterministic CIDs
 export const IPFS_OPTIONS = {
