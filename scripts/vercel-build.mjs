@@ -29,12 +29,15 @@ const run = (cmd) => {
 // 1. Compile sources (+ dist/config).
 run('pnpm build');
 
-// 2. Build the Vercel output. project.json must exist (vercel pull) or the
-//    build silently produces no .vercel/output.
+// 2. Build the Vercel output.
+// On Vercel's build server the project context is provided via env vars
+// (VERCEL_PROJECT_ID / VERCEL_TOKEN), so `vercel build` needs NO --scope —
+// passing one can conflict with that context and fail. Locally we `vercel pull`
+// first (creates .vercel/project.json) so the unscoped build works too.
 if (!existsSync(resolve(root, '.vercel', 'project.json'))) {
   run(`npx vercel pull --yes --scope ${scope}`);
 }
-run(`npx vercel build${isProd ? ' --prod' : ''} --scope ${scope}`);
+run(`npx vercel build${isProd ? ' --prod' : ''}`);
 
 // 3. Inject config into the function bundle.
 const funcDir = resolve(root, '.vercel', 'output', 'functions', 'api', 'index.func');
