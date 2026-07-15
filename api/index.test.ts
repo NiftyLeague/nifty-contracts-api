@@ -1,5 +1,6 @@
 import request from 'supertest';
 import { jest } from '@jest/globals';
+import type { Express } from 'express';
 
 import { DEFAULTS, getEndpoints } from './constants/api';
 import { ITEMS_METADATA } from './constants/metadata/items';
@@ -7,7 +8,28 @@ import { MARKETPLACE_COLLECTION_METADATA } from './constants/metadata/marketplac
 import { getItemIdByTokenId_SAFE } from './utils/getItemIdByTokenId';
 import { handleNameChangeById } from './utils/handleNameChange';
 import { MakeDegen, Degen } from './classes/degen';
-import app from './index';
+
+// Deterministic supply values so the NFTL endpoints are not exercised
+// against the live Etherscan/contract RPC (see issue #117 — these calls
+// were the source of intermittent timeouts/flakiness in CI).
+const mockResolveCirculatingSupply = jest.fn() as jest.Mock<() => Promise<any>>;
+const mockResolveUnclaimedSupply = jest.fn() as jest.Mock<() => Promise<any>>;
+const mockResolveTotalSupply = jest.fn() as jest.Mock<() => Promise<any>>;
+const mockResolveMaxSupply = jest.fn() as jest.Mock<() => Promise<any>>;
+
+await jest.unstable_mockModule('@/utils/nftl', () => ({
+  resolveCirculatingSupply: mockResolveCirculatingSupply,
+  resolveUnclaimedSupply: mockResolveUnclaimedSupply,
+  resolveTotalSupply: mockResolveTotalSupply,
+  resolveMaxSupply: mockResolveMaxSupply,
+}));
+
+// `app` is imported dynamically (after the nftl mock is registered) so the
+// routes resolve the mocked supply helpers instead of the real network ones.
+let app: Express;
+beforeAll(async () => {
+  app = (await import('./index')).default;
+});
 
 describe('API Endpoints', () => {
   it('should return the API details on the root endpoint', async () => {
@@ -22,6 +44,17 @@ describe('API Endpoints', () => {
 
   describe('NFTL', () => {
     const NFTL_MIN_SUPPLY = 500000000000000000000000000n;
+    const CIRCULATING = (NFTL_MIN_SUPPLY + 1n).toString();
+    const UNCLAIMED = '1234';
+    const TOTAL = (NFTL_MIN_SUPPLY + 1n + 1234n).toString();
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      mockResolveCirculatingSupply.mockResolvedValue(CIRCULATING);
+      mockResolveUnclaimedSupply.mockResolvedValue(UNCLAIMED);
+      mockResolveTotalSupply.mockResolvedValue(TOTAL);
+      mockResolveMaxSupply.mockResolvedValue(TOTAL);
+    });
 
     it('should return the circulating supply of NFTL', async () => {
       const response = await request(app).get('/NFTL/supply/circulating');
@@ -32,20 +65,20 @@ describe('API Endpoints', () => {
     it('should return the unclaimed supply of NFTL', async () => {
       const response = await request(app).get('/NFTL/supply/unclaimed');
       expect(response.status).toBe(200);
-      expect(response.text).toBeDefined();
-    }, 30000);
+      expect(response.text).toBe(UNCLAIMED);
+    });
 
     it('should return the total supply of NFTL', async () => {
       const response = await request(app).get('/NFTL/supply/total');
       expect(response.status).toBe(200);
       expect(BigInt(response.text)).toBeGreaterThan(NFTL_MIN_SUPPLY);
-    }, 30000);
+    });
 
     it('should return the max supply of NFTL', async () => {
       const response = await request(app).get('/NFTL/supply/max');
       expect(response.status).toBe(200);
       expect(BigInt(response.text)).toBeGreaterThan(NFTL_MIN_SUPPLY);
-    }, 30000);
+    });
   });
 
   describe('DEGENs', () => {
