@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 
 import { Metadata, TargetNetwork } from '@/types';
-import { downloadImage, generateImageURL, raritySelector } from '@/utils/imageGenerator';
+import { downloadImage, generateImageURL } from '@/utils/imageGenerator';
 // import { makeGatewayURL } from '@/utils/uriHelpers';
 
 import {
@@ -52,8 +52,7 @@ export class Degen extends Minty {
    */
   async generateNFT(tokenId: number) {
     const traits = await this.getCharacterTraits(tokenId);
-    let rarity = raritySelector(tokenId);
-    rarity = 1;
+    const rarity = 1;
     // const filePath = await this.generateImage(tokenId, traits, rarity);
     const filePath = `ContractsAPI/public/images/degens/${tokenId}.${rarity < 3 ? 'png' : 'gif'}`;
     const content = await fs.promises.readFile(filePath);

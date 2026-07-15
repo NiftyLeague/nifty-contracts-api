@@ -28,7 +28,7 @@ const network = config.eth.network as TargetNetwork;
         starkPublicKey: user.starkPublicKey,
       });
     } catch (error) {
-      throw new Error(JSON.stringify(error, null, 2));
+      throw new Error(JSON.stringify(error, null, 2), { cause: error });
     }
   }
 

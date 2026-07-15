@@ -3,12 +3,11 @@ import { config } from 'node-config-ts';
 import type { Contract, EventLog } from 'ethers';
 import fetch from 'node-fetch';
 import { create, type Options, type IPFSHTTPClient } from 'ipfs-http-client';
-import type { ListOptions } from 'ipfs-core-types/dist/src/root';
 import { concat } from 'uint8arrays/concat';
 import { toString } from 'uint8arrays/to-string';
 import pinataSDK from '@pinata/sdk';
 
-import { ContractName, TargetNetwork, NFTInfo } from '@/types';
+import { ContractName, TargetNetwork, NFTInfo, type ListOptions } from '@/types';
 import { getContractFactory } from '@/contracts';
 import { refreshOpenSea } from '@/utils/refreshMetadata';
 import { uploadToS3 } from '@/utils/uploadToS3';

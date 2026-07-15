@@ -93,3 +93,25 @@ export enum CharacterItemSlotType {
   Primary = 'Primary',
   Special = 'Special',
 }
+
+// Local definitions for the deprecated `ipfs-core-types` package, which is no
+// longer published with deep subpath exports. Only the surface used by this
+// project is reproduced here.
+export interface AddOptions {
+  cidVersion?: 0 | 1;
+  hashAlg?: string;
+  wrapWithDirectory?: boolean;
+  rawLeaves?: boolean;
+  onlyHash?: boolean;
+  pin?: boolean;
+  chunker?: string;
+  trickle?: boolean;
+  preload?: boolean;
+}
+
+export interface ListOptions {
+  cid?: unknown[] | unknown;
+  preload?: boolean;
+  timeout?: number;
+  signal?: AbortSignal;
+}
