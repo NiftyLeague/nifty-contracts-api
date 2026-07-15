@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "express",
   "functions": {
-    "src/index.ts": {
+    "api/index.ts": {
       "includeFiles": "config/**",
       "maxDuration": 30
     }
