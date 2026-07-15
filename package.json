@@ -1,8 +1,8 @@
 {
-  "name": "@niftyleague/contracts-api",
+  "name": "@niftyleague/nifty-contracts-api",
   "version": "1.0.0",
   "description": "Nifty League Contracts API & Webhooks",
-  "repository": "github:NiftyLeague/ContractsAPI.git",
+  "repository": "github:NiftyLeague/nifty-contracts-api.git",
   "author": "Nifty Andy",
   "license": "MIT",
   "type": "module",
