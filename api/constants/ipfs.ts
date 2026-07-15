@@ -1,11 +1,9 @@
-import type { AddOptions } from '@/types';
-
 // ipfs parameters for more deterministic CIDs
 export const IPFS_OPTIONS = {
-  cidVersion: 1,
+  cidVersion: 1 as const,
   hashAlg: 'sha2-256',
   wrapWithDirectory: true,
-} as AddOptions;
+};
 
 // ipfs://bafybeih75ntopwuggljajz3p2y2mh2ylxfv6joqlbvo2wxtabxkxm6igaa/degens
 export const DEGEN_IMAGES_CID = 'bafybeih75ntopwuggljajz3p2y2mh2ylxfv6joqlbvo2wxtabxkxm6igaa';
