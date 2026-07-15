@@ -8,10 +8,11 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
+    "resolveJsonModule": true,
     "noImplicitAny": false,
     "rootDir": "./",
     "types": ["node", "jest"],
-    "paths": { "@/*": ["./api/*"] }
+    "paths": { "@/*": ["./src/*"] }
   },
   "tsc-alias": {
     "verbose": false,
@@ -21,7 +22,7 @@
       "outputCheck": ["js", "json", "jsx", "mjs"]
     }
   },
-  "include": ["./api/**/*.ts", "./config/**/*.ts"],
+  "include": ["./src/**/*.ts", "./config/**/*.ts"],
   "files": ["./commander.ts"],
   "exclude": ["node_modules", "dist"]
 }

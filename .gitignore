@@ -104,8 +104,12 @@ cache/*
 # TernJS port file
 .tern-port
 
-public/images/degens/
-.vercel
+assets/images/degens/
 
-.cursor/rules/kluster-code-verify.mdc
+# AI / IDE
+.vercel
+.cursor
 .kluster
+.kilo
+.idea
+.claude

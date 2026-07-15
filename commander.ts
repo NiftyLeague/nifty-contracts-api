@@ -3,7 +3,7 @@
 // This file contains the main entry point for the command line `minty` app, and the command line option parsing code.
 // See minty.js for the core functionality.
 
-import type { NFTInfo, TargetNetwork } from './api/types';
+import type { NFTInfo, TargetNetwork } from './src/types';
 
 import { Command } from 'commander';
 import chalk from 'chalk';
@@ -11,17 +11,17 @@ import { colorize } from 'json-colorizer';
 import { config } from 'node-config-ts';
 import path from 'path';
 
-import { COLORIZE_OPTIONS } from './api/constants/commandLine';
+import { COLORIZE_OPTIONS } from './src/constants/commandLine';
 import { createComic, createItem, updateComic, updateItem } from '@/utils/marketplace';
-import { getItemIdByTokenId_SAFE } from './api/utils/getItemIdByTokenId';
-import { getWallet } from './api/utils/wallet';
-import { handleNameChangeById } from './api/utils/handleNameChange';
-import { MakeDegen } from './api/classes/degen';
-import { mint } from './api/imx/minting/mint';
-import { sleep } from './api/utils/api';
-import alignOutput from './api/utils/alignOutput';
-import handleMetadataUpdate from './api/utils/handleMetadataUpdate';
-import { refreshImmutable, refreshOpenSea } from './api/utils/refreshMetadata';
+import { getItemIdByTokenId_SAFE } from './src/utils/getItemIdByTokenId';
+import { getWallet } from './src/utils/wallet';
+import { handleNameChangeById } from './src/utils/handleNameChange';
+import { MakeDegen } from './src/classes/degen';
+import { mint } from './src/imx/minting/mint';
+import { sleep } from './src/utils/api';
+import alignOutput from './src/utils/alignOutput';
+import handleMetadataUpdate from './src/utils/handleMetadataUpdate';
+import { refreshImmutable, refreshOpenSea } from './src/utils/refreshMetadata';
 
 const targetNetwork = config.eth.network as TargetNetwork;
 
