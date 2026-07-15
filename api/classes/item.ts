@@ -6,6 +6,7 @@ import { ITEMS_METADATA } from '@/constants/metadata/items';
 import { ITEMS_CONTRACT_NAME } from '@/constants/contracts';
 import { S3_MARKETPLACE_BUCKET } from '@/constants/aws';
 import { ITEMS_IMAGES_CID } from '@/constants/ipfs';
+import { getAssetPath } from '@/utils/assets';
 import { makeGatewayURL } from '@/utils/uriHelpers';
 import { Minty } from './minty';
 
@@ -67,7 +68,7 @@ class Item extends Minty {
    * @returns {Promise<GenerateNFTResult>}
    */
   async generateItem(tokenId: number) {
-    const filePath = `ContractsAPI/public/images/items/${tokenId}.gif`;
+    const filePath = getAssetPath('items', `${tokenId}.gif`);
     const content = await fs.promises.readFile(filePath);
     const basename = path.basename(filePath);
     const { assetURI, assetGatewayURL } = await this.pinImage(`/items/${basename}`, content);

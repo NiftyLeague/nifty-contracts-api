@@ -6,6 +6,7 @@ import { COMICS_METADATA } from '@/constants/metadata/comics';
 import { COMICS_CONTRACT_NAME } from '@/constants/contracts';
 import { S3_MARKETPLACE_BUCKET } from '@/constants/aws';
 import { COMICS_IMAGES_CID } from '@/constants/ipfs';
+import { getAssetPath } from '@/utils/assets';
 import { makeGatewayURL } from '@/utils/uriHelpers';
 import { Minty } from './minty';
 
@@ -67,7 +68,7 @@ class Comic extends Minty {
    * @returns {Promise<GenerateNFTResult>}
    */
   async generateComic(tokenId: number) {
-    const filePath = `ContractsAPI/public/images/comics/${tokenId}.png`;
+    const filePath = getAssetPath('comics', `${tokenId}.png`);
     const content = await fs.promises.readFile(filePath);
     const basename = path.basename(filePath);
     const { assetURI, assetGatewayURL } = await this.pinImage(`/nifty-launch-comics/${basename}`, content);
