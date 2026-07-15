@@ -1,0 +1,16 @@
+# Vercel deployment ignore file.
+#
+# These directories contain large, S3-backed binary assets that are only used
+# by local CLI tooling (the `minty` commands for generating item/comic/degen
+# metadata and images). They are NOT used by any Express API route served in
+# production, and the degen images are git-ignored. Excluding them keeps the
+# serverless function bundle small and the upload fast.
+assets/images/degens
+assets/images/comics
+assets/images/comics-disabled
+assets/images/items
+assets/images/hydra
+
+# Never deploy local/test artifacts
+coverage
+*.log

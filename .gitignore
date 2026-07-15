@@ -113,3 +113,4 @@ assets/images/degens/
 .kilo
 .idea
 .claude
+.env*.local
