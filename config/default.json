@@ -1,7 +1,7 @@
 {
   "host": {
     "mainnet": "https://api.niftyleague.com",
-    "sepolia": "https://niftyleague-dev.herokuapp.com"
+    "sepolia": "https://staging.api.niftyleague.com"
   },
   "port": "@@PORT",
   "aws": {
@@ -109,7 +109,7 @@
         "description": "A collection of unique and rare items used in Nifty League games.",
         "iconUrl": "https://niftyleague.com/img/logo/purple-filled.png",
         "imageUrl": "https://niftyleague.com/img/logo/full-bg.png",
-        "metadataApiUrl": "https://niftyleague-dev.herokuapp.com/imx/items/metadata"
+        "metadataApiUrl": "https://staging.api.niftyleague.com/imx/items/metadata"
       }
     }
   }

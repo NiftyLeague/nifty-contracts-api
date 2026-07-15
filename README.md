@@ -4,20 +4,26 @@
 
 ### Requirements
 
-You need node > `v20`.
+You need node `v24` (see `.nvmrc`). The API is hosted on [Vercel](https://vercel.com).
 
-If you want to do a Heroku deployment, download and install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) and run `heroku login` locally.
+## Deploy (Vercel)
 
-## API Setup
+The Express app is served as a single Vercel Serverless Function. The thin entry in
+`api/index.ts` imports the app from `src/index.ts`, and a catch-all rewrite in
+`vercel.json` routes every request to it.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+- **Production (mainnet):** the `main` branch deploys to the Production environment
+  (`api.niftyleague.com`, `ETH_NETWORK=mainnet`).
+- **Preview (sepolia / dev):** the dev branch deploys to a Preview environment
+  (e.g. `api-dev.niftyleague.com`, `ETH_NETWORK=sepolia`).
 
-1. Click the **Deploy to Heroku** button to instantly get it up and running somewhere. You can pick the URL! For this example, let's say that it's `your-metadata-api.herokuapp.com`.
-2. Run `heroku git:clone -a your-metadata-api`, and `cd` into your new directory.
-3. Run `npm install`.
-4. Add a `.env` file using `.env.example` as a reference.
-5. Save the Heroku URL you picked into `config/default.js` as the `host` variable (e.g. `https://your-metadata-api.herokuapp.com`). This is the root URL for the tokens on your contract.
-6. Deploy to Heroku by committing your changes and using `git push heroku master`.
+1. Link the project: `vercel link` (or create it in the dashboard, framework preset "Other").
+2. Set the environment variables from `.env.example`, scoped per environment
+   (Production vs Preview) in the Vercel dashboard.
+3. Deploy: `vercel --prod` for production, or push the branch for a preview.
+
+`config/default.json` is bundled into the function at runtime via `includeFiles` in
+`vercel.json`, so no build step is required for configuration.
 
 ## API Quick Start
 

@@ -105,7 +105,11 @@ cache/*
 .tern-port
 
 public/images/degens/
-.vercel
 
-.cursor/rules/kluster-code-verify.mdc
+# AI / IDE
+.vercel
+.cursor
 .kluster
+.kilo
+.idea
+.claude
