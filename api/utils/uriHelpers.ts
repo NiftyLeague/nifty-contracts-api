@@ -1,4 +1,4 @@
-import CID from 'cids';
+import { CID } from 'multiformats/cid';
 import { config } from 'node-config-ts';
 
 /**
@@ -41,5 +41,5 @@ export function makeGatewayURL(ipfsURI: string) {
 export function extractCID(cidOrURI: string): CID {
   // remove the ipfs:// prefix, split on '/' and return first path component (root CID)
   const cidString = stripIpfsUriPrefix(cidOrURI).split('/')[0];
-  return new CID(cidString);
+  return CID.parse(cidString);
 }

@@ -1,0 +1,156 @@
+import { jest } from '@jest/globals';
+
+const mockFetch = jest.fn() as jest.Mock<() => Promise<any>>;
+const mockGetContractFactory = jest.fn() as jest.Mock<() => Promise<any>>;
+const mockGetBurnedDegens = jest.fn() as jest.Mock<() => Promise<any>>;
+
+const mockConfig = {
+  eth: {
+    network: 'mainnet',
+    etherscan: '',
+    alchemy: { mainnet: 'mainnet-key', sepolia: 'sepolia-key' },
+  },
+};
+
+await jest.unstable_mockModule('node-config-ts', () => ({
+  config: mockConfig,
+}));
+
+await jest.unstable_mockModule('node-fetch', () => ({
+  default: mockFetch,
+}));
+
+await jest.unstable_mockModule('@/contracts', () => ({
+  getContractFactory: mockGetContractFactory,
+  getContractAddress: jest.fn(),
+}));
+
+await jest.unstable_mockModule('./degensBurned', () => ({
+  getBurnedDegens: mockGetBurnedDegens,
+}));
+
+const { resolveCirculatingSupply, resolveUnclaimedSupply, resolveTotalSupply, resolveMaxSupply } =
+  await import('./nftl');
+
+const CIRCULATING = 500000000000000000000000001n;
+const UNCLAIMED = 1234n;
+
+function mockContract() {
+  return {
+    totalSupply: jest.fn() as jest.Mock<() => Promise<any>>,
+    accumulatedMultiCheck: jest.fn() as jest.Mock<() => Promise<any>>,
+  };
+}
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockConfig.eth.etherscan = '';
+  const contract = mockContract();
+  contract.totalSupply.mockResolvedValue(CIRCULATING);
+  contract.accumulatedMultiCheck.mockResolvedValue(UNCLAIMED);
+  mockGetContractFactory.mockResolvedValue(contract);
+  mockGetBurnedDegens.mockResolvedValue([]);
+  mockFetch.mockReset();
+});
+
+describe('resolveCirculatingSupply', () => {
+  it('uses the Etherscan v2 result when configured and valid', async () => {
+    mockConfig.eth.etherscan = 'fake-key';
+    mockFetch.mockResolvedValue({
+      status: 200,
+      json: async () => ({ status: '1', result: CIRCULATING.toString() }),
+      text: async () => '',
+    });
+
+    const result = await resolveCirculatingSupply();
+
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(mockGetContractFactory).not.toHaveBeenCalled();
+    expect(result).toBe(CIRCULATING.toString());
+  });
+
+  it('falls back to the contract when Etherscan returns a non-numeric result', async () => {
+    mockConfig.eth.etherscan = 'fake-key';
+    mockFetch.mockResolvedValue({
+      status: 200,
+      json: async () => ({ status: '0', result: 'NOT_A_NUMBER' }),
+      text: async () => '',
+    });
+
+    const result = await resolveCirculatingSupply();
+
+    expect(mockGetContractFactory).toHaveBeenCalledTimes(1);
+    expect(result).toBe(CIRCULATING.toString());
+  });
+
+  it('falls back to the contract when no Etherscan key is configured', async () => {
+    mockConfig.eth.etherscan = '';
+
+    const result = await resolveCirculatingSupply();
+
+    expect(mockFetch).not.toHaveBeenCalled();
+    expect(mockGetContractFactory).toHaveBeenCalledTimes(1);
+    expect(result).toBe(CIRCULATING.toString());
+  });
+
+  it('returns null when the contract is unavailable', async () => {
+    mockConfig.eth.etherscan = '';
+    mockGetContractFactory.mockResolvedValue(null);
+
+    const result = await resolveCirculatingSupply();
+
+    expect(result).toBeNull();
+  });
+});
+
+describe('resolveUnclaimedSupply', () => {
+  it('sums accumulated rewards over active degens', async () => {
+    mockGetBurnedDegens.mockResolvedValue([1, 2, 3]);
+
+    const result = await resolveUnclaimedSupply();
+
+    expect(mockGetBurnedDegens).toHaveBeenCalledTimes(1);
+    expect(mockGetContractFactory).toHaveBeenCalledTimes(1);
+    expect(result).toBe(UNCLAIMED.toString());
+  });
+
+  it('returns null when the contract is unavailable', async () => {
+    mockGetContractFactory.mockResolvedValue(null);
+
+    const result = await resolveUnclaimedSupply();
+
+    expect(result).toBeNull();
+  });
+});
+
+describe('resolveTotalSupply', () => {
+  it('is the sum of circulating and unclaimed supply', async () => {
+    const result = await resolveTotalSupply();
+
+    expect(result).toBe((CIRCULATING + UNCLAIMED).toString());
+  });
+
+  it('returns null when a component is missing', async () => {
+    mockGetContractFactory.mockResolvedValue(null);
+
+    const result = await resolveTotalSupply();
+
+    expect(result).toBeNull();
+  });
+});
+
+describe('resolveMaxSupply', () => {
+  it('adds remaining emissions to the total (zero after the emission end date)', async () => {
+    const result = await resolveMaxSupply();
+
+    expect(result).toBe((CIRCULATING + UNCLAIMED).toString());
+  });
+
+  it('returns null when the total supply cannot be resolved', async () => {
+    mockGetContractFactory.mockResolvedValue(null);
+
+    const result = await resolveMaxSupply();
+
+    expect(result).toBeNull();
+  });
+});

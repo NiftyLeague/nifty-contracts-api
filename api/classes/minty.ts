@@ -1,12 +1,10 @@
-import CID from 'cids';
+import { CID } from 'multiformats/cid';
 import { config } from 'node-config-ts';
 import type { Contract, EventLog } from 'ethers';
 import fetch from 'node-fetch';
-import { create, type Options, type IPFSHTTPClient } from 'ipfs-http-client';
-import type { ListOptions } from 'ipfs-core-types/dist/src/root';
+import { create } from 'kubo-rpc-client';
 import { concat } from 'uint8arrays/concat';
 import { toString } from 'uint8arrays/to-string';
-import pinataSDK from '@pinata/sdk';
 
 import { ContractName, TargetNetwork, NFTInfo } from '@/types';
 import { getContractFactory } from '@/contracts';
@@ -15,8 +13,6 @@ import { uploadToS3 } from '@/utils/uploadToS3';
 import all from '@/utils/it-all';
 import { stripIpfsUriPrefix, makeGatewayURL, extractCID, ensureIpfsUriPrefix } from '@/utils/uriHelpers';
 import { IPFS_OPTIONS } from '@/constants/ipfs';
-
-const pinata = new pinataSDK(config.ipfs.pinata);
 
 /**
  * Minty is the main object responsible for storing NFT data and interacting with the smart contract.
@@ -28,7 +24,7 @@ export class Minty {
   contractName: ContractName;
   _initialized: boolean;
   contract: Contract | null;
-  ipfs: IPFSHTTPClient | null;
+  ipfs: ReturnType<typeof create> | null;
 
   constructor(targetNetwork: TargetNetwork, contractName: ContractName) {
     this.targetNetwork = targetNetwork;
@@ -43,18 +39,16 @@ export class Minty {
     // connect to the smart contract using the address and ABI
     this.contract = await getContractFactory(this.targetNetwork, this.contractName);
 
-    const options = {
-      protocol: config.ipfs.protocol,
+    // connect to the IPFS HTTP API (e.g. NFT.Storage / Infura)
+    this.ipfs = create({
+      protocol: config.ipfs.protocol as 'https' | 'http',
       host: config.ipfs.host,
       port: config.ipfs.port,
-      path: config.ipfs.path,
+      apiPath: config.ipfs.path || '/api/v0',
       headers: {
         authorization: `Basic ${config.ipfs.authorization}`,
       },
-    } as Options;
-
-    // create a local IPFS node
-    this.ipfs = create(options);
+    });
 
     this._initialized = true;
   }
@@ -276,12 +270,26 @@ export class Minty {
     if (this.ipfs) {
       const { cid: assetCid } = await this.ipfs.add({ path: imgPath, content }, IPFS_OPTIONS);
       console.log('✅ Image pinned to Infura IPFS');
-      const options = {
-        pinataMetadata: { name: imgPath },
-        // pinataOptions: IPFS_OPTIONS,
-      };
-      await pinata.pinByHash(assetCid.toString(), options);
-      console.log('✅ Image pinned to Pinata IPFS');
+      // Pin the same CID on Pinata via their REST API
+      const { pinataApiKey, pinataSecretApiKey } = config.ipfs.pinata;
+      const res = await fetch('https://api.pinata.cloud/pinning/pinByHash', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          pinata_api_key: pinataApiKey,
+          pinata_secret_api_key: pinataSecretApiKey,
+        },
+        body: JSON.stringify({
+          hashToPin: assetCid.toString(),
+          pinataMetadata: { name: imgPath },
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.text();
+        console.warn('Pinata pinByHash failed:', res.status, body);
+      } else {
+        console.log('✅ Image pinned to Pinata IPFS');
+      }
       const assetURI = ensureIpfsUriPrefix(assetCid.toString()) + imgPath;
       return {
         assetCid,
@@ -313,7 +321,7 @@ export class Minty {
     // Ask the remote service to pin the content.
     // Behind the scenes, this will cause the pinning service to connect to our local IPFS node
     // and fetch the data using Bitswap, IPFS's transfer protocol.
-    await this.ipfs?.pin.add(cid.toString());
+    await this.ipfs?.pin.add(cid);
   }
 
   /**
@@ -329,8 +337,7 @@ export class Minty {
       // Ask the remote service to unpin the content.
       // Removes pin object matching query allowing it to be garbage collected
       console.log(`Unpinning CID (${cid})`);
-      // @ts-expect-error CID issue from package
-      await this.ipfs?.pin.rm(typeof cid === 'string' ? new CID(cid) : cid);
+      await this.ipfs?.pin.rm(typeof cid === 'string' ? CID.parse(cid) : cid);
     }
   }
 
@@ -342,10 +349,8 @@ export class Minty {
    */
   async isPinned(cid: string | CID) {
     if (this.ipfs) {
-      const opts = {
-        cid: [[typeof cid === 'string' ? new CID(cid) : cid]], // ls expects an array of cids
-      } as ListOptions;
-      for await (const result of this.ipfs.pin.ls(opts)) {
+      const cidObj = typeof cid === 'string' ? CID.parse(cid) : cid;
+      for await (const _result of this.ipfs.pin.ls({ paths: [cidObj] })) {
         return true;
       }
     }
