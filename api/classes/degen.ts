@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs';
 
 import { Metadata, TargetNetwork } from '@/types';
+import { getAssetPath } from '@/utils/assets';
 import { downloadImage, generateImageURL } from '@/utils/imageGenerator';
 // import { makeGatewayURL } from '@/utils/uriHelpers';
 
@@ -54,7 +55,7 @@ export class Degen extends Minty {
     const traits = await this.getCharacterTraits(tokenId);
     const rarity = 1;
     // const filePath = await this.generateImage(tokenId, traits, rarity);
-    const filePath = `ContractsAPI/public/images/degens/${tokenId}.${rarity < 3 ? 'png' : 'gif'}`;
+    const filePath = getAssetPath('degens', `${tokenId}.${rarity < 3 ? 'png' : 'gif'}`);
     const content = await fs.promises.readFile(filePath);
     // Upload NFT asset from file
     const basename = path.basename(filePath);
@@ -200,7 +201,7 @@ export class Degen extends Minty {
   async updateDegenImage(tokenId: number, metadata: Metadata) {
     // Upload new image to IPFS
     const background = metadata.attributes.find(attr => attr.trait_type === 'Background');
-    const filePath = `ContractsAPI/public/images/degens/${tokenId}.${background?.value === 'Legendary' ? 'gif' : 'png'}`;
+    const filePath = getAssetPath('degens', `${tokenId}.${background?.value === 'Legendary' ? 'gif' : 'png'}`);
     const content = await fs.promises.readFile(filePath);
     const basename = path.basename(filePath);
     const { assetURI } = await this.pinImage(`/degens/${basename}`, content);
