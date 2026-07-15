@@ -1,0 +1,35 @@
+# pnpm workspace config
+# https://pnpm.io/11.x/settings
+
+# pnpm 11 enforces a 1-day minimum release age by default. We use the
+# latest dependencies on a regular cadence, so opt out for this repo.
+minimumReleaseAge: 0
+
+# pnpm 11 also flipped `optimisticRepeatInstall` to true by default, which
+# causes it to silently re-resolve transitive deps on every install
+# (e.g. `@types/express-serve-static-core` 5.1.0 → 5.1.2). Disable it so
+# installs honor the lockfile and the change shows up in a real PR
+# instead of silently on every checkout.
+optimisticRepeatInstall: false
+
+# pnpm 11 split the hoist pattern out of `.npmrc` — non-auth settings
+# live here. Keeps `@eslint/js` available at the top level so the ESLint
+# flat config can import it without a subpath.
+publicHoistPattern:
+  - "@eslint/js"
+
+# Explicit allow-list for packages that need to run their install scripts.
+# `strictDepBuilds` is on by default in pnpm 11, so anything not listed
+# here is rejected.
+allowBuilds:
+  "@aws-sdk/*": true
+  "@scarf/scarf": true
+  "@swc/core": true
+  bufferutil: true
+  es5-ext: true
+  esbuild: true
+  keccak: true
+  protobufjs: true
+  secp256k1: true
+  unrs-resolver: true
+  utf-8-validate: true
