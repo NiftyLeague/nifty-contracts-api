@@ -11,7 +11,7 @@
     "minty": "commander.ts"
   },
   "scripts": {
-    "build": "npx tsc && tsc-alias",
+    "build": "npx tsc && tsc-alias && node scripts/copy-config.mjs",
     "start": "node dist/src/index.js",
     "dev": "tsx watch src/index.ts",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --forceExit",
