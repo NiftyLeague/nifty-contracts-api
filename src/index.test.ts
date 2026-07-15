@@ -101,7 +101,9 @@ describe('API Endpoints', () => {
   describe('Root', () => {
     it('GET / — returns API details with name, version, and endpoints', async () => {
       const response = await request(app).get('/');
-      const baseUrl = `${response.request.protocol}//${response.request.host}`;
+      // The handler builds the base URL from X-Forwarded-Proto (defaulting to
+      // https) and the Host header, so the protocol is always https here.
+      const baseUrl = `https://${response.request.host}`;
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         ...DEFAULTS,

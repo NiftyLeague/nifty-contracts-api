@@ -4,10 +4,19 @@ import fetch from 'node-fetch';
 import { getContractAddress } from '@/contracts';
 import { DEGEN_CONTRACT_NAME } from '@/constants/contracts';
 import type { TargetNetwork } from '@/types';
-import { sleep } from './api';
+import { sleep, withCache } from './api';
 
 const BURN_ADDY1 = '0x000000000000000000000000000000000000dEaD';
 const BURN_ADDY2 = '0x0000000000000000000000000000000000000001';
+
+const BURN_LIST_TTL_MS = 60_000;
+
+const FETCH_TIMEOUT_MS = 10000;
+
+// node-fetch v3 accepts an AbortSignal timeout option. Keeps Alchemy paged calls
+// from hanging the function up to maxDuration on a slow/dead upstream.
+const fetchWithTimeout = (url: string, options: any) =>
+  fetch(url, { ...options, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
 
 type NftOwned = {
   contractAddress: string;
@@ -15,7 +24,7 @@ type NftOwned = {
   balance: string;
 };
 
-export async function getBurnedDegens(): Promise<number[]> {
+export async function fetchBurnedDegens(): Promise<number[]> {
   try {
     const targetNetwork = config.eth.network as TargetNetwork;
     const apiKey = config.eth.alchemy[targetNetwork];
@@ -41,6 +50,10 @@ export async function getBurnedDegens(): Promise<number[]> {
   }
 }
 
+// Memoized for 60s so routine traffic doesn't hit Alchemy on every call. The
+// cache falls back to the last-good value on transient upstream failure.
+export const getBurnedDegens = withCache(BURN_LIST_TTL_MS, fetchBurnedDegens);
+
 interface FetchResponse {
   ownedNfts: NftOwned[];
   pageKey?: string;
@@ -52,7 +65,7 @@ async function fetchAndProcess(inventoryURI: string, inventoryRes: number[]) {
 
   do {
     const paginatedURI: string = pageKey ? `${inventoryURI}&pageKey=${pageKey}` : inventoryURI;
-    const response = await fetch(paginatedURI, options);
+    const response = await fetchWithTimeout(paginatedURI, options);
 
     const { ownedNfts, pageKey: nextPageKey } = (await response.json()) as FetchResponse;
     if (ownedNfts) inventoryRes.push(...ownedNfts.map((nft: NftOwned) => parseInt(nft.tokenId, 10)));

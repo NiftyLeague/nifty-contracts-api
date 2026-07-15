@@ -7,8 +7,11 @@ import { getContractFactory } from '@/contracts';
 import type { TargetNetwork } from '@/types';
 import { getBurnedDegens } from './degensBurned';
 import { NFTLToken } from '@/types/typechain';
+import { withCache } from './api';
 
-export async function resolveCirculatingSupply(): Promise<string | null> {
+const SUPPLY_TTL_MS = 60_000;
+
+export async function resolveCirculatingSupplyImpl(): Promise<string | null> {
   try {
     const secret = config.eth.etherscan;
     const targetNetwork = config.eth.network as TargetNetwork;
@@ -59,13 +62,15 @@ export async function resolveCirculatingSupply(): Promise<string | null> {
   }
 }
 
-export async function resolveUnclaimedSupply(): Promise<string | null> {
+export async function resolveUnclaimedSupplyImpl(): Promise<string | null> {
   try {
     const targetNetwork = config.eth.network as TargetNetwork;
     const nftlContract = await getContractFactory<NFTLToken>(targetNetwork, NFTL_CONTRACT_NAME);
     if (nftlContract) {
       const burnedDegens = await getBurnedDegens();
-      const activeDegens = Array.from({ length: 10000 }, (_, i) => i + 1).filter(num => !burnedDegens.includes(num));
+      const activeDegens = Array.from({ length: 10000 }, (_, i) => i + 1).filter(
+        num => burnedDegens !== null && !burnedDegens.includes(num),
+      );
       const unclaimed = await nftlContract.accumulatedMultiCheck(activeDegens);
       return unclaimed.toString();
     }
@@ -75,10 +80,10 @@ export async function resolveUnclaimedSupply(): Promise<string | null> {
   }
 }
 
-export async function resolveTotalSupply(): Promise<string | null> {
+export async function resolveTotalSupplyImpl(): Promise<string | null> {
   try {
-    const circulatingSupply = await resolveCirculatingSupply();
-    const unclaimedSupply = await resolveUnclaimedSupply();
+    const circulatingSupply = await resolveCirculatingSupplyImpl();
+    const unclaimedSupply = await resolveUnclaimedSupplyImpl();
     if (!circulatingSupply || !unclaimedSupply) return null;
     return (BigInt(circulatingSupply) + BigInt(unclaimedSupply)).toString();
   } catch {
@@ -99,9 +104,9 @@ export const calculateRemainingEmissions = (): string => {
   return parseEther(remainingEmissions.toString()).toString();
 };
 
-export async function resolveMaxSupply(): Promise<string | null> {
+export async function resolveMaxSupplyImpl(): Promise<string | null> {
   try {
-    const totalSupply = await resolveTotalSupply();
+    const totalSupply = await resolveTotalSupplyImpl();
     if (!totalSupply) return null;
     const remainingEmissions = calculateRemainingEmissions();
     return (BigInt(totalSupply) + BigInt(remainingEmissions)).toString();
@@ -109,3 +114,12 @@ export async function resolveMaxSupply(): Promise<string | null> {
     return null;
   }
 }
+
+// Memoized exports (60s TTL). Routine traffic shouldn't hit Etherscan/Alchemy
+// or the NFTL contract on every request — that's rate-limit prone and risks the
+// function's 30s ceiling. The cache returns the last-good value on transient
+// upstream failure.
+export const resolveCirculatingSupply = withCache(SUPPLY_TTL_MS, resolveCirculatingSupplyImpl);
+export const resolveUnclaimedSupply = withCache(SUPPLY_TTL_MS, resolveUnclaimedSupplyImpl);
+export const resolveTotalSupply = withCache(SUPPLY_TTL_MS, resolveTotalSupplyImpl);
+export const resolveMaxSupply = withCache(SUPPLY_TTL_MS, resolveMaxSupplyImpl);

@@ -8,27 +8,69 @@ You need node `v24` (see `.nvmrc`). The API is hosted on [Vercel](https://vercel
 
 ## Deploy (Vercel)
 
-The Express app (`src/index.ts`, which imports `express` and `export default app`) is
-auto-detected by Vercel's **Express** framework preset (`framework: "express"` in
-`vercel.json`) and served as a single Vercel Serverless Function. No catch-all rewrite
-or separate entry file is needed — Vercel wires routing to the app directly.
+The API is compiled to `dist/` by `pnpm build` (`tsc` + `tsc-alias` to rewrite the
+`@/*` path aliases) and served by a thin serverless entry `api/index.js` that
+re-exports `dist/src/index.js` (the default-exported Express app). `vercel.json`
+uses a `buildCommand` + catch-all `rewrite` to `/api/index` rather than the
+legacy `"framework": "express"` preset, which avoids the ESM/tsc-alias module
+resolution crash the preset triggered.
 
 - **Production (mainnet):** the `main` branch deploys to the Production environment
   (`api.niftyleague.com`, `ETH_NETWORK=mainnet`).
-- **Preview (sepolia / dev):** the dev branch deploys to a Preview environment
-  (e.g. `api-dev.niftyleague.com`, `ETH_NETWORK=sepolia`).
+- **Preview (sepolia / dev):** the dev branch deploys to a Preview environment.
 
-1. Link the project: `vercel link` (or create it in the dashboard, framework preset "Express").
+1. Link the project: `vercel link --scope niftyleague`.
 2. Set the environment variables from `.env.example`, scoped per environment
-   (Production vs Preview) in the Vercel dashboard.
-3. Deploy: `vercel --prod` for production, or push the branch for a preview.
+   (Production vs Preview) in the Vercel dashboard. **Every `@@VAR` in
+   `config/default.json` must be set** or the config resolves to `undefined` and
+   handlers can crash.
+3. Build and deploy: `pnpm build && vercel deploy --prebuilt --prod --scope niftyleague`.
+   Pushing to `main` also triggers CI (`test` job) and the `live-audit` job, which
+   runs `pnpm audit:endpoints` against production.
 
 `config/default.json` is bundled into the function at runtime via `includeFiles` in
-`vercel.json`, so no build step is required for configuration.
+`vercel.json`.
+
+### Vercel proxy notes
+
+Vercel terminates TLS at the edge, so the raw `@vercel/node` `(req, res)` bridge
+invokes the Express handler **without** `trust proxy`. `src/index.ts` sets
+`app.set('trust proxy', true)` and builds the root `GET /` base URL from
+`X-Forwarded-Proto`/`Host` (never `req.protocol`, which reads
+`req.socket.encrypted` and throws on the edge). Do not reintroduce `req.protocol`.
+
+## Local validation
+
+```bash
+pnpm install
+pnpm type-check && pnpm lint && pnpm test   # hermetic, mocked, offline
+pnpm test:live                              # hits BASE_URL (default prod) — needs network
+node scripts/audit-endpoints.mjs            # contract gate an AI agent runs after a dep bump
+```
+
+`pnpm test` ignores `dist`, `.vercel`, and `coverage` so a local `vercel build`
+cannot pollute the run.
+
+## API contract → test mapping (for AI maintenance)
+
+| Route                | Contract source                         | Hermetic unit test                            | Live test                         |
+| -------------------- | --------------------------------------- | --------------------------------------------- | --------------------------------- |
+| `GET /`              | `src/constants/api.ts`                  | `src/index.test.ts`                           | `test/smoke/api.contract.test.ts` |
+| `/NFTL/supply*`      | `src/utils/nftl.ts`                     | `src/index.test.ts`, `src/utils/nftl.test.ts` | `test/smoke/...`                  |
+| `/degens/burn-list`  | `src/utils/degensBurned.ts`             | `src/index.test.ts`                           | `test/smoke/...`                  |
+| `/:network/degen/*`  | `src/utils/api.ts` (`pipeRequest`)      | `src/index.test.ts` (mocked)                  | `test/smoke/...`                  |
+| `/imx/marketplace/*` | `src/constants/metadata/marketplace.ts` | `src/index.test.ts`                           | `test/smoke/...`                  |
+
+When a dependency update breaks a route, the failure surfaces in the matching
+hermetic test (fast) and, if it reaches production, in `pnpm audit:endpoints`
+(non-zero exit). NFTL supply + burn-list resolvers are memoized for 60s
+(`withCache` in `src/utils/api.ts`) and fall back to last-good on upstream
+failure; `pipeRequest` has a 10s timeout and returns a 502 `{ errors: [...] }`
+shape instead of hanging.
 
 ## API Quick Start
 
-Run `pnpm dev` to start up your local API on post 5005 in watchmode
+Run `pnpm dev` to start up your local API on port 5005 in watch mode
 
 ## Commander Quick Start
 

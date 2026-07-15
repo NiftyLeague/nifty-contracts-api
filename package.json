@@ -15,6 +15,8 @@
     "start": "node dist/src/index.js",
     "dev": "tsx watch src/index.ts",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --forceExit",
+    "test:live": "RUN_LIVE_TESTS=1 node --experimental-vm-modules node_modules/jest/bin/jest.js --forceExit --testPathPatterns=smoke",
+    "audit:endpoints": "node scripts/audit-endpoints.mjs",
     "lint": "eslint .",
     "format": "prettier --ignore-path .prettierignore --write .",
     "type-check": "tsc --noEmit",

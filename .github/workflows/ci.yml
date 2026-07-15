@@ -26,6 +26,10 @@ jobs:
         run: pnpm type-check
       - name: Build
         run: pnpm build
+      # Guard: never let a stray .vercel/output (from a local `vercel build`)
+      # pollute the deterministic test run.
+      - name: Clean build artifacts
+        run: rm -rf .vercel dist coverage
       - name: Test
         run: pnpm test
         env:
@@ -35,3 +39,27 @@ jobs:
           ETH_ACCOUNT_PRIVATE_KEY: ${{ secrets.ETH_ACCOUNT_PRIVATE_KEY }}
           INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
           TESTNET_COLLECTION_CONTRACT_ADDRESS: ${{ secrets.TESTNET_COLLECTION_CONTRACT_ADDRESS }}
+
+  live-audit:
+    name: Live endpoint audit (production)
+    runs-on: ubuntu-latest
+    # Only audit production after a push to main; the deployed artifact is the
+    # real contract gate (catches regressions like the Vercel topology 500s).
+    if: github.ref == 'refs/heads/main'
+    needs: test
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install --prod=false
+      - name: Audit live endpoints
+        run: pnpm audit:endpoints
+        env:
+          BASE_URL: 'https://api.niftyleague.com'

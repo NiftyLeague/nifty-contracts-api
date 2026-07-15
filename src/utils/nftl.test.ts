@@ -29,8 +29,16 @@ await jest.unstable_mockModule('./degensBurned', () => ({
   getBurnedDegens: mockGetBurnedDegens,
 }));
 
-const { resolveCirculatingSupply, resolveUnclaimedSupply, resolveTotalSupply, resolveMaxSupply } =
+const { resolveCirculatingSupplyImpl, resolveUnclaimedSupplyImpl, resolveTotalSupplyImpl, resolveMaxSupplyImpl } =
   await import('./nftl');
+
+// The exported resolvers are memoized (withCache) for production resilience;
+// the *Impl variants are the raw implementations, which is what this unit suite
+// exercises in isolation.
+const resolveCirculatingSupply = resolveCirculatingSupplyImpl;
+const resolveUnclaimedSupply = resolveUnclaimedSupplyImpl;
+const resolveTotalSupply = resolveTotalSupplyImpl;
+const resolveMaxSupply = resolveMaxSupplyImpl;
 
 const CIRCULATING = 500000000000000000000000001n;
 const UNCLAIMED = 1234n;

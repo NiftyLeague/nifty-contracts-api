@@ -29,7 +29,10 @@ export default tseslint.config(
     ignores: [
       'node_modules/**',
       'public/**',
+      '.vercel/**',
       'dist/**',
+      'scripts/**/*.mjs',
+      '*.mjs',
       '*.config.js',
       '*.config.cjs',
       '.eslintrc.cjs',

@@ -17,15 +17,29 @@ import type { Attribute, TargetNetwork } from './types';
 
 const app = express().set('port', config.port || 5005);
 
+// Vercel terminates TLS at the edge and invokes this handler via @vercel/node's
+// raw (req, res) bridge, where req.socket is undefined. Without trust proxy,
+// Express 5's req.protocol getter reads req.socket.encrypted and throws on every
+// request. Enabling trust proxy makes Express derive the protocol from
+// X-Forwarded-Proto (which Vercel sets to https), and we build the base URL
+// defensively below as a belt-and-suspenders measure.
+app.set('trust proxy', true);
+
+const buildBaseUrl = (req: Request): string => {
+  const proto = req.get('x-forwarded-proto') || 'https';
+  const host = req.get('host') || (config.host ? config.host[config.eth.network as TargetNetwork] : undefined);
+  return `${proto}://${host}`;
+};
+
 app.get('/', function (req: Request, res: Response) {
-  const baseUrl = `${req.protocol}://${req.get('host')}`;
+  const baseUrl = buildBaseUrl(req);
   res.json({
     ...DEFAULTS,
     endpoints: getEndpoints(baseUrl),
   });
 });
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '1mb' }));
 
 app.use(cors());
 
