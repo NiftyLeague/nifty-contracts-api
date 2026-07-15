@@ -1,13 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/api"
-    }
-  ],
+  "framework": "express",
   "functions": {
-    "api/index.ts": {
+    "src/index.ts": {
       "includeFiles": "config/**",
       "maxDuration": 30
     }

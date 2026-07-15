@@ -1,7 +1,7 @@
 import path from 'path';
 
 /**
- * Asset kind directories under `public/images/`.
+ * Asset kind directories under `assets/images/`.
  *
  * Keep this in sync with the on-disk layout — the NFT generators
  * (`generateComic`, `generateItem`, `generateNFT`, `updateDegenImage`)
@@ -20,5 +20,5 @@ export type AssetKind = 'comics' | 'items' | 'degens';
  * JavaScript under `dist/` or from the source via `tsx`.
  */
 export function getAssetPath(kind: AssetKind, fileName: string): string {
-  return path.join(process.cwd(), 'public', 'images', kind, fileName);
+  return path.join(process.cwd(), 'assets', 'images', kind, fileName);
 }

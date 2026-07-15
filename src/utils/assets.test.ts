@@ -11,11 +11,11 @@ describe('getAssetPath', () => {
     ['degens', '1.png'],
   ];
 
-  it.each(cases)('resolves %s -> public/images/%s relative to cwd', (kind, fileName) => {
-    const expected = path.join(process.cwd(), 'public', 'images', kind, fileName);
+  it.each(cases)('resolves %s -> assets/images/%s relative to cwd', (kind, fileName) => {
+    const expected = path.join(process.cwd(), 'assets', 'images', kind, fileName);
     const resolved = getAssetPath(kind, fileName);
 
-    // Absolute, and exactly <cwd>/public/images/<kind>/<file>. This is the
+    // Absolute, and exactly <cwd>/assets/images/<kind>/<file>. This is the
     // core of the #118 fix: the previous code built a `ContractsAPI/`
     // prefixed path (e.g. `ContractsAPI/public/images/...`) which resolved
     // to a non-existent location. It must not. An exact-equality check is
@@ -25,7 +25,7 @@ describe('getAssetPath', () => {
     expect(resolved).toBe(expected);
   });
 
-  it.each(cases)('points at a real, writable directory under public/images/%s', (kind, fileName) => {
+  it.each(cases)('points at a real, writable directory under assets/images/%s', (kind, fileName) => {
     // The committed binary assets are git-ignored, so we cannot assume the
     // resolved file exists. Instead we materialize a throwaway file at the
     // resolved directory to prove the path is correct and writable, then

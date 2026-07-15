@@ -83,7 +83,7 @@ export class Degen extends Minty {
    */
 
   async generateImage(tokenId: number, traits: number[], rarity: number) {
-    const filePath = `./public/images/degens/${tokenId}.${rarity < 3 ? 'png' : 'gif'}`;
+    const filePath = `./assets/images/degens/${tokenId}.${rarity < 3 ? 'png' : 'gif'}`;
     const url = generateImageURL(traits, rarity, tokenId);
     console.log('🎮 Unity image url:', url);
     console.log('');

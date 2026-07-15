@@ -104,7 +104,7 @@ cache/*
 # TernJS port file
 .tern-port
 
-public/images/degens/
+assets/images/degens/
 
 # AI / IDE
 .vercel

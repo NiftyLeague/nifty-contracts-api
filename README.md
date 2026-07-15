@@ -8,16 +8,17 @@ You need node `v24` (see `.nvmrc`). The API is hosted on [Vercel](https://vercel
 
 ## Deploy (Vercel)
 
-The Express app is served as a single Vercel Serverless Function. The thin entry in
-`api/index.ts` imports the app from `src/index.ts`, and a catch-all rewrite in
-`vercel.json` routes every request to it.
+The Express app (`src/index.ts`, which imports `express` and `export default app`) is
+auto-detected by Vercel's **Express** framework preset (`framework: "express"` in
+`vercel.json`) and served as a single Vercel Serverless Function. No catch-all rewrite
+or separate entry file is needed — Vercel wires routing to the app directly.
 
 - **Production (mainnet):** the `main` branch deploys to the Production environment
   (`api.niftyleague.com`, `ETH_NETWORK=mainnet`).
 - **Preview (sepolia / dev):** the dev branch deploys to a Preview environment
   (e.g. `api-dev.niftyleague.com`, `ETH_NETWORK=sepolia`).
 
-1. Link the project: `vercel link` (or create it in the dashboard, framework preset "Other").
+1. Link the project: `vercel link` (or create it in the dashboard, framework preset "Express").
 2. Set the environment variables from `.env.example`, scoped per environment
    (Production vs Preview) in the Vercel dashboard.
 3. Deploy: `vercel --prod` for production, or push the branch for a preview.
@@ -66,10 +67,8 @@ import { config } from 'node-config-ts';
 const network = config.eth.network;
 ```
 
-If changes are made to `default.json` you can regenerte types using:
-
-```
-pnpm update-env
-```
+The TypeScript types for the config live in `config/Config.d.ts`. If you add or
+change keys in `default.json`, update that declaration file to match (it augments
+the `node-config-ts` `IConfig` interface).
 
 ---
