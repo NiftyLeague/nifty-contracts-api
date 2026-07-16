@@ -1,6 +1,6 @@
 import request from 'supertest';
-import { jest } from '@jest/globals';
 import type { Express } from 'express';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { CONTRACT_METHODS } from './constants/contracts';
 
@@ -34,7 +34,7 @@ const IMX_ENV = {
   },
 };
 
-await jest.unstable_mockModule('node-config-ts', () => ({
+vi.doMock('node-config-ts', () => ({
   config: {
     host: { mainnet: 'https://api.niftyleague.com', sepolia: 'https://staging.api.niftyleague.com' },
     port: 5005,
@@ -71,12 +71,12 @@ await jest.unstable_mockModule('node-config-ts', () => ({
   },
 }));
 
-const mockHandleNameChangeByInput = jest.fn(() => Promise.resolve({ metadata: {} })) as jest.Mock<
-  (network: string, input: string) => Promise<any>
->;
-await jest.unstable_mockModule('@/utils/handleNameChange', () => ({
+const mockHandleNameChangeByInput = vi.fn<(network: string, input: string) => Promise<any>>(() =>
+  Promise.resolve({ metadata: {} }),
+);
+vi.doMock('@/utils/handleNameChange', () => ({
   handleNameChangeByInput: mockHandleNameChangeByInput,
-  handleNameChangeById: jest.fn(),
+  handleNameChangeById: vi.fn(),
 }));
 
 // ---------------------------------------------------------------------------
@@ -101,7 +101,7 @@ const webhookUrl = (network: string, secret: string) => `/${network}/webhooks/de
 
 describe('Webhook routes (Degen rename)', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockHandleNameChangeByInput.mockResolvedValue({ metadata: {} });
   });
 

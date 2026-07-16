@@ -1,67 +1,86 @@
-name: Validate, build, and test on every push
+name: CI
 
-on: [push]
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main, staging]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
-    name: Test & Build Code
+  validate:
+    name: Test, audit, and build
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v6
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
-      - name: Setup Node
+        with:
+          version: 11.13.1
+          run_install: false
+
+      - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
-          cache: 'pnpm'
+          cache: pnpm
+
       - name: Install dependencies
-        run: pnpm install
-      - name: Run prettier
-        run: pnpm format
-      - name: Lint JS files
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        run: pnpm format:check
+
+      - name: Lint
         run: pnpm lint
-      - name: Check TypeScript
+
+      - name: Type-check
         run: pnpm type-check
-      - name: Audit dependencies
+
+      - name: Test with coverage
+        run: pnpm test:coverage
+
+      - name: Audit high-severity vulnerabilities
         run: pnpm audit --audit-level high
+
       - name: Build
         run: pnpm build
-      # Guard: never let a stray .vercel/output (from a local `vercel build`)
-      # pollute the deterministic test run.
-      - name: Clean build artifacts
-        run: rm -rf .vercel dist coverage
-      - name: Test
-        run: pnpm test
-        env:
-          ETH_NETWORK: 'sepolia'
-          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
-          TESTNET_ALCHEMY_API_KEY: ${{ secrets.TESTNET_ALCHEMY_API_KEY }}
-          ETH_ACCOUNT_PRIVATE_KEY: ${{ secrets.ETH_ACCOUNT_PRIVATE_KEY }}
-          INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
-          TESTNET_COLLECTION_CONTRACT_ADDRESS: ${{ secrets.TESTNET_COLLECTION_CONTRACT_ADDRESS }}
 
   live-audit:
     name: Live endpoint audit (production)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: validate
     runs-on: ubuntu-latest
-    # Only audit production after a push to main; the deployed artifact is the
-    # real contract gate (catches regressions like the Vercel topology 500s).
-    if: github.ref == 'refs/heads/main'
-    needs: test
+    timeout-minutes: 10
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v6
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
-      - name: Setup Node
+        with:
+          version: 11.13.1
+          run_install: false
+
+      - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
-          cache: 'pnpm'
+          cache: pnpm
+
       - name: Install dependencies
-        run: pnpm install --prod=false
+        run: pnpm install --frozen-lockfile
+
       - name: Audit live endpoints
         run: pnpm audit:endpoints
         env:
-          BASE_URL: 'https://api.niftyleague.com'
+          BASE_URL: https://api.niftyleague.com

@@ -16,15 +16,15 @@ optimisticRepeatInstall: false
 # live here. Keeps `@eslint/js` available at the top level so the ESLint
 # flat config can import it without a subpath.
 publicHoistPattern:
-  - "@eslint/js"
+  - '@eslint/js'
 
 # Explicit allow-list for packages that need to run their install scripts.
 # `strictDepBuilds` is on by default in pnpm 11, so anything not listed
 # here is rejected.
 allowBuilds:
-  "@aws-sdk/*": true
-  "@scarf/scarf": true
-  "@swc/core": true
+  '@aws-sdk/*': true
+  '@scarf/scarf': true
+  '@swc/core': true
   bufferutil: true
   es5-ext: true
   esbuild: true

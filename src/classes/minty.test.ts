@@ -1,37 +1,37 @@
-import { jest } from '@jest/globals';
 import { CID } from 'multiformats/cid';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const mockAdd = jest.fn() as jest.Mock<() => Promise<any>>;
-const mockCat = jest.fn();
-const mockPinAdd = jest.fn() as jest.Mock<() => Promise<any>>;
-const mockPinRm = jest.fn() as jest.Mock<() => Promise<any>>;
-const mockPinLs = jest.fn();
-const mockFetch = jest.fn() as jest.Mock<() => Promise<any>>;
+const mockAdd = vi.fn<() => Promise<any>>();
+const mockCat = vi.fn();
+const mockPinAdd = vi.fn<() => Promise<any>>();
+const mockPinRm = vi.fn<() => Promise<any>>();
+const mockPinLs = vi.fn();
+const mockFetch = vi.fn<() => Promise<any>>();
 
-const mockCreate = jest.fn().mockReturnValue({
+const mockCreate = vi.fn().mockReturnValue({
   add: mockAdd,
   cat: mockCat,
   pin: { add: mockPinAdd, rm: mockPinRm, ls: mockPinLs },
 });
 
-await jest.unstable_mockModule('kubo-rpc-client', () => ({
+vi.doMock('kubo-rpc-client', () => ({
   create: mockCreate,
 }));
 
-await jest.unstable_mockModule('node-fetch', () => ({
+vi.doMock('node-fetch', () => ({
   default: mockFetch,
 }));
 
-await jest.unstable_mockModule('@/contracts', () => ({
-  getContractFactory: jest.fn().mockImplementation(async () => null),
+vi.doMock('@/contracts', () => ({
+  getContractFactory: vi.fn<() => Promise<null>>().mockResolvedValue(null),
 }));
 
-await jest.unstable_mockModule('@/utils/refreshMetadata', () => ({
-  refreshOpenSea: jest.fn(),
+vi.doMock('@/utils/refreshMetadata', () => ({
+  refreshOpenSea: vi.fn(),
 }));
 
-await jest.unstable_mockModule('@/utils/uploadToS3', () => ({
-  uploadToS3: jest.fn(),
+vi.doMock('@/utils/uploadToS3', () => ({
+  uploadToS3: vi.fn(),
 }));
 
 const SAMPLE_CID = 'bafybeih75ntopwuggljajz3p2y2mh2ylxfv6joqlbvo2wxtabxkxm6igaa';
@@ -43,7 +43,7 @@ function makeMinty() {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   mockAdd.mockReset();
   mockCat.mockReset();
   mockPinAdd.mockReset();

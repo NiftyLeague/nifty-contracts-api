@@ -18,14 +18,6 @@ export default tseslint.config(
     },
   },
   {
-    files: ['**/*.test.ts'],
-    languageOptions: {
-      globals: {
-        jest: 'readonly',
-      },
-    },
-  },
-  {
     ignores: [
       'node_modules/**',
       'public/**',
@@ -35,7 +27,6 @@ export default tseslint.config(
       '*.mjs',
       '*.config.js',
       '*.config.cjs',
-      '.eslintrc.cjs',
       '.lintstagedrc.cjs',
       'api/types/typechain/**',
     ],

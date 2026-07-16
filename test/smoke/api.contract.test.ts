@@ -6,12 +6,12 @@
  * (req.protocol reading req.socket.encrypted on an edge-proxied request).
  *
  * It is SKIPPED by default so `pnpm test` stays fast and offline. Enable it
- * with RUN_LIVE_TESTS=1 (or target it directly with
- * `pnpm test --testPathPattern=smoke`). Point it at any deployment via BASE_URL
+ * with `pnpm test:live`. Point it at any deployment via BASE_URL
  * (defaults to the production domain in config.host.mainnet).
  */
 
 import request from 'supertest';
+import { describe, expect, it } from 'vitest';
 
 const BASE_URL = process.env.BASE_URL || 'https://api.niftyleague.com';
 
