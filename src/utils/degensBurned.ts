@@ -38,8 +38,8 @@ export async function fetchBurnedDegens(): Promise<number[]> {
     const inventoryURI1 = `${endpoint}&owner=${BURN_ADDY1}`;
     inventoryRes = await fetchAndProcess(inventoryURI1, inventoryRes);
 
-    await sleep(1000);
-
+    // BURN_ADDY1 and BURN_ADDY2 are independent Alchemy queries (different
+    // owner filters), so no inter-call delay is needed between them.
     // Fetch BURN_ADDY2
     const inventoryURI2 = `${endpoint}&owner=${BURN_ADDY2}`;
     inventoryRes = await fetchAndProcess(inventoryURI2, inventoryRes);
@@ -71,7 +71,7 @@ async function fetchAndProcess(inventoryURI: string, inventoryRes: number[]) {
     if (ownedNfts) inventoryRes.push(...ownedNfts.map((nft: NftOwned) => parseInt(nft.tokenId, 10)));
 
     pageKey = nextPageKey;
-    await sleep(1100); // Avoid rate limiting - 1 compute per second
+    await sleep(300); // Padding between Alchemy NFT API paged calls
   } while (pageKey);
 
   return inventoryRes;

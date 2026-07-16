@@ -68,6 +68,26 @@ hermetic test (fast) and, if it reaches production, in `pnpm audit:endpoints`
 failure; `pipeRequest` has a 10s timeout and returns a 502 `{ errors: [...] }`
 shape instead of hanging.
 
+## Dependencies & known vulnerabilities
+
+`pnpm-workspace.yaml` uses `overrides` to neutralize vulnerable transitive
+dependencies. `axios` is forced to `^1.7.0` (the unmaintained `@imtbl/imx-sdk`
+pins `axios@^0.21.1`, which carries the high/critical SSRF/DoS advisories); it
+was verified that `ImmutableXClient` still constructs and the `src/imx/*` CLI
+scripts type-check and run against axios 1.x.
+
+Three **low**-severity advisories remain and are **not fixable** without
+rewriting the IMX tooling — they live in `@imtbl/imx-sdk` → `magic-sdk` →
+`web3-*` / `elliptic`, none of which publish a patched version:
+
+- `elliptic <=6.6.1` (no `6.6.2` published)
+- `web3-core-method` / `web3-core-subscriptions` (only prerelease `2.0.0-alpha.1` exists)
+
+These affect only the offline `src/imx/*` onboarding/minting scripts, **not**
+the live API routes, and are tracked in CI via `pnpm audit --audit-level high`.
+To fully clear them, replace `@imtbl/imx-sdk` with direct calls to Immutable's
+public REST API (out of scope for this pass).
+
 ## API Quick Start
 
 Run `pnpm dev` to start up your local API on port 5005 in watch mode

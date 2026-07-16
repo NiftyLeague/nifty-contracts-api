@@ -24,6 +24,8 @@ jobs:
         run: pnpm lint
       - name: Check TypeScript
         run: pnpm type-check
+      - name: Audit dependencies
+        run: pnpm audit --audit-level high
       - name: Build
         run: pnpm build
       # Guard: never let a stray .vercel/output (from a local `vercel build`)
