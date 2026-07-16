@@ -9,6 +9,8 @@
 // and therefore produces extensionless/aliased imports that crash at runtime
 // with ERR_MODULE_NOT_FOUND).
 //
-import './bootstrap.js';
+globalThis.process.env.NODE_CONFIG_TS_DIR ??= 'api/.app/config';
 
-export { default } from '../dist/src/index.js';
+const { default: app } = await import('./.app/index.js');
+
+export default app;
