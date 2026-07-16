@@ -228,7 +228,7 @@ export class Degen extends Minty {
   async getName(tokenId: string | number): Promise<string> {
     if (Number(tokenId) === 10000) return 'Satoshi';
     if (Number(tokenId) === 9999) return 'RugMan';
-    const name = this.contract?.getName(tokenId);
+    const name = await this.contract?.getName(tokenId);
     const nameString = name?.toString()?.toLowerCase();
     if (nameString && (nameString === 'satoshi' || nameString === 'rugman') && Number(tokenId) < 9999) {
       return `DEGEN #${tokenId}`;
