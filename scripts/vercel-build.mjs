@@ -42,20 +42,26 @@ if (!existsSync(resolve(root, '.vercel', 'project.json'))) {
 }
 run(`npx vercel build${isProd ? ' --prod' : ''}${authFlag}`);
 
-// 3. Inject config into the function bundle.
+// 3. Inject config + dist into the function bundle.
+// `vercel build` traces imports, so `dist/` is normally included — but we copy
+// it explicitly as a safety net (the Git build on Vercel's servers has been
+// observed to omit it, causing `Cannot find module dist/src/index.js`). Same
+// for config/, which is loaded from disk at runtime and never traced.
 const funcDir = resolve(root, '.vercel', 'output', 'functions', 'api', 'index.func');
 if (!existsSync(funcDir)) {
   throw new Error(`Function bundle not found at ${funcDir}; build may have failed.`);
 }
 
-const targets = [
-  resolve(funcDir, 'config'),
-  resolve(funcDir, 'dist', 'config'),
+const copies = [
+  { from: resolve(root, 'config'), to: resolve(funcDir, 'config') },
+  { from: resolve(root, 'config'), to: resolve(funcDir, 'dist', 'config') },
+  { from: resolve(root, 'dist'), to: resolve(funcDir, 'dist') },
 ];
-for (const dest of targets) {
-  mkdirSync(dirname(dest), { recursive: true });
-  cpSync(resolve(root, 'config'), dest, { recursive: true });
-  console.log(`[vercel-build] injected config -> ${dest}`);
+for (const { from, to } of copies) {
+  if (!existsSync(from)) continue;
+  mkdirSync(dirname(to), { recursive: true });
+  cpSync(from, to, { recursive: true });
+  console.log(`[vercel-build] injected -> ${to}`);
 }
 
 console.log('[vercel-build] done. Deploy with: npx vercel deploy --prebuilt --prod --scope ' + scope);
