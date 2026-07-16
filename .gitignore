@@ -116,3 +116,6 @@ assets/images/degens/
 .idea
 .claude
 .env*.local
+
+# generated at build time (copied from config/ by scripts/copy-config.mjs)
+src/config/
