@@ -24,12 +24,34 @@ resolution crash the preset triggered.
    (Production vs Preview) in the Vercel dashboard. **Every `@@VAR` in
    `config/default.json` must be set** or the config resolves to `undefined` and
    handlers can crash.
-3. Build and deploy: `pnpm build && vercel deploy --prebuilt --prod --scope niftyleague`.
-   Pushing to `main` also triggers CI (`test` job) and the `live-audit` job, which
-   runs `pnpm audit:endpoints` against production.
+3. Build and deploy with `pnpm deploy` (or the expanded form below). `pnpm deploy`
+   runs `scripts/vercel-build.mjs`, which compiles `dist/`, builds the Vercel
+   output, and injects `config/` + `dist/` into the function bundle, then deploys
+   the prebuilt artifact:
 
-`config/default.json` is bundled into the function at runtime via `includeFiles` in
-`vercel.json`.
+   ```bash
+   pnpm deploy
+   # equivalent to:
+   node scripts/vercel-build.mjs --prod && \
+     npx vercel deploy --prebuilt --prod --scope niftyleague
+   ```
+
+`config/default.json` is loaded from disk at runtime by `node-config-ts` (via
+`NODE_CONFIG_TS_DIR=dist/config`), so it cannot be traced by `vercel build` and
+must be injected into the function bundle by `scripts/vercel-build.mjs`. Note that
+`functions.includeFiles` in `vercel.json` is **ignored** by both the local CLI and
+the server-side builder, so the script's manual injection is the only thing keeping
+the config in the deployed bundle.
+
+### Git auto-deploy is disabled
+
+Pushing to `main` runs CI (the `test` job + the `live-audit` job, which runs
+`pnpm audit:endpoints` against production), **but must NOT trigger a Vercel Git
+production deploy**: the server-side `vercel build` step does not produce a usable
+`.vercel/output` for this repo (it omits `dist/src/index.js` from the function
+bundle), which 500s every route. **Disable the Git production deployment in the
+Vercel dashboard** (Project → Git → "Production Git Branch" → unlink, or set
+Deployments to "None" for pushes) and deploy exclusively via `pnpm deploy`.
 
 ### Vercel proxy notes
 
