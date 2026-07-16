@@ -11,15 +11,18 @@
     "minty": "commander.ts"
   },
   "scripts": {
-    "build": "npx tsc && tsc-alias && node scripts/copy-config.mjs",
+    "build": "tsc && tsc-alias && node scripts/copy-config.mjs",
     "start": "node dist/src/index.js",
     "dev": "tsx watch src/index.ts",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --forceExit",
-    "test:live": "RUN_LIVE_TESTS=1 node --experimental-vm-modules node_modules/jest/bin/jest.js --forceExit --testPathPatterns=smoke",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:live": "RUN_LIVE_TESTS=1 vitest run test/smoke/api.contract.test.ts --testTimeout=30000",
     "deploy": "node scripts/vercel-build.mjs --prod && npx vercel deploy --prebuilt --prod --scope niftyleague",
     "audit:endpoints": "node scripts/audit-endpoints.mjs",
     "lint": "eslint .",
     "format": "prettier --ignore-path .prettierignore --write .",
+    "format:check": "prettier --ignore-path .prettierignore --check .",
     "type-check": "tsc --noEmit",
     "onboarding:user-registration": "tsx src/imx/onboarding/1-user-registration.ts",
     "onboarding:create-project": "tsx src/imx/onboarding/2-create-project.ts",
@@ -35,7 +38,7 @@
     "bn.js": "^5.2.5",
     "body-parser": "^2.3.0",
     "cors": "^2.8.6",
-    "dotenv": "^17.4.2",
+    "dotenv": "^16.6.1",
     "enc-utils": "^3.0.0",
     "ethers": "^6.17.0",
     "express": "^5.2.1",
@@ -50,13 +53,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@jest/globals": "^30.4.1",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/jest": "^30.0.0",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^24.0.0",
     "@types/node-fetch": "^2.6.13",
+    "@vitest/coverage-v8": "4.1.10",
     "@typescript-eslint/eslint-plugin": "^8.64.0",
     "@typescript-eslint/parser": "^8.64.0",
     "chalk": "^5.6.2",
@@ -65,18 +67,18 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
     "husky": "^9.1.7",
-    "jest": "^30.4.2",
     "lint-staged": "^17.0.8",
     "prettier": "^3.9.5",
     "supertest": "^7.2.2",
-    "ts-jest": "^29.4.11",
     "tsc-alias": "^1.9.1",
     "tsx": "^4.23.1",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.64.0"
+    "typescript-eslint": "^8.64.0",
+    "vitest": "4.1.10"
   },
   "engines": {
-    "node": "24.x"
+    "node": "24.18.0",
+    "pnpm": "11.13.1"
   },
-  "packageManager": "pnpm@11.13.0"
+  "packageManager": "pnpm@11.13.1"
 }

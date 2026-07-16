@@ -1,4 +1,5 @@
 import { CID } from 'multiformats/cid';
+import { describe, expect, it } from 'vitest';
 
 import { stripIpfsUriPrefix, ensureIpfsUriPrefix, makeGatewayURL, extractCID } from './uriHelpers';
 

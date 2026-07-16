@@ -13,7 +13,7 @@
 //
 // The function reads it via NODE_CONFIG_TS_DIR=dist/config (set in vercel.json).
 import { execSync } from 'node:child_process';
-import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -99,6 +99,29 @@ try {
     cpSync(from, to, { recursive: true });
     console.log(`[vercel-build] injected -> ${to}`);
   }
+
+  // 4. Ensure the runtime env var that points node-config-ts at the bundled
+  // config reaches the function, and make the bundle deployable.
+  //
+  // - NODE_CONFIG_TS_DIR: vercel.json `env` and project-level env vars get
+  //   dropped because `vercel build` emits `.vc-config.json` with an empty
+  //   `environment`, so we write it directly — the one place guaranteed to
+  //   apply at runtime.
+  // - filePathsMap: `vercel build` traces pnpm's symlinked `.pnpm` store
+  //   and lists those symlink paths as packaging sources. Vercel's deploy
+  //   rejects symlinked sources ("invalid deployment package … symlinked
+  //   directories"). The func bundle already has a real (non-symlinked)
+  //   node_modules installed, so dropping the map lets Vercel package the
+  //   func dir contents as-is.
+  const vcConfigPath = resolve(funcDir, '.vc-config.json');
+  if (existsSync(vcConfigPath)) {
+    const vc = JSON.parse(readFileSync(vcConfigPath, 'utf8'));
+    vc.environment = { ...(vc.environment || {}), NODE_CONFIG_TS_DIR: 'dist/config' };
+    delete vc.filePathMap;
+    writeFileSync(vcConfigPath, JSON.stringify(vc, null, 2));
+    console.log('[vercel-build] patched .vc-config.json (env + filePathsMap)');
+  }
+
   recordStep('inject-config', true);
 
   writeFileSync(

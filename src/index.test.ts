@@ -1,23 +1,21 @@
 import request from 'supertest';
-import { jest } from '@jest/globals';
 import type { Express } from 'express';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULTS, getEndpoints } from './constants/api';
 import { MARKETPLACE_COLLECTION_METADATA, MARKETPLACE_ITEMS } from './constants/metadata/marketplace';
-import { handleNameChangeById } from './utils/handleNameChange';
-import { MakeDegen, Degen } from './classes/degen';
 
 // ---------------------------------------------------------------------------
 // Mocks — isolate the app from all external services
 // ---------------------------------------------------------------------------
 
 // NFTL supply resolvers (no live Etherscan / contract RPC)
-const mockResolveCirculatingSupply = jest.fn() as jest.Mock<() => Promise<any>>;
-const mockResolveUnclaimedSupply = jest.fn() as jest.Mock<() => Promise<any>>;
-const mockResolveTotalSupply = jest.fn() as jest.Mock<() => Promise<any>>;
-const mockResolveMaxSupply = jest.fn() as jest.Mock<() => Promise<any>>;
+const mockResolveCirculatingSupply = vi.fn<() => Promise<any>>();
+const mockResolveUnclaimedSupply = vi.fn<() => Promise<any>>();
+const mockResolveTotalSupply = vi.fn<() => Promise<any>>();
+const mockResolveMaxSupply = vi.fn<() => Promise<any>>();
 
-await jest.unstable_mockModule('@/utils/nftl', () => ({
+vi.doMock('@/utils/nftl', () => ({
   resolveCirculatingSupply: mockResolveCirculatingSupply,
   resolveUnclaimedSupply: mockResolveUnclaimedSupply,
   resolveTotalSupply: mockResolveTotalSupply,
@@ -25,8 +23,8 @@ await jest.unstable_mockModule('@/utils/nftl', () => ({
 }));
 
 // Burned degens list (no live Alchemy RPC)
-const mockGetBurnedDegens = jest.fn() as jest.Mock<() => Promise<any>>;
-await jest.unstable_mockModule('@/utils/degensBurned', () => ({
+const mockGetBurnedDegens = vi.fn<() => Promise<any>>();
+vi.doMock('@/utils/degensBurned', () => ({
   getBurnedDegens: mockGetBurnedDegens,
 }));
 
@@ -39,7 +37,7 @@ const MOCK_DEGEN_METADATA = {
   attributes: [{ trait_type: 'Background', value: 'Common' }],
 };
 
-const mockPipeRequest = jest.fn((url: string, res: any) => {
+const mockPipeRequest = vi.fn((url: string, res: any) => {
   const tokenId = url.match(/(\d+)\.(json|png|gif)$/)?.[1] ?? '1';
   const ext = url.match(/(\d+)\.(json|png|gif)$/)?.[2] ?? 'json';
   if (ext === 'json') {
@@ -62,13 +60,26 @@ const mockPipeRequest = jest.fn((url: string, res: any) => {
   }
 });
 
-const mockResolveDegenMetadata = (jest.fn() as jest.Mock<() => Promise<any>>).mockResolvedValue(MOCK_DEGEN_METADATA);
+const mockResolveDegenMetadata = vi.fn<() => Promise<any>>().mockResolvedValue(MOCK_DEGEN_METADATA);
 
-await jest.unstable_mockModule('@/utils/api', () => ({
+vi.doMock('@/utils/api', () => ({
   pipeRequest: mockPipeRequest,
   resolveDegenMetadata: mockResolveDegenMetadata,
-  fetchMetadata: jest.fn(),
-  sleep: jest.fn(),
+  fetchMetadata: vi.fn(),
+  sleep: vi.fn(),
+}));
+
+const mockCheckTokenMetadataExists = vi.fn<() => Promise<any>>();
+const mockUpdateDegenName = vi.fn<() => Promise<any>>();
+const mockDegenInstance = {
+  checkTokenMetadataExists: mockCheckTokenMetadataExists,
+  updateDegenName: mockUpdateDegenName,
+};
+const mockMakeDegen = vi.fn(async () => mockDegenInstance);
+
+vi.doMock('./classes/degen', () => ({
+  MakeDegen: mockMakeDegen,
+  Degen: class {},
 }));
 
 // ---------------------------------------------------------------------------
@@ -76,8 +87,14 @@ await jest.unstable_mockModule('@/utils/api', () => ({
 // ---------------------------------------------------------------------------
 
 let app: Express;
+let handleNameChangeById: typeof import('./utils/handleNameChange').handleNameChangeById;
 beforeAll(async () => {
+  ({ handleNameChangeById } = await import('./utils/handleNameChange'));
   app = (await import('./index')).default;
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
 });
 
 // ---------------------------------------------------------------------------
@@ -123,7 +140,7 @@ describe('API Endpoints', () => {
 
   describe('NFTL', () => {
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
       mockResolveCirculatingSupply.mockResolvedValue(CIRCULATING);
       mockResolveUnclaimedSupply.mockResolvedValue(UNCLAIMED);
       mockResolveTotalSupply.mockResolvedValue(TOTAL);
@@ -186,7 +203,7 @@ describe('API Endpoints', () => {
     const tokenId = 123;
 
     beforeEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
       mockGetBurnedDegens.mockResolvedValue([1, 2, 3, 4, 5]);
       mockResolveDegenMetadata.mockResolvedValue(MOCK_DEGEN_METADATA);
     });
@@ -285,10 +302,8 @@ describe('API Endpoints', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Webhooks (Degen class is mocked via jest.mock)
+// Webhooks (Degen factory is mocked to avoid contract/IPFS access)
 // ---------------------------------------------------------------------------
-
-jest.mock('./classes/degen');
 
 describe('API Webhooks', () => {
   describe('DEGENS', () => {
@@ -308,21 +323,19 @@ describe('API Webhooks', () => {
     newMetadata.name = 'New Name';
 
     beforeEach(() => {
-      jest.clearAllMocks();
-      jest.spyOn(console, 'log').mockImplementation(jest.fn());
+      vi.clearAllMocks();
+      vi.spyOn(console, 'log').mockImplementation(() => undefined);
     });
 
     it('should update the metadata on name change', async () => {
-      const degenInstance = await MakeDegen(network);
-      jest
-        .spyOn(Degen.prototype, 'checkTokenMetadataExists')
-        .mockResolvedValueOnce({ exists: true, metadata, metadataURI: null });
-      jest.spyOn(Degen.prototype, 'updateDegenName').mockResolvedValueOnce({ newMetadata });
+      mockCheckTokenMetadataExists.mockResolvedValueOnce({ exists: true, metadata, metadataURI: null });
+      mockUpdateDegenName.mockResolvedValueOnce({ newMetadata });
 
       const result = await handleNameChangeById(network, tokenId);
 
-      expect(degenInstance.checkTokenMetadataExists).toHaveBeenCalledWith(tokenId);
-      expect(degenInstance.updateDegenName).toHaveBeenCalledWith(tokenId, metadata);
+      expect(mockMakeDegen).toHaveBeenCalledWith(network);
+      expect(mockCheckTokenMetadataExists).toHaveBeenCalledWith(tokenId);
+      expect(mockUpdateDegenName).toHaveBeenCalledWith(tokenId, metadata);
       expect(result).toEqual({ metadata: newMetadata });
     });
   });

@@ -1,8 +1,8 @@
-import { jest } from '@jest/globals';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const mockFetch = jest.fn() as jest.Mock<() => Promise<any>>;
-const mockGetContractFactory = jest.fn() as jest.Mock<() => Promise<any>>;
-const mockGetBurnedDegens = jest.fn() as jest.Mock<() => Promise<any>>;
+const mockFetch = vi.fn<() => Promise<any>>();
+const mockGetContractFactory = vi.fn<() => Promise<any>>();
+const mockGetBurnedDegens = vi.fn<() => Promise<any>>();
 
 const mockConfig = {
   eth: {
@@ -12,20 +12,20 @@ const mockConfig = {
   },
 };
 
-await jest.unstable_mockModule('node-config-ts', () => ({
+vi.doMock('node-config-ts', () => ({
   config: mockConfig,
 }));
 
-await jest.unstable_mockModule('node-fetch', () => ({
+vi.doMock('node-fetch', () => ({
   default: mockFetch,
 }));
 
-await jest.unstable_mockModule('@/contracts', () => ({
+vi.doMock('@/contracts', () => ({
   getContractFactory: mockGetContractFactory,
-  getContractAddress: jest.fn(),
+  getContractAddress: vi.fn(),
 }));
 
-await jest.unstable_mockModule('./degensBurned', () => ({
+vi.doMock('./degensBurned', () => ({
   getBurnedDegens: mockGetBurnedDegens,
 }));
 
@@ -45,13 +45,13 @@ const UNCLAIMED = 1234n;
 
 function mockContract() {
   return {
-    totalSupply: jest.fn() as jest.Mock<() => Promise<any>>,
-    accumulatedMultiCheck: jest.fn() as jest.Mock<() => Promise<any>>,
+    totalSupply: vi.fn<() => Promise<any>>(),
+    accumulatedMultiCheck: vi.fn<() => Promise<any>>(),
   };
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   mockConfig.eth.etherscan = '';
   const contract = mockContract();
   contract.totalSupply.mockResolvedValue(CIRCULATING);

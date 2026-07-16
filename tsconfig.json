@@ -11,7 +11,7 @@
     "resolveJsonModule": true,
     "noImplicitAny": false,
     "rootDir": "./",
-    "types": ["node", "jest"],
+    "types": ["node", "vitest/globals"],
     "paths": { "@/*": ["./src/*"] }
   },
   "tsc-alias": {
