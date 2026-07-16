@@ -8,4 +8,9 @@
 // @vercel/node builder recompile raw TypeScript (which does not run tsc-alias
 // and therefore produces extensionless/aliased imports that crash at runtime
 // with ERR_MODULE_NOT_FOUND).
-export { default } from '../dist/src/index.js';
+//
+globalThis.process.env.NODE_CONFIG_TS_DIR ??= 'api/.app/config';
+
+const { default: app } = await import('./.app/index.js');
+
+export default app;

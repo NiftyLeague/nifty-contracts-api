@@ -11,7 +11,8 @@
     "minty": "commander.ts"
   },
   "scripts": {
-    "build": "tsc && tsc-alias && node scripts/copy-config.mjs",
+    "build": "node scripts/copy-config.mjs && npx tsc && tsc-alias && node scripts/copy-config.mjs && node scripts/copy-api-app.mjs",
+    "postinstall": "pnpm build",
     "start": "node dist/src/index.js",
     "dev": "tsx watch src/index.ts",
     "test": "vitest run",

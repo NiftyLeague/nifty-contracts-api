@@ -1,4 +1,5 @@
 import { config } from 'node-config-ts';
+import './config.js'; // side-effect: traced import of dist/src/config/default.json
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express, { NextFunction, type Request, type Response } from 'express';
