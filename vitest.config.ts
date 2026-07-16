@@ -9,7 +9,7 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    exclude: ['**/node_modules/**', '**/dist/**', '**/.vercel/**', '**/coverage/**'],
+    exclude: ['**/node_modules/**', '**/dist/**', '**/.vercel/**', '**/coverage/**', '**/api/.app/**'],
     env: {
       VERCEL: '1',
     },
