@@ -31,13 +31,16 @@ run('pnpm build');
 
 // 2. Build the Vercel output.
 // On Vercel's build server the project context is provided via env vars
-// (VERCEL_PROJECT_ID / VERCEL_TOKEN), so `vercel build` needs NO --scope —
-// passing one can conflict with that context and fail. Locally we `vercel pull`
-// first (creates .vercel/project.json) so the unscoped build works too.
+// (VERCEL_PROJECT_ID / VERCEL_ORG_ID / VERCEL_TOKEN), so `vercel build` needs
+// NO --scope — passing one can conflict with that context and fail. Locally we
+// `vercel pull` first (creates .vercel/project.json) so the unscoped build
+// works too. If a token is present (CI / Vercel build env) we forward it.
+const token = process.env.VERCEL_TOKEN;
+const authFlag = token ? ` --token ${token}` : '';
 if (!existsSync(resolve(root, '.vercel', 'project.json'))) {
   run(`npx vercel pull --yes --scope ${scope}`);
 }
-run(`npx vercel build${isProd ? ' --prod' : ''}`);
+run(`npx vercel build${isProd ? ' --prod' : ''}${authFlag}`);
 
 // 3. Inject config into the function bundle.
 const funcDir = resolve(root, '.vercel', 'output', 'functions', 'api', 'index.func');
