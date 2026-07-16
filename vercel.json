@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "node scripts/vercel-build.mjs",
+  "buildCommand": "pnpm build",
   "env": {
     "NODE_CONFIG_TS_DIR": "dist/config"
   },
