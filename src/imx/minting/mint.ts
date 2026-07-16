@@ -1,4 +1,3 @@
-import { ImmutableXClient, ImmutableMethodResults } from '@imtbl/imx-sdk';
 import type { Log, TransactionResponse, Result } from 'ethers';
 import { JsonRpcProvider, Interface } from 'ethers';
 import { config } from 'node-config-ts';
@@ -8,11 +7,10 @@ import { getTxReceipt } from '@/utils/txReceipt';
 import { COMICS_BURNER_CONTRACT_NAME } from '@/constants/contracts';
 import { getContractABI } from '@/contracts';
 import { getWallet } from '@/utils/wallet';
+import { mintV2 } from '@/imx/client';
 
-async function get_imx_client(network: TargetNetwork): Promise<ImmutableXClient> {
-  const { client } = config.imx[network];
-  const signer = getWallet<Signer>(network);
-  return ImmutableXClient.build({ ...client, signer });
+async function get_imx_client(network: TargetNetwork): Promise<Signer> {
+  return getWallet<Signer>(network);
 }
 
 function parseTopics(targetNetwork: TargetNetwork, log: Log, eventName: string): Result {
@@ -28,19 +26,18 @@ export async function mint(
   to: string,
   tokenIds: string[],
   itemId: string,
-): Promise<ImmutableMethodResults.ImmutableOffchainMintV2Result | undefined> {
+): Promise<unknown> {
   if (tokenIds.length === 0) return;
   // Get configuration for the network
-  const client = await get_imx_client(targetNetwork);
+  const signer = await get_imx_client(targetNetwork);
+  const { client } = config.imx[targetNetwork];
 
   console.log('Minting on L2...');
   const tokens = tokenIds.map(x => ({ id: x.toString(), blueprint: itemId }));
-  const mint_result = await client.mintV2([
-    {
-      users: [{ etherKey: to, tokens }],
-      contractAddress,
-    },
-  ]);
+  const mint_result = await mintV2(client.publicApiUrl, signer, {
+    contractAddress,
+    users: [{ ether_key: to, tokens }],
+  });
   console.log(`✅ Minting of tokenId(s) ${tokenIds} for collection ${contractAddress.toLowerCase()} successful!`);
 
   return mint_result.results[0];

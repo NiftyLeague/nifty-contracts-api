@@ -13,7 +13,7 @@
 //
 // The function reads it via NODE_CONFIG_TS_DIR=dist/config (set in vercel.json).
 import { execSync } from 'node:child_process';
-import { cpSync, existsSync, mkdirSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -21,47 +21,92 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const scope = process.env.VERCEL_SCOPE || 'niftyleague';
 const isProd = process.argv.includes('--prod');
 
-const run = (cmd) => {
+// Fail loudly with the exact cause so a broken server-side Vercel build
+// surfaces the underlying error instead of a generic "build may have failed".
+const run = (cmd, label) => {
   console.log(`[vercel-build] ${cmd}`);
-  execSync(cmd, { stdio: 'inherit', cwd: root });
+  try {
+    execSync(cmd, { stdio: 'inherit', cwd: root });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error(`\n[vercel-build] ✗ FAILED: ${label}`);
+    console.error(`[vercel-build]   command : ${cmd}`);
+    console.error(`[vercel-build]   cause   : ${message}`);
+    fail(message);
+  }
 };
 
-// 1. Compile sources (+ dist/config).
-run('pnpm build');
+// Persist a build manifest so a future auto-deploy from Git can be inspected
+// after the fact (handy when revisiting Git auto-deploy).
+const manifest = { startedAt: new Date().toISOString(), isProd, scope, steps: [] };
+const recordStep = (name, ok, detail) => {
+  manifest.steps.push({ name, ok, detail, at: new Date().toISOString() });
+};
 
-// 2. Build the Vercel output.
-// On Vercel's build server the project context is provided via env vars
-// (VERCEL_PROJECT_ID / VERCEL_ORG_ID / VERCEL_TOKEN), so `vercel build` needs
-// NO --scope — passing one can conflict with that context and fail. Locally we
-// `vercel pull` first (creates .vercel/project.json) so the unscoped build
-// works too. If a token is present (CI / Vercel build env) we forward it.
-const token = process.env.VERCEL_TOKEN;
-const authFlag = token ? ` --token ${token}` : '';
-if (!existsSync(resolve(root, '.vercel', 'project.json'))) {
-  run(`npx vercel pull --yes --scope ${scope}`);
-}
-run(`npx vercel build${isProd ? ' --prod' : ''}${authFlag}`);
-
-// 3. Inject config + dist into the function bundle.
-// `vercel build` traces imports, so `dist/` is normally included — but we copy
-// it explicitly as a safety net (the Git build on Vercel's servers has been
-// observed to omit it, causing `Cannot find module dist/src/index.js`). Same
-// for config/, which is loaded from disk at runtime and never traced.
-const funcDir = resolve(root, '.vercel', 'output', 'functions', 'api', 'index.func');
-if (!existsSync(funcDir)) {
-  throw new Error(`Function bundle not found at ${funcDir}; build may have failed.`);
+function fail(reason) {
+  const summary = {
+    ok: false,
+    reason,
+    steps: manifest.steps,
+  };
+  try {
+    writeFileSync(resolve(root, '.vercel-build-failure.json'), JSON.stringify(summary, null, 2));
+    console.error(`[vercel-build] wrote failure manifest -> .vercel-build-failure.json`);
+  } catch {
+    /* best-effort */
+  }
+  console.error(`\n[vercel-build] ✗ build aborted: ${reason}`);
+  process.exit(1);
 }
 
-const copies = [
-  { from: resolve(root, 'config'), to: resolve(funcDir, 'config') },
-  { from: resolve(root, 'config'), to: resolve(funcDir, 'dist', 'config') },
-  { from: resolve(root, 'dist'), to: resolve(funcDir, 'dist') },
-];
-for (const { from, to } of copies) {
-  if (!existsSync(from)) continue;
-  mkdirSync(dirname(to), { recursive: true });
-  cpSync(from, to, { recursive: true });
-  console.log(`[vercel-build] injected -> ${to}`);
-}
+try {
+  // 1. Compile sources (+ dist/config).
+  run('pnpm build', 'compile sources (pnpm build)');
+  recordStep('build', true);
 
-console.log('[vercel-build] done. Deploy with: npx vercel deploy --prebuilt --prod --scope ' + scope);
+  // 2. Build the Vercel output.
+  // On Vercel's build server the project context is provided via env vars
+  // (VERCEL_PROJECT_ID / VERCEL_ORG_ID / VERCEL_TOKEN), so `vercel build` needs
+  // NO --scope — passing one can conflict with that context and fail. Locally we
+  // `vercel pull` first (creates .vercel/project.json) so the unscoped build
+  // works too. If a token is present (CI / Vercel build env) we forward it.
+  const token = process.env.VERCEL_TOKEN;
+  const authFlag = token ? ` --token ${token}` : '';
+  if (!existsSync(resolve(root, '.vercel', 'project.json'))) {
+    run(`npx vercel pull --yes --scope ${scope}`, 'vercel pull (project context)');
+  }
+  run(`npx vercel build${isProd ? ' --prod' : ''}${authFlag}`, 'vercel build');
+  recordStep('vercel-build', true);
+
+  // 3. Inject config + dist into the function bundle.
+  // `vercel build` traces imports, so `dist/` is normally included — but we copy
+  // it explicitly as a safety net (the Git build on Vercel's servers has been
+  // observed to omit it, causing `Cannot find module dist/src/index.js`). Same
+  // for config/, which is loaded from disk at runtime and never traced.
+  const funcDir = resolve(root, '.vercel', 'output', 'functions', 'api', 'index.func');
+  if (!existsSync(funcDir)) {
+    fail(`Function bundle not found at ${funcDir}; vercel build did not produce the expected output.`);
+  }
+
+  const copies = [
+    { from: resolve(root, 'config'), to: resolve(funcDir, 'config') },
+    { from: resolve(root, 'config'), to: resolve(funcDir, 'dist', 'config') },
+    { from: resolve(root, 'dist'), to: resolve(funcDir, 'dist') },
+  ];
+  for (const { from, to } of copies) {
+    if (!existsSync(from)) continue;
+    mkdirSync(dirname(to), { recursive: true });
+    cpSync(from, to, { recursive: true });
+    console.log(`[vercel-build] injected -> ${to}`);
+  }
+  recordStep('inject-config', true);
+
+  writeFileSync(
+    resolve(root, '.vercel-build-success.json'),
+    JSON.stringify({ ok: true, steps: manifest.steps }, null, 2),
+  );
+  console.log('[vercel-build] done. Deploy with: npx vercel deploy --prebuilt --prod --scope ' + scope);
+} catch (err) {
+  // Any unexpected throw (not from `run`) still ends up here.
+  fail(err instanceof Error ? err.message : String(err));
+}

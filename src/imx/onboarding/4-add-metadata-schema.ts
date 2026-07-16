@@ -1,64 +1,35 @@
 import { config } from 'node-config-ts';
-import { AddMetadataSchemaToCollectionParams, ImmutableXClient, MetadataTypes } from '@imtbl/imx-sdk';
-import type { Signer, TargetNetwork } from '@/types';
-import { getWallet } from '@/utils/wallet';
+import type { TargetNetwork } from '@/types';
+import { addMetadataSchemaToCollection } from '@/imx/client';
 
 const network = config.eth.network as TargetNetwork;
 
 (async (): Promise<void> => {
   console.group('IMX-ADD-COLLECTION-METADATA-SCHEMA');
-  const { collection, client } = config.imx[network];
+  const { collection, apiKey } = config.imx[network];
   const collectionContractAddress = collection.contractAddress;
-
-  const signer = getWallet<Signer>();
-  const user = await ImmutableXClient.build({ ...client, signer });
 
   console.log('Adding metadata schema to collection...', collectionContractAddress);
 
   /**
    * Edit your values here
    */
-  const params: AddMetadataSchemaToCollectionParams = {
-    metadata: [
-      {
-        name: 'item_id',
-        type: MetadataTypes.Continuous,
-        filterable: false,
-      },
-      {
-        name: 'name',
-        type: MetadataTypes.Enum,
-        filterable: true,
-      },
-      {
-        name: 'type',
-        type: MetadataTypes.Enum,
-        filterable: true,
-      },
-      {
-        name: 'tier',
-        type: MetadataTypes.Enum,
-        filterable: true,
-      },
-      {
-        name: 'placement',
-        type: MetadataTypes.Enum,
-        filterable: true,
-      },
-      {
-        name: 'image_url',
-        type: MetadataTypes.Text,
-        filterable: false,
-      },
-      {
-        name: 'description',
-        type: MetadataTypes.Text,
-        filterable: false,
-      },
-    ],
-  };
+  const metadata = [
+    { name: 'item_id', type: 'continuous', filterable: false },
+    { name: 'name', type: 'enum', filterable: true },
+    { name: 'type', type: 'enum', filterable: true },
+    { name: 'tier', type: 'enum', filterable: true },
+    { name: 'placement', type: 'enum', filterable: true },
+    { name: 'image_url', type: 'text', filterable: false },
+    { name: 'description', type: 'text', filterable: false },
+  ];
 
-  const newCollection = await user.addMetadataSchemaToCollection(collectionContractAddress, params);
+  const newCollection = await addMetadataSchemaToCollection(
+    config.imx[network].client.publicApiUrl,
+    collectionContractAddress,
+    metadata,
+    apiKey,
+  );
 
   console.log('✅ Added metadata schema to collection', collectionContractAddress);
   console.log(JSON.stringify(newCollection, null, 2));

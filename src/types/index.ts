@@ -1,5 +1,5 @@
 import { BytesLike } from 'ethers';
-import type { ImmutableXClientParams } from '@imtbl/imx-sdk';
+import type { Signer } from 'ethers';
 
 export * from './metadata';
 export * from './snapshot';
@@ -14,8 +14,7 @@ export type ContractName =
 
 export type TargetNetwork = 'mainnet' | 'sepolia';
 
-// TODO: remove temp Ethers v5 Signer reference
-export type Signer = NonNullable<ImmutableXClientParams['signer']>;
+export type { Signer };
 
 export type ChainId = '1' | '11155111';
 

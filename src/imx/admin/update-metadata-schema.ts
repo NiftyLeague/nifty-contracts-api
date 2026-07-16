@@ -1,14 +1,13 @@
 import { config } from 'node-config-ts';
-import { ImmutableXClient, UpdateMetadataSchemaByNameParams, MetadataTypes } from '@imtbl/imx-sdk';
 import { parse } from 'ts-command-line-args';
-import type { Signer, TargetNetwork } from '@/types';
-import { getWallet } from '@/utils/wallet';
+import type { TargetNetwork } from '@/types';
+import { updateMetadataSchemaByName } from '@/imx/client';
 
 const network = config.eth.network as TargetNetwork;
 
 (async (): Promise<void> => {
   console.group('IMX-UPDATE-COLLECTION-METADATA-SCHEMA');
-  const { collection, client } = config.imx[network];
+  const { collection, apiKey, client } = config.imx[network];
   const collectionContractAddress = collection.contractAddress;
 
   const { name } = parse<{ name: string }>({
@@ -19,24 +18,26 @@ const network = config.eth.network as TargetNetwork;
     },
   });
 
-  const signer = getWallet<Signer>();
-  const user = await ImmutableXClient.build({ ...client, signer });
-
   console.log(`Updating metadata schema for ${name}...`, collectionContractAddress);
 
   /**
    * Edit your values here
    */
-  const params: UpdateMetadataSchemaByNameParams = {
+  const params = {
     name: 'NEW_NAME',
-    type: MetadataTypes.Enum,
+    type: 'enum',
     filterable: false,
   };
 
-  const message = await user.updateMetadataSchemaByName(name, collectionContractAddress, params);
+  const message = await updateMetadataSchemaByName(
+    client.publicApiUrl,
+    collectionContractAddress,
+    name,
+    params,
+    apiKey,
+  );
 
   console.log(`✅ Updated metadata schema for ${name}.`);
-  console.log(`Run 'npm run admin:get-metadata-schema' to see updated schema.`);
   console.log(JSON.stringify(message, null, 2));
   console.groupEnd();
 })().catch(e => {
