@@ -3,4 +3,7 @@ public
 dist
 coverage
 .vercel
+api/.app
+.kilo/plans
+.vercel-build-*.json
 pnpm-lock.yaml

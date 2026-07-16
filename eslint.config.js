@@ -22,6 +22,7 @@ export default tseslint.config(
       'node_modules/**',
       'public/**',
       '.vercel/**',
+      'api/.app/**',
       'dist/**',
       'scripts/**/*.mjs',
       '*.mjs',
