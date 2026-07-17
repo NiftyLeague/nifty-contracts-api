@@ -18,7 +18,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:live": "RUN_LIVE_TESTS=1 bun test test/smoke/api.contract.test.ts --testTimeout=30000",
+    "test:live": "RUN_LIVE_TESTS=1 bunx vitest run test/smoke/api.contract.test.ts --testTimeout=30000",
     "deploy": "node scripts/vercel-build.mjs --prod && npx vercel deploy --prebuilt --prod --scope niftyleague",
     "audit:endpoints": "node scripts/audit-endpoints.mjs",
     "lint": "eslint .",
