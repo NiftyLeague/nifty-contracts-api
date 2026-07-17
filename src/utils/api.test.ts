@@ -3,7 +3,6 @@ import { afterEach, describe, expect, it, jest, mock, spyOn } from 'bun:test';
 import { sleep, withCache } from './api';
 
 afterEach(() => {
-
   jest.useRealTimers();
 });
 
@@ -36,9 +35,7 @@ describe('withCache', () => {
   });
 
   it('does not cache null results', async () => {
-    const resolve = mock<() => Promise<string | null>>()
-      .mockResolvedValueOnce(null)
-      .mockResolvedValueOnce('recovered');
+    const resolve = mock<() => Promise<string | null>>().mockResolvedValueOnce(null).mockResolvedValueOnce('recovered');
     const cached = withCache(1_000, resolve);
 
     await expect(cached()).resolves.toBeNull();

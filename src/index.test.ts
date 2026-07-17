@@ -93,9 +93,7 @@ beforeAll(async () => {
   app = (await import('./index')).default;
 });
 
-afterEach(() => {
-
-});
+afterEach(() => {});
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -140,7 +138,6 @@ describe('API Endpoints', () => {
 
   describe('NFTL', () => {
     beforeEach(() => {
-    
       mockResolveCirculatingSupply.mockResolvedValue(CIRCULATING);
       mockResolveUnclaimedSupply.mockResolvedValue(UNCLAIMED);
       mockResolveTotalSupply.mockResolvedValue(TOTAL);
@@ -203,7 +200,6 @@ describe('API Endpoints', () => {
     const tokenId = 123;
 
     beforeEach(() => {
-    
       mockGetBurnedDegens.mockResolvedValue([1, 2, 3, 4, 5]);
       mockResolveDegenMetadata.mockResolvedValue(MOCK_DEGEN_METADATA);
     });
@@ -323,7 +319,6 @@ describe('API Webhooks', () => {
     newMetadata.name = 'New Name';
 
     beforeEach(() => {
-    
       spyOn(console, 'log').mockImplementation(() => undefined);
     });
 

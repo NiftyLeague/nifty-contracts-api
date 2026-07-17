@@ -11,14 +11,9 @@
     "resolveJsonModule": true,
     "noImplicitAny": false,
     "rootDir": "./",
-    "types": [
-      "node",
-      "bun"
-    ],
+    "types": ["node", "bun"],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
   "tsc-alias": {
@@ -26,24 +21,10 @@
     "resolveFullPaths": true,
     "fileExtensions": {
       "inputGlob": "{js,jsx,mjs}",
-      "outputCheck": [
-        "js",
-        "json",
-        "jsx",
-        "mjs"
-      ]
+      "outputCheck": ["js", "json", "jsx", "mjs"]
     }
   },
-  "include": [
-    "./src/**/*.ts",
-    "./config/**/*.ts"
-  ],
-  "files": [
-    "./commander.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.test.ts"
-  ]
+  "include": ["./src/**/*.ts", "./config/**/*.ts"],
+  "files": ["./commander.ts"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }

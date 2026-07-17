@@ -6,9 +6,7 @@ function makeDegen() {
   return new Degen('mainnet', 'NiftyDegen');
 }
 
-beforeEach(() => {
-
-});
+beforeEach(() => {});
 
 describe('Degen metadata', () => {
   it('builds metadata from non-zero traits and uploads it', async () => {

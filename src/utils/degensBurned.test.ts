@@ -11,7 +11,7 @@ mock.module('node-config-ts', () => ({
 }));
 mock.module('@/contracts', () => ({ getContractAddress: () => '0xdegen' }));
 mock.module('./api', async () => {
-  const actual = await await import<typeof import('./api')>('./api');
+  const actual = await await import('./api');
   return { ...actual, sleep: sleepMock };
 });
 

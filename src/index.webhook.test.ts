@@ -101,8 +101,8 @@ const webhookUrl = (network: string, secret: string) => `/${network}/webhooks/de
 
 describe('Webhook routes (Degen rename)', () => {
   beforeEach(() => {
-  mockHandleNameChangeByInput.mockClear()
-  
+    mockHandleNameChangeByInput.mockClear();
+
     mockHandleNameChangeByInput.mockResolvedValue({ metadata: {} });
   });
 

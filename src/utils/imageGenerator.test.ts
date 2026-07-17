@@ -12,9 +12,7 @@ mock.module('node-config-ts', () => ({
 
 import { generateImageURL, raritySelector } from './imageGenerator';
 
-afterEach(() => {
-
-});
+afterEach(() => {});
 
 describe('raritySelector', () => {
   it('uses the weighted background table', () => {

@@ -37,7 +37,7 @@ function response(status: number, statusText = '') {
 }
 
 beforeEach(() => {
-  fetchMock.mockClear(), getContractAddressMock.mockClear()
+  (fetchMock.mockClear(), getContractAddressMock.mockClear());
   fetchMock.mockClear();
   getContractAddressMock.mockClear();
   spyOn(console, 'log').mockImplementation(() => undefined);
