@@ -1,17 +1,30 @@
-import { describe, expect, it, vi } from 'vitest';
-import { raritySelector, generateImageURL } from './imageGenerator';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('node-config-ts', () => ({
-  config: {
-    imageGenerator: {
-      baseURL: 'https://example.com/generate',
-      version: 'v1',
-      secret: 'test-secret',
-    },
+const fetchMock = vi.fn();
+
+vi.mock('node-fetch', () => ({ default: fetchMock }));
+
+const mockWriteStream = {
+  on: vi.fn((event: string, cb: () => void) => {
+    if (event === 'finish') cb();
+    return mockWriteStream;
+  }),
+};
+
+vi.mock('fs', () => ({
+  default: {
+    createWriteStream: vi.fn().mockReturnValue(mockWriteStream),
   },
+  createWriteStream: vi.fn().mockReturnValue(mockWriteStream),
 }));
 
+const { raritySelector, downloadImage } = await import('./imageGenerator');
+
 describe('raritySelector', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('returns rarity 0 most of the time', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0.1);
     expect(raritySelector(100)).toBe(0);
@@ -38,14 +51,19 @@ describe('raritySelector', () => {
   });
 });
 
-describe('generateImageURL', () => {
-  it('builds a URL with encoded traits and metadata', () => {
-    const url = generateImageURL([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], 2, 42);
-    expect(url).toContain('https://example.com/generate');
-    expect(url).toContain('version=v1');
-    expect(url).toContain('rarity=2');
-    expect(url).toContain('token=42');
-    expect(url).toContain('secret=test-secret');
-    expect(url).toContain('traits=');
+describe('downloadImage', () => {
+  it('pipes the response body to the destination file', async () => {
+    const mockRes = {
+      body: {
+        pipe: vi.fn(),
+        on: vi.fn(),
+      },
+    };
+    fetchMock.mockResolvedValue(mockRes);
+
+    await downloadImage('https://example.com/image.png', '/tmp/dest.png');
+
+    expect(fetchMock).toHaveBeenCalledWith('https://example.com/image.png');
+    expect(mockWriteStream.on).toHaveBeenCalledWith('finish', expect.any(Function));
   });
 });
