@@ -1,37 +1,50 @@
 import { CID } from 'multiformats/cid';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, mock, test } from 'bun:test';
 
-const mockAdd = vi.fn<() => Promise<any>>();
-const mockCat = vi.fn();
-const mockPinAdd = vi.fn<() => Promise<any>>();
-const mockPinRm = vi.fn<() => Promise<any>>();
-const mockPinLs = vi.fn();
-const mockFetch = vi.fn<() => Promise<any>>();
+const mockAdd = mock<() => Promise<any>>();
+const mockCat = mock();
+const mockPinAdd = mock<() => Promise<any>>();
+const mockPinRm = mock<() => Promise<any>>();
+const mockPinLs = mock();
+const mockFetch = mock<() => Promise<any>>();
 
-const mockCreate = vi.fn().mockReturnValue({
+const mockCreate = mock().mockReturnValue({
   add: mockAdd,
   cat: mockCat,
   pin: { add: mockPinAdd, rm: mockPinRm, ls: mockPinLs },
 });
 
-vi.doMock('kubo-rpc-client', () => ({
+mock.module('kubo-rpc-client', () => ({
   create: mockCreate,
 }));
 
-vi.doMock('node-fetch', () => ({
+mock.module('node-config-ts', () => ({
+  config: {
+    ipfs: {
+      protocol: 'https',
+      host: 'api.ipfs.io',
+      port: 5001,
+      path: '',
+      authorization: 'Bearer test-token',
+      pinata: { pinataApiKey: 'test-key', pinataSecretApiKey: 'test-secret' },
+    },
+  },
+}));
+
+mock.module('node-fetch', () => ({
   default: mockFetch,
 }));
 
-vi.doMock('@/contracts', () => ({
-  getContractFactory: vi.fn<() => Promise<null>>().mockResolvedValue(null),
+mock.module('@/contracts', () => ({
+  getContractFactory: mock<() => Promise<null>>().mockResolvedValue(null),
 }));
 
-vi.doMock('@/utils/refreshMetadata', () => ({
-  refreshOpenSea: vi.fn(),
+mock.module('@/utils/refreshMetadata', () => ({
+  refreshOpenSea: mock(),
 }));
 
-vi.doMock('@/utils/uploadToS3', () => ({
-  uploadToS3: vi.fn(),
+mock.module('@/utils/uploadToS3', () => ({
+  uploadToS3: mock(),
 }));
 
 const SAMPLE_CID = 'bafybeih75ntopwuggljajz3p2y2mh2ylxfv6joqlbvo2wxtabxkxm6igaa';
@@ -43,7 +56,8 @@ function makeMinty() {
 }
 
 beforeEach(() => {
-  vi.clearAllMocks();
+  mockAdd.mockClear(), mockCat.mockClear(), mockPinAdd.mockClear(), mockPinRm.mockClear(), mockPinLs.mockClear(), mockFetch.mockClear()
+
   mockAdd.mockReset();
   mockCat.mockReset();
   mockPinAdd.mockReset();

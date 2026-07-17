@@ -1,19 +1,17 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, mock, spyOn } from 'bun:test';
 
-const { fetchMock, sleepMock } = vi.hoisted(() => ({
-  fetchMock: vi.fn(),
-  sleepMock: vi.fn().mockResolvedValue(undefined),
-}));
+const fetchMock = mock();
+const sleepMock = mock().mockResolvedValue(undefined);
 
-vi.mock('node-fetch', () => ({ default: fetchMock }));
-vi.mock('node-config-ts', () => ({
+mock.module('node-fetch', () => ({ default: fetchMock }));
+mock.module('node-config-ts', () => ({
   config: {
     eth: { network: 'mainnet', alchemy: { mainnet: 'alchemy-key' } },
   },
 }));
-vi.mock('@/contracts', () => ({ getContractAddress: () => '0xdegen' }));
-vi.mock('./api', async () => {
-  const actual = await vi.importActual<typeof import('./api')>('./api');
+mock.module('@/contracts', () => ({ getContractAddress: () => '0xdegen' }));
+mock.module('./api', async () => {
+  const actual = await await import<typeof import('./api')>('./api');
   return { ...actual, sleep: sleepMock };
 });
 
@@ -21,7 +19,7 @@ import { fetchBurnedDegens } from './degensBurned';
 
 function page(ownedNfts: Array<{ tokenId: string }>, pageKey?: string) {
   return {
-    json: vi.fn().mockResolvedValue({
+    json: mock().mockResolvedValue({
       ownedNfts: ownedNfts.map(({ tokenId }) => ({
         tokenId,
         contractAddress: '0xdegen',

@@ -1,8 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, mock, test } from 'bun:test';
 
-const mockFetch = vi.fn<() => Promise<any>>();
-const mockGetContractFactory = vi.fn<() => Promise<any>>();
-const mockGetBurnedDegens = vi.fn<() => Promise<any>>();
+const mockFetch = mock<() => Promise<any>>();
+const mockGetContractFactory = mock<() => Promise<any>>();
+const mockGetBurnedDegens = mock<() => Promise<any>>();
 
 const mockConfig = {
   eth: {
@@ -12,20 +12,20 @@ const mockConfig = {
   },
 };
 
-vi.doMock('node-config-ts', () => ({
+mock.module('node-config-ts', () => ({
   config: mockConfig,
 }));
 
-vi.doMock('node-fetch', () => ({
+mock.module('node-fetch', () => ({
   default: mockFetch,
 }));
 
-vi.doMock('@/contracts', () => ({
+mock.module('@/contracts', () => ({
   getContractFactory: mockGetContractFactory,
-  getContractAddress: vi.fn(),
+  getContractAddress: mock(),
 }));
 
-vi.doMock('./degensBurned', () => ({
+mock.module('@/utils/degensBurned', () => ({
   getBurnedDegens: mockGetBurnedDegens,
 }));
 
@@ -45,13 +45,16 @@ const UNCLAIMED = 1234n;
 
 function mockContract() {
   return {
-    totalSupply: vi.fn<() => Promise<any>>(),
-    accumulatedMultiCheck: vi.fn<() => Promise<any>>(),
+    totalSupply: mock<() => Promise<any>>(),
+    accumulatedMultiCheck: mock<() => Promise<any>>(),
   };
 }
 
 beforeEach(() => {
-  vi.clearAllMocks();
+  mockFetch.mockClear();
+  mockGetContractFactory.mockClear();
+  mockGetBurnedDegens.mockClear();
+
   mockConfig.eth.etherscan = '';
   const contract = mockContract();
   contract.totalSupply.mockResolvedValue(CIRCULATING);

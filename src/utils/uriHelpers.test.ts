@@ -1,5 +1,5 @@
 import { CID } from 'multiformats/cid';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 import { stripIpfsUriPrefix, ensureIpfsUriPrefix, makeGatewayURL, extractCID } from './uriHelpers';
 

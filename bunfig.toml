@@ -1,0 +1,4 @@
+[test]
+# bunfig `isolate` key is ignored in bun 1.3.x — use `bun test --isolate` in script.
+exclude = ["dist/**", "node_modules/**", "coverage/**"]
+mockClear = true

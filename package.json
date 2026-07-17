@@ -15,10 +15,10 @@
     "postinstall": "bun run build",
     "start": "node dist/src/index.js",
     "dev": "tsx watch src/index.ts",
-    "test": "bunx vitest run",
-    "test:watch": "bunx vitest",
-    "test:coverage": "bunx vitest run --coverage",
-    "test:live": "RUN_LIVE_TESTS=1 bunx vitest run test/smoke/api.contract.test.ts --testTimeout=30000",
+    "test": "bun test --isolate",
+    "test:watch": "bun test --watch",
+    "test:coverage": "bun test --coverage --isolate",
+    "test:live": "RUN_LIVE_TESTS=1 bun test test/smoke/api.contract.test.ts --testTimeout=30000",
     "deploy": "node scripts/vercel-build.mjs --prod && npx vercel deploy --prebuilt --prod --scope niftyleague",
     "audit:endpoints": "node scripts/audit-endpoints.mjs",
     "lint": "eslint .",
@@ -62,7 +62,6 @@
     "@types/node-fetch": "^2.6.13",
     "@typescript-eslint/eslint-plugin": "^8.64.0",
     "@typescript-eslint/parser": "^8.64.0",
-    "@vitest/coverage-v8": "4.1.10",
     "chalk": "^5.6.2",
     "commander": "^15.0.0",
     "eslint": "^10.7.0",
@@ -75,8 +74,7 @@
     "tsc-alias": "^1.9.1",
     "tsx": "^4.23.1",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.64.0",
-    "vitest": "^4.1.10"
+    "typescript-eslint": "^8.64.0"
   },
   "engines": {
     "node": "24.18.0"

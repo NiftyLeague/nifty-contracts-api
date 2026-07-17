@@ -1,8 +1,8 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, mock, spyOn, test } from 'bun:test';
 import alignOutput from './alignOutput';
 
 // alignOutput only communicates via console.log — spy on it to assert real behavior.
-const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+const logSpy = spyOn(console, 'log').mockImplementation(() => undefined);
 
 afterEach(() => {
   logSpy.mockClear();

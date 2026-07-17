@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 import all from './it-all';
 
 async function* asyncGen<T>(items: T[]): AsyncGenerator<T> {

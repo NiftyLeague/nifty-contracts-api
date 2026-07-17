@@ -1,6 +1,6 @@
 import request from 'supertest';
 import type { Express } from 'express';
-import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it, mock, test } from 'bun:test';
 
 import { CONTRACT_METHODS } from './constants/contracts';
 
@@ -34,7 +34,7 @@ const IMX_ENV = {
   },
 };
 
-vi.doMock('node-config-ts', () => ({
+mock.module('node-config-ts', () => ({
   config: {
     host: { mainnet: 'https://api.niftyleague.com', sepolia: 'https://staging.api.niftyleague.com' },
     port: 5005,
@@ -71,12 +71,12 @@ vi.doMock('node-config-ts', () => ({
   },
 }));
 
-const mockHandleNameChangeByInput = vi.fn<(network: string, input: string) => Promise<any>>(() =>
+const mockHandleNameChangeByInput = mock<(network: string, input: string) => Promise<any>>(() =>
   Promise.resolve({ metadata: {} }),
 );
-vi.doMock('@/utils/handleNameChange', () => ({
+mock.module('./utils/handleNameChange', () => ({
   handleNameChangeByInput: mockHandleNameChangeByInput,
-  handleNameChangeById: vi.fn(),
+  handleNameChangeById: mock(),
 }));
 
 // ---------------------------------------------------------------------------
@@ -101,7 +101,8 @@ const webhookUrl = (network: string, secret: string) => `/${network}/webhooks/de
 
 describe('Webhook routes (Degen rename)', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+  mockHandleNameChangeByInput.mockClear()
+  
     mockHandleNameChangeByInput.mockResolvedValue({ metadata: {} });
   });
 

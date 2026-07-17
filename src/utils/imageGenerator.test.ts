@@ -1,6 +1,6 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, mock, spyOn, test } from 'bun:test';
 
-vi.mock('node-config-ts', () => ({
+mock.module('node-config-ts', () => ({
   config: {
     imageGenerator: {
       baseURL: 'https://images.example/generate',
@@ -13,20 +13,20 @@ vi.mock('node-config-ts', () => ({
 import { generateImageURL, raritySelector } from './imageGenerator';
 
 afterEach(() => {
-  vi.restoreAllMocks();
+
 });
 
 describe('raritySelector', () => {
   it('uses the weighted background table', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0);
+    spyOn(Math, 'random').mockReturnValue(0);
     expect(raritySelector(10)).toBe(0);
 
-    vi.spyOn(Math, 'random').mockReturnValue(0.999);
+    spyOn(Math, 'random').mockReturnValue(0.999);
     expect(raritySelector(10)).toBe(3);
   });
 
   it('caps rare backgrounds for the first three tokens', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0.999);
+    spyOn(Math, 'random').mockReturnValue(0.999);
     expect(raritySelector(3)).toBe(1);
   });
 });

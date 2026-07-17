@@ -1,12 +1,10 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, mock } from 'bun:test';
 
-const { fetchMock, getContractAddressMock } = vi.hoisted(() => ({
-  fetchMock: vi.fn(),
-  getContractAddressMock: vi.fn(() => '0xcontract'),
-}));
+const fetchMock = mock();
+const getContractAddressMock = mock(() => '0xcontract');
 
-vi.mock('node-fetch', () => ({ default: fetchMock }));
-vi.mock('node-config-ts', () => ({
+mock.module('node-fetch', () => ({ default: fetchMock }));
+mock.module('node-config-ts', () => ({
   config: {
     eth: { opensea: 'opensea-key' },
     imx: {
@@ -23,8 +21,8 @@ vi.mock('node-config-ts', () => ({
     },
   },
 }));
-vi.mock('@/contracts', () => ({ getContractAddress: getContractAddressMock }));
-vi.mock('@/constants/metadata', () => ({
+mock.module('@/contracts', () => ({ getContractAddress: getContractAddressMock }));
+mock.module('./constants/metadata/degens', () => ({
   MARKETPLACE_ITEMS: [{ name: 'Arcade Token', image: 'ipfs://token' }],
 }));
 
@@ -34,15 +32,16 @@ function response(status: number, statusText = '') {
   return {
     status,
     statusText,
-    json: vi.fn().mockResolvedValue({ accepted: true }),
+    json: mock().mockResolvedValue({ accepted: true }),
   };
 }
 
 beforeEach(() => {
+  fetchMock.mockClear(), getContractAddressMock.mockClear()
   fetchMock.mockReset();
   getContractAddressMock.mockClear();
-  vi.spyOn(console, 'log').mockImplementation(() => undefined);
-  vi.spyOn(console, 'error').mockImplementation(() => undefined);
+  spyOn(console, 'log').mockImplementation(() => undefined);
+  spyOn(console, 'error').mockImplementation(() => undefined);
 });
 
 describe('refreshOpenSea', () => {

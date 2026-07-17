@@ -1,18 +1,16 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, mock } from 'bun:test';
 
-const { commandMock, sendMock } = vi.hoisted(() => ({
-  commandMock: vi.fn(),
-  sendMock: vi.fn(),
-}));
+const commandMock = mock();
+const sendMock = mock();
 
-vi.mock('node-config-ts', () => ({
+mock.module('node-config-ts', () => ({
   config: {
     aws: {
       s3: { bucket: 'assets-bucket', clientConfig: { region: 'us-east-1' } },
     },
   },
 }));
-vi.mock('@aws-sdk/client-s3', () => ({
+mock.module('@aws-sdk/client-s3', () => ({
   S3Client: class {
     send = sendMock;
   },
@@ -26,10 +24,11 @@ vi.mock('@aws-sdk/client-s3', () => ({
 import { uploadToS3 } from './uploadToS3';
 
 beforeEach(() => {
+  commandMock.mockClear(), sendMock.mockClear()
   commandMock.mockReset();
   sendMock.mockReset();
-  vi.spyOn(console, 'log').mockImplementation(() => undefined);
-  vi.spyOn(console, 'error').mockImplementation(() => undefined);
+  spyOn(console, 'log').mockImplementation(() => undefined);
+  spyOn(console, 'error').mockImplementation(() => undefined);
 });
 
 describe('uploadToS3', () => {
@@ -64,7 +63,7 @@ describe('uploadToS3', () => {
       .mockResolvedValueOnce({ $metadata: { httpStatusCode: 200 } });
 
     await uploadToS3('metadata.json', '{}');
-    await vi.waitFor(() => expect(sendMock).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(sendMock).toHaveBeenCalledTimes(2));
   });
 
   it('does not retry when retry is disabled', async () => {

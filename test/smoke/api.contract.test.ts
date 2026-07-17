@@ -11,7 +11,7 @@
  */
 
 import request from 'supertest';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'bun:test';
 
 const BASE_URL = process.env.BASE_URL || 'https://api.niftyleague.com';
 

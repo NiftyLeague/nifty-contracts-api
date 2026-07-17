@@ -1,6 +1,6 @@
 import request from 'supertest';
 import type { Express } from 'express';
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, mock, spyOn, test } from 'bun:test';
 
 import { DEFAULTS, getEndpoints } from './constants/api';
 import { MARKETPLACE_COLLECTION_METADATA, MARKETPLACE_ITEMS } from './constants/metadata/marketplace';
@@ -10,12 +10,12 @@ import { MARKETPLACE_COLLECTION_METADATA, MARKETPLACE_ITEMS } from './constants/
 // ---------------------------------------------------------------------------
 
 // NFTL supply resolvers (no live Etherscan / contract RPC)
-const mockResolveCirculatingSupply = vi.fn<() => Promise<any>>();
-const mockResolveUnclaimedSupply = vi.fn<() => Promise<any>>();
-const mockResolveTotalSupply = vi.fn<() => Promise<any>>();
-const mockResolveMaxSupply = vi.fn<() => Promise<any>>();
+const mockResolveCirculatingSupply = mock<() => Promise<any>>();
+const mockResolveUnclaimedSupply = mock<() => Promise<any>>();
+const mockResolveTotalSupply = mock<() => Promise<any>>();
+const mockResolveMaxSupply = mock<() => Promise<any>>();
 
-vi.doMock('@/utils/nftl', () => ({
+mock.module('./utils/nftl', () => ({
   resolveCirculatingSupply: mockResolveCirculatingSupply,
   resolveUnclaimedSupply: mockResolveUnclaimedSupply,
   resolveTotalSupply: mockResolveTotalSupply,
@@ -23,8 +23,8 @@ vi.doMock('@/utils/nftl', () => ({
 }));
 
 // Burned degens list (no live Alchemy RPC)
-const mockGetBurnedDegens = vi.fn<() => Promise<any>>();
-vi.doMock('@/utils/degensBurned', () => ({
+const mockGetBurnedDegens = mock<() => Promise<any>>();
+mock.module('./utils/degensBurned', () => ({
   getBurnedDegens: mockGetBurnedDegens,
 }));
 
@@ -37,7 +37,7 @@ const MOCK_DEGEN_METADATA = {
   attributes: [{ trait_type: 'Background', value: 'Common' }],
 };
 
-const mockPipeRequest = vi.fn((url: string, res: any) => {
+const mockPipeRequest = mock((url: string, res: any) => {
   const tokenId = url.match(/(\d+)\.(json|png|gif)$/)?.[1] ?? '1';
   const ext = url.match(/(\d+)\.(json|png|gif)$/)?.[2] ?? 'json';
   if (ext === 'json') {
@@ -60,24 +60,24 @@ const mockPipeRequest = vi.fn((url: string, res: any) => {
   }
 });
 
-const mockResolveDegenMetadata = vi.fn<() => Promise<any>>().mockResolvedValue(MOCK_DEGEN_METADATA);
+const mockResolveDegenMetadata = mock<() => Promise<any>>().mockResolvedValue(MOCK_DEGEN_METADATA);
 
-vi.doMock('@/utils/api', () => ({
+mock.module('./utils/api', () => ({
   pipeRequest: mockPipeRequest,
   resolveDegenMetadata: mockResolveDegenMetadata,
-  fetchMetadata: vi.fn(),
-  sleep: vi.fn(),
+  fetchMetadata: mock(),
+  sleep: mock(),
 }));
 
-const mockCheckTokenMetadataExists = vi.fn<() => Promise<any>>();
-const mockUpdateDegenName = vi.fn<() => Promise<any>>();
+const mockCheckTokenMetadataExists = mock<() => Promise<any>>();
+const mockUpdateDegenName = mock<() => Promise<any>>();
 const mockDegenInstance = {
   checkTokenMetadataExists: mockCheckTokenMetadataExists,
   updateDegenName: mockUpdateDegenName,
 };
-const mockMakeDegen = vi.fn(async () => mockDegenInstance);
+const mockMakeDegen = mock(async () => mockDegenInstance);
 
-vi.doMock('./classes/degen', () => ({
+mock.module('./classes/degen', () => ({
   MakeDegen: mockMakeDegen,
   Degen: class {},
 }));
@@ -94,7 +94,7 @@ beforeAll(async () => {
 });
 
 afterEach(() => {
-  vi.restoreAllMocks();
+
 });
 
 // ---------------------------------------------------------------------------
@@ -140,7 +140,7 @@ describe('API Endpoints', () => {
 
   describe('NFTL', () => {
     beforeEach(() => {
-      vi.clearAllMocks();
+    
       mockResolveCirculatingSupply.mockResolvedValue(CIRCULATING);
       mockResolveUnclaimedSupply.mockResolvedValue(UNCLAIMED);
       mockResolveTotalSupply.mockResolvedValue(TOTAL);
@@ -203,7 +203,7 @@ describe('API Endpoints', () => {
     const tokenId = 123;
 
     beforeEach(() => {
-      vi.clearAllMocks();
+    
       mockGetBurnedDegens.mockResolvedValue([1, 2, 3, 4, 5]);
       mockResolveDegenMetadata.mockResolvedValue(MOCK_DEGEN_METADATA);
     });
@@ -323,8 +323,8 @@ describe('API Webhooks', () => {
     newMetadata.name = 'New Name';
 
     beforeEach(() => {
-      vi.clearAllMocks();
-      vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    
+      spyOn(console, 'log').mockImplementation(() => undefined);
     });
 
     it('should update the metadata on name change', async () => {
