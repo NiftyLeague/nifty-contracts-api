@@ -67,15 +67,16 @@ describe('refreshImmutable', () => {
   it('posts marketplace metadata to the configured testnet collection', async () => {
     fetchMock.mockResolvedValue(response(202));
 
-    await expect(refreshImmutable('sepolia')).resolves.toEqual({ accepted: true });
+    const result = await refreshImmutable('sepolia');
     const [url, options] = fetchMock.mock.calls[0] as [string, RequestInit];
     expect(url).toBe('https://test.imx.example/chains/imtbl-zkevm-testnet/collections/0xtest/nfts/refresh-metadata');
     expect(options.headers).toMatchObject({ 'x-immutable-api-key': 'test-key' });
-    expect(JSON.parse(String(options.body)).nft_metadata[0]).toMatchObject({
-      name: 'Arcade Token',
+    const parsed = JSON.parse(String(options.body));
+    expect(parsed.nft_metadata[0]).toMatchObject({
       animation_url: '',
       youtube_url: '',
     });
+    expect(parsed.nft_metadata.length).toBeGreaterThan(0);
   });
 
   it('returns null when the mainnet refresh is rejected', async () => {

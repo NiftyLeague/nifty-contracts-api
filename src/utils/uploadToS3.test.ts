@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, mock, spyOn } from 'bun:test';
+import { beforeEach, describe, expect, it, mock, spyOn, waitFor } from 'bun:test';
 
 const commandMock = mock();
 const sendMock = mock();
