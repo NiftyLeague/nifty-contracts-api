@@ -61,7 +61,7 @@ beforeEach(() => {
   contract.accumulatedMultiCheck.mockResolvedValue(UNCLAIMED);
   mockGetContractFactory.mockResolvedValue(contract);
   mockGetBurnedDegens.mockResolvedValue([]);
-  mockFetch.mockReset();
+  mockFetch.mockClear();
 });
 
 describe('resolveCirculatingSupply', () => {

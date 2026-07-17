@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, mock } from 'bun:test';
+import { beforeEach, describe, expect, it, mock, spyOn } from 'bun:test';
 
 const commandMock = mock();
 const sendMock = mock();
@@ -25,8 +25,8 @@ import { uploadToS3 } from './uploadToS3';
 
 beforeEach(() => {
   commandMock.mockClear(), sendMock.mockClear()
-  commandMock.mockReset();
-  sendMock.mockReset();
+  commandMock.mockClear();
+  sendMock.mockClear();
   spyOn(console, 'log').mockImplementation(() => undefined);
   spyOn(console, 'error').mockImplementation(() => undefined);
 });

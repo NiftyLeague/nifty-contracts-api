@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, mock } from 'bun:test';
+import { beforeEach, describe, expect, it, mock, spyOn } from 'bun:test';
 
 const fetchMock = mock();
 const getContractAddressMock = mock(() => '0xcontract');
@@ -38,7 +38,7 @@ function response(status: number, statusText = '') {
 
 beforeEach(() => {
   fetchMock.mockClear(), getContractAddressMock.mockClear()
-  fetchMock.mockReset();
+  fetchMock.mockClear();
   getContractAddressMock.mockClear();
   spyOn(console, 'log').mockImplementation(() => undefined);
   spyOn(console, 'error').mockImplementation(() => undefined);

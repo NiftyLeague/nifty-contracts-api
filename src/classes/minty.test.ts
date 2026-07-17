@@ -58,12 +58,12 @@ function makeMinty() {
 beforeEach(() => {
   mockAdd.mockClear(), mockCat.mockClear(), mockPinAdd.mockClear(), mockPinRm.mockClear(), mockPinLs.mockClear(), mockFetch.mockClear()
 
-  mockAdd.mockReset();
-  mockCat.mockReset();
-  mockPinAdd.mockReset();
-  mockPinRm.mockReset();
-  mockPinLs.mockReset();
-  mockFetch.mockReset();
+  mockAdd.mockClear();
+  mockCat.mockClear();
+  mockPinAdd.mockClear();
+  mockPinRm.mockClear();
+  mockPinLs.mockClear();
+  mockFetch.mockClear();
 });
 
 describe('Minty.init', () => {

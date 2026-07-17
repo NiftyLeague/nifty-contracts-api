@@ -36,8 +36,7 @@ describe('withCache', () => {
   });
 
   it('does not cache null results', async () => {
-    const resolve = vi
-      .fn<() => Promise<string | null>>()
+    const resolve = mock<() => Promise<string | null>>()
       .mockResolvedValueOnce(null)
       .mockResolvedValueOnce('recovered');
     const cached = withCache(1_000, resolve);
@@ -50,8 +49,7 @@ describe('withCache', () => {
   it('returns the last good value when a refresh fails', async () => {
     jest.useFakeTimers();
     jest.setSystemTime(0);
-    const resolve = vi
-      .fn<() => Promise<string>>()
+    const resolve = mock<() => Promise<string>>()
       .mockResolvedValueOnce('last-good')
       .mockRejectedValueOnce(new Error('upstream unavailable'));
     const cached = withCache(100, resolve);

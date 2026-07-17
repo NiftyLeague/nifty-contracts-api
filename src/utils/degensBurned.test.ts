@@ -31,7 +31,7 @@ function page(ownedNfts: Array<{ tokenId: string }>, pageKey?: string) {
 }
 
 beforeEach(() => {
-  fetchMock.mockReset();
+  fetchMock.mockClear();
   sleepMock.mockClear();
 });
 
