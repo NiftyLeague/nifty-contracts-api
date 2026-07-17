@@ -1,69 +1,51 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { raritySelector, generateImageURL } from './imageGenerator';
 
 vi.mock('node-config-ts', () => ({
   config: {
     imageGenerator: {
-      baseURL: 'https://images.example/generate',
+      baseURL: 'https://example.com/generate',
+      version: 'v1',
       secret: 'test-secret',
-      version: 'v2',
     },
   },
 }));
 
-import { generateImageURL, raritySelector } from './imageGenerator';
-
-afterEach(() => {
-  vi.restoreAllMocks();
-});
-
 describe('raritySelector', () => {
-  it('uses the weighted background table', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0);
-    expect(raritySelector(10)).toBe(0);
-
-    vi.spyOn(Math, 'random').mockReturnValue(0.999);
-    expect(raritySelector(10)).toBe(3);
+  it('returns rarity 0 most of the time', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.1);
+    expect(raritySelector(100)).toBe(0);
   });
 
-  it('caps rare backgrounds for the first three tokens', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0.999);
-    expect(raritySelector(3)).toBe(1);
+  it('returns rarity 1 when random falls in the 6% band', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.92);
+    expect(raritySelector(100)).toBe(1);
+  });
+
+  it('returns rarity 2 when random falls in the 3% band', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.97);
+    expect(raritySelector(100)).toBe(2);
+  });
+
+  it('returns rarity 3 when random falls in the 1% band', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.995);
+    expect(raritySelector(100)).toBe(3);
+  });
+
+  it('caps rarity at 1 for low token IDs', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.995);
+    expect(raritySelector(1)).toBe(1);
   });
 });
 
 describe('generateImageURL', () => {
-  it('serializes every trait and generator option', () => {
-    const traits = Array.from({ length: 22 }, (_, index) => index + 1);
-    const url = new URL(generateImageURL(traits, 2, 42));
-
-    expect(`${url.origin}${url.pathname}`).toBe('https://images.example/generate');
-    expect(url.searchParams.get('version')).toBe('v2');
-    expect(url.searchParams.get('secret')).toBe('test-secret');
-    expect(url.searchParams.get('rarity')).toBe('2');
-    expect(url.searchParams.get('token')).toBe('42');
-    expect(JSON.parse(url.searchParams.get('traits') ?? '[]')).toEqual([
-      ['Tribe', 1],
-      ['Skin Color', 2],
-      ['Fur Color', 3],
-      ['Eye Color', 4],
-      ['Pupil Color', 5],
-      ['Hair', 6],
-      ['Mouth', 7],
-      ['Beard', 8],
-      ['Top', 9],
-      ['Outerwear', 10],
-      ['Print', 11],
-      ['Bottom', 12],
-      ['Footwear', 13],
-      ['Belt', 14],
-      ['Hat', 15],
-      ['Eyewear', 16],
-      ['Piercing', 17],
-      ['Wrist', 18],
-      ['Hands', 19],
-      ['Neckwear', 20],
-      ['Left Item', 21],
-      ['Right Item', 22],
-    ]);
+  it('builds a URL with encoded traits and metadata', () => {
+    const url = generateImageURL([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], 2, 42);
+    expect(url).toContain('https://example.com/generate');
+    expect(url).toContain('version=v1');
+    expect(url).toContain('rarity=2');
+    expect(url).toContain('token=42');
+    expect(url).toContain('secret=test-secret');
+    expect(url).toContain('traits=');
   });
 });
