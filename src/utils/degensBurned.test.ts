@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, mock, spyOn } from 'bun:test';
 
-const fetchMock = mock();
+const fetchMock = mock().mockResolvedValue({ json: async () => ({ ownedNfts: [], pageKey: undefined }) });
 const sleepMock = mock().mockResolvedValue(undefined);
 
 mock.module('node-fetch', () => ({ default: fetchMock }));
@@ -10,10 +10,10 @@ mock.module('node-config-ts', () => ({
   },
 }));
 mock.module('@/contracts', () => ({ getContractAddress: () => '0xdegen' }));
-mock.module('./api', async () => {
-  const actual = await await import('./api');
-  return { ...actual, sleep: sleepMock };
-});
+mock.module('./api', () => ({
+  sleep: sleepMock,
+  withCache: (_ttl: number, fn: () => unknown) => fn,
+}));
 
 import { fetchBurnedDegens } from './degensBurned';
 

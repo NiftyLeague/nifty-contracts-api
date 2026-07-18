@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, mock, spyOn, waitFor } from 'bun:test';
+import { beforeEach, describe, expect, it, mock, spyOn } from 'bun:test';
 
 const commandMock = mock();
 const sendMock = mock();
@@ -12,7 +12,9 @@ mock.module('node-config-ts', () => ({
 }));
 mock.module('@aws-sdk/client-s3', () => ({
   S3Client: class {
-    send = sendMock;
+    get send() {
+      return sendMock;
+    }
   },
   PutObjectCommand: class {
     constructor(params: unknown) {
@@ -21,7 +23,10 @@ mock.module('@aws-sdk/client-s3', () => ({
   },
 }));
 
-import { uploadToS3 } from './uploadToS3';
+// uploadToS3 creates `client = new S3Client(...)` at module top-level, so it must
+// be imported AFTER the mocks above are registered (bun does not hoist mock.module
+// like vitest's vi.mock).
+const uploadToS3 = (await import('./uploadToS3')).uploadToS3;
 
 beforeEach(() => {
   (commandMock.mockClear(), sendMock.mockClear());
@@ -63,7 +68,7 @@ describe('uploadToS3', () => {
       .mockResolvedValueOnce({ $metadata: { httpStatusCode: 200 } });
 
     await uploadToS3('metadata.json', '{}');
-    await waitFor(() => expect(sendMock).toHaveBeenCalledTimes(2));
+    expect(sendMock).toHaveBeenCalledTimes(2);
   });
 
   it('does not retry when retry is disabled', async () => {
