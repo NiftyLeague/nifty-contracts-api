@@ -49,10 +49,7 @@ describe('api.resolveDegenMetadata', () => {
 
     const meta = await resolveDegenMetadata(req);
     expect(meta).toEqual({ token_id: 7 });
-    expect(mockFetch).toHaveBeenCalledWith(
-      'https://nifty-league.s3.amazonaws.com/degens/mainnet/metadata/7.json',
-      {},
-    );
+    expect(mockFetch).toHaveBeenCalledWith('https://nifty-league.s3.amazonaws.com/degens/mainnet/metadata/7.json', {});
   });
 });
 
@@ -86,10 +83,7 @@ describe('api.pipeRequest', () => {
     await new Promise(r => setTimeout(r, 5));
 
     expect((res as any).setHeader).toHaveBeenCalledWith('content-type', 'application/json');
-    expect((res as any).setHeader).toHaveBeenCalledWith(
-      'cache-control',
-      'public, max-age=86400, immutable',
-    );
+    expect((res as any).setHeader).toHaveBeenCalledWith('cache-control', 'public, max-age=86400, immutable');
     expect((res as any).end).toHaveBeenCalled();
   });
 
@@ -122,9 +116,7 @@ describe('api.pipeRequest', () => {
     await new Promise(r => setTimeout(r, 5));
 
     expect((res as any).status).toHaveBeenCalledWith(404);
-    expect((res as any).json).toHaveBeenCalledWith(
-      expect.objectContaining({ errors: expect.any(Array) }),
-    );
+    expect((res as any).json).toHaveBeenCalledWith(expect.objectContaining({ errors: expect.any(Array) }));
   });
 
   it('returns a 502 when the request errors before headers are sent', async () => {

@@ -18,10 +18,12 @@ mock.module('node-fetch', () => ({
 
 // `downloadImage` uses fs.createWriteStream and pipes res.body into it.
 const fs = await import('fs');
-const writeStreamMock = { on: mock(function (this: any, _e: string, cb: () => void) {
-  if (_e === 'finish') cb();
-  return this;
-}) };
+const writeStreamMock = {
+  on: mock(function (this: any, _e: string, cb: () => void) {
+    if (_e === 'finish') cb();
+    return this;
+  }),
+};
 const fsSpy = mock(function () {
   return writeStreamMock;
 }) as never;
@@ -34,7 +36,12 @@ const { downloadImage } = await import('./imageGenerator');
 
 describe('imageGenerator.downloadImage', () => {
   it('pipes the upstream body into a write stream at the destination', async () => {
-    const body = { pipe: mock(function (this: any) { return this; }), on: mock() };
+    const body = {
+      pipe: mock(function (this: any) {
+        return this;
+      }),
+      on: mock(),
+    };
     mockFetch.mockResolvedValue({ body });
 
     await downloadImage('https://images.example/x.png', '/tmp/out.png');
@@ -46,7 +53,9 @@ describe('imageGenerator.downloadImage', () => {
 
   it('rejects when the upstream body emits an error', async () => {
     const body = {
-      pipe: mock(function (this: any) { return this; }),
+      pipe: mock(function (this: any) {
+        return this;
+      }),
       on: mock(function (this: any, _e: string, cb: (err: Error) => void) {
         if (_e === 'error') cb(new Error('stream failed'));
         return this;
@@ -54,8 +63,6 @@ describe('imageGenerator.downloadImage', () => {
     };
     mockFetch.mockResolvedValue({ body });
 
-    await expect(downloadImage('https://images.example/x.png', '/tmp/out.png')).rejects.toThrow(
-      'stream failed',
-    );
+    await expect(downloadImage('https://images.example/x.png', '/tmp/out.png')).rejects.toThrow('stream failed');
   });
 });

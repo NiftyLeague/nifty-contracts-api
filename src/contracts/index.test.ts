@@ -11,12 +11,7 @@ mock.module('@/utils/wallet', () => ({
   getWallet: mockGetWallet,
 }));
 
-const {
-  getDeployedContract,
-  getContractAddress,
-  getContractABI,
-  getContractFactory,
-} = await import('./index');
+const { getDeployedContract, getContractAddress, getContractABI, getContractFactory } = await import('./index');
 
 describe('contracts.getDeployedContract', () => {
   it('returns the mainnet deployment for mainnet', () => {
