@@ -112,6 +112,39 @@ describe('resolveCirculatingSupply', () => {
 
     expect(result).toBeNull();
   });
+
+  it('falls back to the contract and logs when Etherscan returns a non-OK status', async () => {
+    mockConfig.eth.etherscan = 'fake-key';
+    mockFetch.mockResolvedValue({
+      status: 429,
+      json: async () => ({}),
+      text: async () => 'rate limited',
+    });
+
+    const result = await resolveCirculatingSupply();
+
+    expect(mockGetContractFactory).toHaveBeenCalledTimes(1);
+    expect(result).toBe(CIRCULATING.toString());
+  });
+
+  it('falls back to the contract when the Etherscan fetch throws', async () => {
+    mockConfig.eth.etherscan = 'fake-key';
+    mockFetch.mockRejectedValue(new Error('network down'));
+
+    const result = await resolveCirculatingSupply();
+
+    expect(mockGetContractFactory).toHaveBeenCalledTimes(1);
+    expect(result).toBe(CIRCULATING.toString());
+  });
+
+  it('returns null when both Etherscan and the outer fallback fail', async () => {
+    mockConfig.eth.etherscan = '';
+    mockGetContractFactory.mockRejectedValue(new Error('rpc dead'));
+
+    const result = await resolveCirculatingSupply();
+
+    expect(result).toBeNull();
+  });
 });
 
 describe('resolveUnclaimedSupply', () => {
