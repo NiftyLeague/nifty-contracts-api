@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it, mock, spyOn } from 'bun:test';
 
+// --- mocks must be set before source imports ---
+
 mock.module('node-config-ts', () => ({
   config: {
     imageGenerator: {
@@ -9,6 +11,27 @@ mock.module('node-config-ts', () => ({
     },
   },
 }));
+
+const fetchSpy = mock(async (_url: string) => ({
+  body: {
+    pipe: mock(() => {}),
+    on: mock((_event: string, cb: () => void) => {
+      if (_event === 'finish') cb();
+    }),
+  },
+}));
+
+mock.module('node-fetch', () => ({ default: fetchSpy }));
+
+const fsOnMock = mock((_event: string, cb: () => void) => {
+  if (_event === 'finish') cb();
+});
+mock.module('fs', () => ({
+  default: { createWriteStream: mock(() => ({ on: fsOnMock })) },
+  createWriteStream: mock(() => ({ on: fsOnMock })),
+}));
+
+// --- now safe to import source ---
 
 import { generateImageURL, raritySelector, downloadImage } from './imageGenerator';
 
@@ -55,30 +78,10 @@ describe('generateImageURL', () => {
 
 describe('downloadImage', () => {
   it('calls fetch with the correct URL', async () => {
-    // mock node-fetch via module mock since the source imports from 'node-fetch'
-    const fetchSpy = mock(async (_url: string) => ({
-      body: {
-        pipe: mock(() => {}),
-        on: mock((_event: string, cb: () => void) => {
-          if (_event === 'finish') cb();
-        }),
-      },
-    }));
-
-    mock.module('node-fetch', () => ({
-      default: fetchSpy,
-    }));
-    mock.module('fs', () => ({
-      default: { createWriteStream: mock(() => ({})) },
-      createWriteStream: mock(() => ({})),
-    }));
-
     const url = 'https://example.com/image.png';
     const dest = '/tmp/dest.png';
 
-    // Re-import to get the version with mocked deps
-    const mod = await import('./imageGenerator');
-    await mod.downloadImage(url, dest);
+    await downloadImage(url, dest);
 
     expect(fetchSpy).toHaveBeenCalledWith(url);
   });
