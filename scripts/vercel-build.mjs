@@ -7,7 +7,7 @@
 //
 // `vercel.json`'s `functions.includeFiles` is ALSO ignored in Build Output API
 // mode, so we inject the config into the prebuilt function bundle ourselves:
-//   1. pnpm build        -> dist/ (+ dist/config via copy-config.mjs)
+//   1. bun run build     -> dist/ (+ dist/config via copy-config.mjs)
 //   2. vercel build      -> .vercel/output/functions/api/index.func/
 //   3. copy config/ + dist/config into that function bundle
 //
@@ -107,7 +107,7 @@ try {
   //   dropped because `vercel build` emits `.vc-config.json` with an empty
   //   `environment`, so we write it directly — the one place guaranteed to
   //   apply at runtime.
-  // - filePathsMap: `vercel build` traces pnpm's symlinked `.pnpm` store
+  // filePathsMap: `vercel build` traces pnpm's symlinked `.pnpm` store
   //   and lists those symlink paths as packaging sources. Vercel's deploy
   //   rejects symlinked sources ("invalid deployment package … symlinked
   //   directories"). The func bundle already has a real (non-symlinked)

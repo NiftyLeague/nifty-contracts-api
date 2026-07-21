@@ -1,13 +1,13 @@
 module.exports = {
   // Type check TypeScript files
-  '**/*.ts': () => 'pnpm tsc --noEmit',
+  '**/*.ts': () => 'bun run type-check',
 
   // Lint then format TypeScript and JavaScript files
   '**/*.(ts|js)': filenames => [
-    `pnpm eslint --fix ${filenames.join(' ')}`,
-    `pnpm prettier --write ${filenames.join(' ')}`,
+    `bunx eslint --fix ${filenames.join(' ')}`,
+    `bunx prettier --write ${filenames.join(' ')}`,
   ],
 
   // Format MarkDown and JSON
-  '**/*.(md|json)': filenames => `pnpm prettier --write ${filenames.join(' ')}`,
+  '**/*.(md|json)': filenames => `bunx prettier --write ${filenames.join(' ')}`,
 };

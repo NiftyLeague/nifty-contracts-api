@@ -8,7 +8,7 @@ You need node `v24` (see `.nvmrc`). The API is hosted on [Vercel](https://vercel
 
 ## Deploy (Vercel)
 
-The API is compiled to `dist/` by `pnpm build` (`tsc` + `tsc-alias` to rewrite the
+The API is compiled to `dist/` by `bun run build` (`tsc` + `tsc-alias` to rewrite the
 `@/*` path aliases) and served by a thin serverless entry `api/index.js` that
 re-exports `dist/src/index.js` (the default-exported Express app). `vercel.json`
 uses a `buildCommand` + catch-all `rewrite` to `/api/index` rather than the
@@ -24,13 +24,13 @@ resolution crash the preset triggered.
    (Production vs Preview) in the Vercel dashboard. **Every `@@VAR` in
    `config/default.json` must be set** or the config resolves to `undefined` and
    handlers can crash.
-3. Build and deploy with `pnpm deploy` (or the expanded form below). `pnpm deploy`
+3. Build and deploy with `bun run deploy` (or the expanded form below). `bun run deploy`
    runs `scripts/vercel-build.mjs`, which compiles `dist/`, builds the Vercel
    output, and injects `config/` + `dist/` into the function bundle, then deploys
    the prebuilt artifact:
 
    ```bash
-   pnpm deploy
+   bun run deploy
    # equivalent to:
    node scripts/vercel-build.mjs --prod && \
      npx vercel deploy --prebuilt --prod --scope niftyleague
@@ -46,12 +46,12 @@ the config in the deployed bundle.
 ### Git auto-deploy is disabled
 
 Pushing to `main` runs CI (the `test` job + the `live-audit` job, which runs
-`pnpm audit:endpoints` against production), **but must NOT trigger a Vercel Git
+`bun run audit:endpoints` against production), **but must NOT trigger a Vercel Git
 production deploy**: the server-side `vercel build` step does not produce a usable
 `.vercel/output` for this repo (it omits `dist/src/index.js` from the function
 bundle), which 500s every route. **Disable the Git production deployment in the
 Vercel dashboard** (Project → Git → "Production Git Branch" → unlink, or set
-Deployments to "None" for pushes) and deploy exclusively via `pnpm deploy`.
+Deployments to "None" for pushes) and deploy exclusively via `bun run deploy`.
 
 ### Vercel proxy notes
 
@@ -64,13 +64,13 @@ invokes the Express handler **without** `trust proxy`. `src/index.ts` sets
 ## Local validation
 
 ```bash
-pnpm install
-pnpm type-check && pnpm lint && pnpm test   # hermetic, mocked, offline
-pnpm test:live                              # hits BASE_URL (default prod) — needs network
+bun install
+bun run type-check && bun run lint && bun run test   # hermetic, mocked, offline
+bun run test:live                              # hits BASE_URL (default prod) — needs network
 node scripts/audit-endpoints.mjs            # contract gate an AI agent runs after a dep bump
 ```
 
-`pnpm test` ignores `dist`, `.vercel`, and `coverage` so a local `vercel build`
+`bun run test` ignores `dist`, `.vercel`, and `coverage` so a local `vercel build`
 cannot pollute the run.
 
 ## API contract → test mapping (for AI maintenance)
@@ -84,7 +84,7 @@ cannot pollute the run.
 | `/imx/marketplace/*` | `src/constants/metadata/marketplace.ts` | `src/index.test.ts`                           | `test/smoke/...`                  |
 
 When a dependency update breaks a route, the failure surfaces in the matching
-hermetic test (fast) and, if it reaches production, in `pnpm audit:endpoints`
+hermetic test (fast) and, if it reaches production, in `bun run audit:endpoints`
 (non-zero exit). NFTL supply + burn-list resolvers are memoized for 60s
 (`withCache` in `src/utils/api.ts`) and fall back to last-good on upstream
 failure; `pipeRequest` has a 10s timeout and returns a 502 `{ errors: [...] }`
@@ -106,13 +106,13 @@ rewriting the IMX tooling — they live in `@imtbl/imx-sdk` → `magic-sdk` →
 - `web3-core-method` / `web3-core-subscriptions` (only prerelease `2.0.0-alpha.1` exists)
 
 These affect only the offline `src/imx/*` onboarding/minting scripts, **not**
-the live API routes, and are tracked in CI via `pnpm audit --audit-level high`.
+the live API routes, and are tracked in CI via `bun audit --audit-level high`.
 To fully clear them, replace `@imtbl/imx-sdk` with direct calls to Immutable's
 public REST API (out of scope for this pass).
 
 ## API Quick Start
 
-Run `pnpm dev` to start up your local API on port 5005 in watch mode
+Run `bun dev` to start up your local API on port 5005 in watch mode
 
 ## Commander Quick Start
 
