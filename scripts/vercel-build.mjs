@@ -61,7 +61,7 @@ function fail(reason) {
 
 try {
   // 1. Compile sources (+ dist/config).
-  run('pnpm build', 'compile sources (pnpm build)');
+  run('bun run build', 'compile sources (bun run build)');
   recordStep('build', true);
 
   // 2. Build the Vercel output.
