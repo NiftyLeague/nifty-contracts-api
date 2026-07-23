@@ -26,7 +26,8 @@ mock.module('node-config-ts', () => ({
       port: 5001,
       path: '',
       authorization: 'Bearer test-token',
-      pinata: { pinataApiKey: 'test-key', pinataSecretApiKey: 'test-secret' },
+      gatewayURL: 'https://nifty-league.infura-ipfs.io/ipfs',
+      pinata: { pinataApiKey: '***', pinataSecretApiKey: '***' },
     },
   },
 }));
@@ -247,5 +248,182 @@ describe('Minty.pin / unpin / isPinned', () => {
     mockPinLs.mockReturnValue((async function* () {})());
 
     expect(await minty.isPinned(SAMPLE_CID)).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Contract helpers — getTokenOwner, getNFTMetadata, checkTokenMetadataExists,
+// getNFT, getCreationInfo
+// ---------------------------------------------------------------------------
+
+describe('Minty.getTokenOwner', () => {
+  it('reads the owner address from the contract', async () => {
+    const minty = makeMinty();
+    minty.contract = { ownerOf: mock().mockResolvedValue('0xDeAdBeEf123') } as never;
+    expect(await minty.getTokenOwner(42)).toBe('0xDeAdBeEf123');
+  });
+
+  it('returns undefined when no contract is initialized', async () => {
+    const minty = makeMinty();
+    expect(await minty.getTokenOwner(42)).toBeUndefined();
+  });
+});
+
+describe('Minty.getNFTMetadata', () => {
+  it('fetches metadata from IPFS when tokenURI starts with ipfs:', async () => {
+    const minty = makeMinty();
+    await minty.init();
+    minty.contract = { tokenURI: mock().mockResolvedValue(`ipfs://${SAMPLE_CID}`) } as never;
+
+    const data = new TextEncoder().encode('{"name":"dood","power":9001}');
+    mockCat.mockReturnValue((async function* () { yield data; })());
+
+    const { metadata, metadataURI } = await minty.getNFTMetadata(1);
+    expect(metadata).toEqual({ name: 'dood', power: 9001 });
+    expect(metadataURI).toBe(`ipfs://${SAMPLE_CID}`);
+  });
+
+  it('fetches metadata via HTTP for non-ipfs URIs', async () => {
+    const minty = makeMinty();
+    await minty.init();
+    minty.contract = { tokenURI: mock().mockResolvedValue('https://api.example.com/nft/1') } as never;
+
+    mockFetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({ name: 'web-nft', desc: 'fetched via http' }),
+    });
+
+    const { metadata, metadataURI } = await minty.getNFTMetadata(2);
+    expect(metadata).toEqual({ name: 'web-nft', desc: 'fetched via http' });
+    expect(metadataURI).toBe('https://api.example.com/nft/1');
+  });
+
+  it('skips metadata when the HTTP response status is >= 400', async () => {
+    const minty = makeMinty();
+    await minty.init();
+    minty.contract = { tokenURI: mock().mockResolvedValue('https://api.example.com/nft/missing') } as never;
+
+    mockFetch.mockResolvedValue({ status: 404 });
+
+    const { metadata } = await minty.getNFTMetadata(3);
+    expect(metadata).toBeUndefined();
+  });
+
+  it('returns empty result when contract is not initialized', async () => {
+    const minty = makeMinty();
+    const { metadata, metadataURI } = await minty.getNFTMetadata(1);
+    expect(metadata).toBeUndefined();
+    expect(metadataURI).toBeUndefined();
+  });
+});
+
+describe('Minty.checkTokenMetadataExists', () => {
+  it('returns exists=true when metadata is available', async () => {
+    const minty = makeMinty();
+    await minty.init();
+    minty.contract = { tokenURI: mock().mockResolvedValue(`ipfs://${SAMPLE_CID}`) } as never;
+
+    const data = new TextEncoder().encode('{"name":"present"}');
+    mockCat.mockReturnValue((async function* () { yield data; })());
+
+    const result = await minty.checkTokenMetadataExists(1);
+    expect(result.exists).toBe(true);
+    expect(result.metadata).toEqual({ name: 'present' });
+  });
+
+  it('returns exists=false when metadata is empty', async () => {
+    const minty = makeMinty();
+    await minty.init();
+    minty.contract = { tokenURI: mock().mockResolvedValue(`ipfs://${SAMPLE_CID}`) } as never;
+
+    mockCat.mockReturnValue((async function* () {})());
+
+    const result = await minty.checkTokenMetadataExists(1);
+    expect(result.exists).toBe(false);
+    expect(result.metadata).toBeFalsy();
+  });
+});
+
+describe('Minty.getNFT', () => {
+  it('returns basic NFT info with an asset gateway URL', async () => {
+    const minty = makeMinty();
+    await minty.init();
+    minty.contract = {
+      tokenURI: mock().mockResolvedValue(`ipfs://${SAMPLE_CID}`),
+      ownerOf: mock().mockResolvedValue('0xOwner'),
+    } as never;
+
+    const data = new TextEncoder().encode('{"name":"basic","image":"ipfs://QmImg"}');
+    mockCat.mockReturnValue((async function* () { yield data; })());
+
+    const nft = await minty.getNFT(1, {});
+    expect(nft.tokenId).toBe(1);
+    expect(nft.ownerAddress).toBe('0xOwner');
+    expect(nft.metadata).toEqual({ name: 'basic', image: 'ipfs://QmImg' });
+    expect(nft.assetURI).toBe('ipfs://QmImg');
+    expect(nft.assetGatewayURL).toContain('//');
+    expect(nft.assetDataBase64).toBe('');
+    expect(nft.creationInfo).toBeUndefined();
+  });
+
+  it('returns minimal result when metadata is unavailable', async () => {
+    const minty = makeMinty();
+    minty.contract = { tokenURI: mock().mockResolvedValue(`ipfs://${SAMPLE_CID}`) } as never;
+    // no init() called → ipfs is null → getIPFSJSON returns null
+
+    const nft = await minty.getNFT(2, {});
+    expect(nft.tokenId).toBe(2);
+    expect(nft.metadata).toBeNull();
+    expect(nft.metadataURI).toBe(`ipfs://${SAMPLE_CID}`);
+  });
+
+  it('fetches asset base64 data when fetchAsset is true', async () => {
+    const minty = makeMinty();
+    await minty.init();
+    minty.contract = {
+      tokenURI: mock().mockResolvedValue(`ipfs://${SAMPLE_CID}`),
+      ownerOf: mock().mockResolvedValue('0xOwner'),
+    } as never;
+
+    const metaData = new TextEncoder().encode('{"name":"asset-test","image":"ipfs://QmAsset"}');
+    mockCat.mockReturnValue((async function* () { yield metaData; })());
+
+    const assetData = new TextEncoder().encode('raw-asset-bytes');
+    mockCat.mockReturnValueOnce((async function* () { yield metaData; })())  // metadata call
+           .mockReturnValueOnce((async function* () { yield assetData; })());  // asset call
+
+    const nft = await minty.getNFT(3, { fetchAsset: true });
+    expect(nft.metadata.name).toBe('asset-test');
+    // assetDataBase64 should be set — getIPFSBase64 returns base64 of 'raw-asset-bytes'
+    expect(nft.assetDataBase64).toBeTruthy();
+  });
+});
+
+describe('Minty.getCreationInfo', () => {
+  it('extracts block number and creator from Transfer events', async () => {
+    const minty = makeMinty();
+    await minty.init();
+
+    const mockFilter = {};
+    const mockLog = {
+      blockNumber: 77_777,
+      args: { to: '0xCrEaToR' },
+    };
+
+    minty.contract = {
+      filters: { Transfer: mock().mockReturnValue(mockFilter) },
+      queryFilter: mock().mockResolvedValue([mockLog]),
+    } as never;
+
+    const info = await minty.getCreationInfo(1);
+    expect(info).toBeDefined();
+    expect(info!.blockNumber).toBe(77_777);
+    expect(info!.creatorAddress).toBe('0xCrEaToR');
+  });
+
+  it('returns undefined when no contract is initialized', async () => {
+    const minty = makeMinty();
+    expect(await minty.getCreationInfo(1)).toBeUndefined();
   });
 });
