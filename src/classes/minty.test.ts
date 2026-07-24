@@ -276,7 +276,11 @@ describe('Minty.getNFTMetadata', () => {
     minty.contract = { tokenURI: mock().mockResolvedValue(`ipfs://${SAMPLE_CID}`) } as never;
 
     const data = new TextEncoder().encode('{"name":"dood","power":9001}');
-    mockCat.mockReturnValue((async function* () { yield data; })());
+    mockCat.mockReturnValue(
+      (async function* () {
+        yield data;
+      })(),
+    );
 
     const { metadata, metadataURI } = await minty.getNFTMetadata(1);
     expect(metadata).toEqual({ name: 'dood', power: 9001 });
@@ -325,7 +329,11 @@ describe('Minty.checkTokenMetadataExists', () => {
     minty.contract = { tokenURI: mock().mockResolvedValue(`ipfs://${SAMPLE_CID}`) } as never;
 
     const data = new TextEncoder().encode('{"name":"present"}');
-    mockCat.mockReturnValue((async function* () { yield data; })());
+    mockCat.mockReturnValue(
+      (async function* () {
+        yield data;
+      })(),
+    );
 
     const result = await minty.checkTokenMetadataExists(1);
     expect(result.exists).toBe(true);
@@ -355,7 +363,11 @@ describe('Minty.getNFT', () => {
     } as never;
 
     const data = new TextEncoder().encode('{"name":"basic","image":"ipfs://QmImg"}');
-    mockCat.mockReturnValue((async function* () { yield data; })());
+    mockCat.mockReturnValue(
+      (async function* () {
+        yield data;
+      })(),
+    );
 
     const nft = await minty.getNFT(1, {});
     expect(nft.tokenId).toBe(1);
@@ -387,11 +399,24 @@ describe('Minty.getNFT', () => {
     } as never;
 
     const metaData = new TextEncoder().encode('{"name":"asset-test","image":"ipfs://QmAsset"}');
-    mockCat.mockReturnValue((async function* () { yield metaData; })());
+    mockCat.mockReturnValue(
+      (async function* () {
+        yield metaData;
+      })(),
+    );
 
     const assetData = new TextEncoder().encode('raw-asset-bytes');
-    mockCat.mockReturnValueOnce((async function* () { yield metaData; })())  // metadata call
-           .mockReturnValueOnce((async function* () { yield assetData; })());  // asset call
+    mockCat
+      .mockReturnValueOnce(
+        (async function* () {
+          yield metaData;
+        })(),
+      ) // metadata call
+      .mockReturnValueOnce(
+        (async function* () {
+          yield assetData;
+        })(),
+      ); // asset call
 
     const nft = await minty.getNFT(3, { fetchAsset: true });
     expect(nft.metadata.name).toBe('asset-test');
