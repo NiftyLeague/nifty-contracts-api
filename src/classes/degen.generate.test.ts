@@ -6,28 +6,25 @@ const FAKE_CID = CID.parse('bafybeih75ntopwuggljajz3p2y2mh2ylxfv6joqlbvo2wxtabxk
 // ── Module-level mocks (MUST run before dynamic import of ./degen) ──
 
 const mockReadFile = mock().mockResolvedValue(Buffer.from('fake-image-data'));
-const mockGetAssetPath = mock((kind: string, fileName: string) =>
-  `/fake/${kind}/${fileName}`,
-);
+const mockGetAssetPath = mock((kind: string, fileName: string) => `/fake/${kind}/${fileName}`);
 const mockDownloadImage = mock().mockResolvedValue(undefined);
 const mockGenerateImageURL = mock(
-  (_traits: number[], _rarity: number, token: number) =>
-    `https://unity.example/image/${token}`,
+  (_traits: number[], _rarity: number, token: number) => `https://unity.example/image/${token}`,
 );
 
 mock.module('fs', () => ({
   default: {
     promises: { readFile: mockReadFile },
     existsSync: () => true,
-    createReadStream: () => ({} as any),
-    createWriteStream: () => ({} as any),
+    createReadStream: () => ({}) as any,
+    createWriteStream: () => ({}) as any,
     readFileSync: () => '',
     statSync: () => ({}),
   },
   promises: { readFile: mockReadFile },
   existsSync: () => true,
-  createReadStream: () => ({} as any),
-  createWriteStream: () => ({} as any),
+  createReadStream: () => ({}) as any,
+  createWriteStream: () => ({}) as any,
   readFileSync: () => '',
   statSync: () => ({}),
 }));
@@ -83,10 +80,7 @@ describe('Degen.generateImage', () => {
     const filePath = await degen.generateImage(42, [1, 0, 3], 1);
     expect(filePath).toBe('./assets/images/degens/42.png');
     expect(mockGenerateImageURL).toHaveBeenCalledWith([1, 0, 3], 1, 42);
-    expect(mockDownloadImage).toHaveBeenCalledWith(
-      'https://unity.example/image/42',
-      './assets/images/degens/42.png',
-    );
+    expect(mockDownloadImage).toHaveBeenCalledWith('https://unity.example/image/42', './assets/images/degens/42.png');
   });
 
   it('uses .gif extension for rarity >= 3', async () => {
@@ -94,10 +88,7 @@ describe('Degen.generateImage', () => {
     const filePath = await degen.generateImage(7, [], 3);
     expect(filePath).toBe('./assets/images/degens/7.gif');
     expect(mockGenerateImageURL).toHaveBeenCalledWith([], 3, 7);
-    expect(mockDownloadImage).toHaveBeenCalledWith(
-      'https://unity.example/image/7',
-      './assets/images/degens/7.gif',
-    );
+    expect(mockDownloadImage).toHaveBeenCalledWith('https://unity.example/image/7', './assets/images/degens/7.gif');
   });
 });
 
@@ -109,8 +100,7 @@ describe('Degen.generateNFT', () => {
   it('orchestrates the full degen minting pipeline', async () => {
     const degen = makeDegen();
 
-    const getCharacterTraitsSpy = spyOn(degen, 'getCharacterTraits')
-      .mockResolvedValue([1, 0, 3, 2, 0, 0, 4]);
+    const getCharacterTraitsSpy = spyOn(degen, 'getCharacterTraits').mockResolvedValue([1, 0, 3, 2, 0, 0, 4]);
 
     const pinImageSpy = spyOn(degen, 'pinImage').mockResolvedValue({
       assetCid: FAKE_CID,
@@ -126,14 +116,11 @@ describe('Degen.generateNFT', () => {
       animation_url: 'https://niftyleague.com/degens/42/animation',
       attributes: [{ trait_type: 'Background', value: 'Common' }],
     };
-    const makeNFTMetadataSpy = spyOn(degen, 'makeNFTMetadata')
-      .mockResolvedValue(mockMetadata as any);
+    const makeNFTMetadataSpy = spyOn(degen, 'makeNFTMetadata').mockResolvedValue(mockMetadata as any);
 
-    const uploadToS3Spy = spyOn(degen, 'uploadToS3')
-      .mockResolvedValue(undefined);
+    const uploadToS3Spy = spyOn(degen, 'uploadToS3').mockResolvedValue(undefined);
 
-    const refreshOpenSeaSpy = spyOn(degen, 'refreshOpenSea')
-      .mockResolvedValue(undefined);
+    const refreshOpenSeaSpy = spyOn(degen, 'refreshOpenSea').mockResolvedValue(undefined);
 
     const result = await degen.generateNFT(42);
 
@@ -147,17 +134,10 @@ describe('Degen.generateNFT', () => {
     expect(mockReadFile).toHaveBeenCalledWith('/fake/degens/42.png');
 
     // 4. Image pinned to IPFS
-    expect(pinImageSpy).toHaveBeenCalledWith(
-      '/degens/42.png',
-      Buffer.from('fake-image-data'),
-    );
+    expect(pinImageSpy).toHaveBeenCalledWith('/degens/42.png', Buffer.from('fake-image-data'));
 
     // 5. Image uploaded to S3
-    expect(uploadToS3Spy).toHaveBeenCalledWith(
-      'mainnet/images/42.png',
-      Buffer.from('fake-image-data'),
-      'degens',
-    );
+    expect(uploadToS3Spy).toHaveBeenCalledWith('mainnet/images/42.png', Buffer.from('fake-image-data'), 'degens');
 
     // 6. Metadata constructed with right args
     expect(makeNFTMetadataSpy).toHaveBeenCalledWith(
@@ -194,11 +174,9 @@ describe('Degen.updateDegenImage', () => {
       assetGatewayURL: 'https://gateway.example/ipfs/QmNewCid/degens/42.png',
     } as any);
 
-    const uploadToS3Spy = spyOn(degen, 'uploadToS3')
-      .mockResolvedValue(undefined);
+    const uploadToS3Spy = spyOn(degen, 'uploadToS3').mockResolvedValue(undefined);
 
-    const refreshOpenSeaSpy = spyOn(degen, 'refreshOpenSea')
-      .mockResolvedValue(undefined);
+    const refreshOpenSeaSpy = spyOn(degen, 'refreshOpenSea').mockResolvedValue(undefined);
 
     const originalMetadata = {
       name: 'My Degen',
@@ -219,17 +197,10 @@ describe('Degen.updateDegenImage', () => {
     expect(mockReadFile).toHaveBeenCalledWith('/fake/degens/42.png');
 
     // Pinned
-    expect(pinImageSpy).toHaveBeenCalledWith(
-      '/degens/42.png',
-      Buffer.from('fake-image-data'),
-    );
+    expect(pinImageSpy).toHaveBeenCalledWith('/degens/42.png', Buffer.from('fake-image-data'));
 
     // Image uploaded to S3 (first call)
-    expect(uploadToS3Spy).toHaveBeenCalledWith(
-      'mainnet/images/42.png',
-      Buffer.from('fake-image-data'),
-      'degens',
-    );
+    expect(uploadToS3Spy).toHaveBeenCalledWith('mainnet/images/42.png', Buffer.from('fake-image-data'), 'degens');
 
     // Metadata uploaded to S3 with updated image URI (second call)
     expect(uploadToS3Spy).toHaveBeenLastCalledWith(
@@ -264,9 +235,7 @@ describe('Degen.updateDegenImage', () => {
       name: 'Legend',
       image: 'ipfs://old.png',
       description: '',
-      attributes: [
-        { trait_type: 'Background', value: 'Legendary' },
-      ],
+      attributes: [{ trait_type: 'Background', value: 'Legendary' }],
     } as any);
 
     // Legendary → .gif
