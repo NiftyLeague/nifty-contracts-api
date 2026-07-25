@@ -203,9 +203,7 @@ describe('resolveCirculatingSupply — retry path', () => {
   it('retries contract call in the outer catch when the first getContractFactory attempt fails', async () => {
     const contract = mockContract();
     contract.totalSupply.mockResolvedValue(CIRCULATING);
-    mockGetContractFactory
-      .mockRejectedValueOnce(new Error('rpc timeout'))
-      .mockResolvedValue(contract);
+    mockGetContractFactory.mockRejectedValueOnce(new Error('rpc timeout')).mockResolvedValue(contract);
 
     const result = await resolveCirculatingSupply();
 
