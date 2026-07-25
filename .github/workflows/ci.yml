@@ -34,7 +34,7 @@ jobs:
         run: bun run build
 
   test:
-    name: Test
+    name: CI / Test
     runs-on: ubuntu-latest
     needs: quality
     steps:
