@@ -1,0 +1,36 @@
+name: API Docs
+
+permissions:
+  contents: read
+
+on:
+  # Allow to run manually
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/search.yaml'
+      - 'src/**'
+      - 'config/**'
+    branches:
+      - main
+
+jobs:
+  build-docs:
+    name: Generate API Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+      - name: Setup mise
+        uses: jdx/mise-action@v4
+        with:
+          cache: true
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Build API docs
+        run: |
+          npx typedoc --out docs/api --entryPoints src/index.ts --entryPoints src/contracts/index.ts --entryPoints src/utils/api.ts
+      - name: Upload docs artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/api
