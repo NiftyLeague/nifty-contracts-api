@@ -5,9 +5,9 @@ import { afterEach, describe, expect, it, mock, spyOn } from 'bun:test';
 mock.module('node-config-ts', () => ({
   config: {
     imageGenerator: {
-      baseURL: 'https://images.example/generate',
+      baseURL: 'https://example.com/generate',
+      version: 'v1',
       secret: 'test-secret',
-      version: 'v2',
     },
   },
 }));
@@ -68,11 +68,12 @@ describe('generateImageURL', () => {
   it('builds the correct image URL with params', () => {
     const traits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
     const url = generateImageURL(traits, 2, 42);
-    expect(url).toContain('https://images.example/generate');
+    expect(url).toContain('https://example.com/generate');
     expect(url).toContain('rarity=2');
     expect(url).toContain('token=42');
     expect(url).toContain('secret=test-secret');
-    expect(url).toContain('version=v2');
+    expect(url).toContain('version=v1');
+    expect(url).toContain('traits=');
   });
 });
 
