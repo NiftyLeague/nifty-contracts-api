@@ -198,3 +198,26 @@ describe('resolveMaxSupply', () => {
     expect(result).toBeNull();
   });
 });
+
+describe('resolveCirculatingSupply — retry path', () => {
+  it('retries contract call in the outer catch when the first getContractFactory attempt fails', async () => {
+    const contract = mockContract();
+    contract.totalSupply.mockResolvedValue(CIRCULATING);
+    mockGetContractFactory.mockRejectedValueOnce(new Error('rpc timeout')).mockResolvedValue(contract);
+
+    const result = await resolveCirculatingSupply();
+
+    expect(mockGetContractFactory).toHaveBeenCalledTimes(2);
+    expect(result).toBe(CIRCULATING.toString());
+  });
+});
+
+describe('resolveUnclaimedSupply — throw path', () => {
+  it('returns null when the contract factory rejects', async () => {
+    mockGetContractFactory.mockRejectedValue(new Error('rpc dead'));
+
+    const result = await resolveUnclaimedSupply();
+
+    expect(result).toBeNull();
+  });
+});
