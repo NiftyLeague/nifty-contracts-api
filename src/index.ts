@@ -48,16 +48,18 @@ app.use(cors());
 // ------ NFTL
 //////////////////////////////////////////////
 
-app.get('/NFTL/supply', async function (req: Request, res: Response, next: NextFunction) {
+const handleCirculatingSupply = async (res: Response, next: NextFunction) => {
   const supply = await resolveCirculatingSupply();
   if (supply) res.send(supply);
   else next(new Error('Unable to resolve supply.'));
+};
+
+app.get('/NFTL/supply', async function (req: Request, res: Response, next: NextFunction) {
+  await handleCirculatingSupply(res, next);
 });
 
 app.get('/NFTL/supply/circulating', async function (req: Request, res: Response, next: NextFunction) {
-  const supply = await resolveCirculatingSupply();
-  if (supply) res.send(supply);
-  else next(new Error('Unable to resolve supply.'));
+  await handleCirculatingSupply(res, next);
 });
 
 app.get('/NFTL/supply/unclaimed', async function (req: Request, res: Response, next: NextFunction) {

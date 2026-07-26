@@ -2,7 +2,6 @@ import { BytesLike } from 'ethers';
 import type { Signer } from 'ethers';
 
 export * from './metadata';
-export * from './snapshot';
 export type ContractName =
   | 'NiftyDegen'
   | 'NiftyLaunchComics'
