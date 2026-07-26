@@ -42,11 +42,9 @@ jobs:
             --title "[WIP] $BRANCH" \
             --body "Draft PR created automatically by CI.
 
-            This PR is a draft and should not be merged until CI passes and a reviewer marks it ready.
+            This PR is a draft and should not be merged until CI passes and a reviewer (or the Daily Review agent) marks it ready.
 
-            **CI Status:** Pending — this workflow triggered on push to \`$BRANCH\`.
-
-            **API changes:** Ensure contract ABIs, config, and Vercel env vars are updated as needed."
+            **CI Status:** Pending — this workflow triggered on push to \`$BRANCH\`."
 
       - name: Mark PR ready when CI passes
         if: steps.check-pr.outputs.existing == '0'
