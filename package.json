@@ -4,7 +4,7 @@
   "description": "Nifty League Contracts API & Webhooks",
   "repository": "github:NiftyLeague/nifty-contracts-api.git",
   "author": "Nifty Andy",
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
   "type": "module",
   "main": "dist/src/index.js",
   "bin": {
@@ -66,7 +66,6 @@
     "eslint": "^10.7.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
-    "husky": "^9.1.7",
     "lint-staged": "^17.1.0",
     "prettier": "^3.9.5",
     "supertest": "^7.2.2",

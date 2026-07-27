@@ -1,22 +1,29 @@
-## Description
+## Summary
 
-<!-- Summarize the change. Link to any related issues or contracts. -->
+<!-- What changed, why was it needed, and which issue or requirement does it address? -->
 
-## CI Status (do not merge until all pass)
+## Validation
 
-- [ ] `Build, Lint & Type Check` — `bun run lint && bun run type:check && bun run build`
-- [ ] `Test` — `bun run test`
-- [ ] Vercel deploy preview passes (if applicable)
+<!-- List the commands, local checks, CI links, screenshots, or recordings used to validate this change. Required repository checks are enforced automatically. -->
 
-## Compliance Checklist
+- Commands run:
+- CI or deployment links:
+- Screenshots/recordings, when applicable:
 
-- [ ] My commits follow [Conventional Commits](https://www.conventionalcommits.org/) (`type(scope): message`)
-- [ ] I have run `bun run format` before committing (or let lint-staged handle it)
-- [ ] No `.env*.local`, `node_modules`, or lockfile churn
-- [ ] No generated artifacts committed (cache output, build output, bundled config)
-- [ ] Contract ABI changes reflected in `src/contracts/` (if applicable)
-- [ ] Config changes tracked in `config/default.json` (if applicable)
+## Impact and rollout
 
-## Additional Context
+- [ ] No migration or rollout action is required
+- [ ] Migration or rollout steps are documented below
+- [ ] Environment or secret changes are documented below
+- [ ] Security, privacy, compatibility, or performance impact is documented below
+- [ ] Rollback or follow-up work is documented below
 
-<!-- Anything reviewers should know: migration steps, env changes (Vercel), breaking contract changes, related PRs across NiftyLeague repos. -->
+<!-- Add the relevant details here. -->
+
+## Review notes
+
+<!-- Call out tradeoffs, known limitations, generated files, dependency changes, or areas that need focused review. -->
+
+## Related issue
+
+<!-- Use `Closes #123` when applicable. -->

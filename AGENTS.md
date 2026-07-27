@@ -1,82 +1,152 @@
-## Stack
+# Agent Instructions
 
-- **Service:** TypeScript API wrapping Nifty League smart contracts — serves on-chain read methods + token/collection metadata, plus Blocknative webhooks.
-- **Runtime:** Bun `1.3.14` on Node `24.18.0`. Pinned via `mise.toml` (local + CI) and `.nvmrc`. CI uses `jdx/mise-action` to match.
-- **Language:** TypeScript 5.9, `module: esnext`, `moduleResolution: bundler`, path alias `@/*` → `./src/*`.
-- **HTTP:** Express 5 wrapped as a Vercel serverless function (`api/index.js` → `dist/src/index.js`).
-- **Config:** `node-config-ts` reading `config/default.json` at runtime (post-build, copied to `api/.app/config/`). Type augmentation in `config/Config.d.ts`.
-- **Tooling:** ESLint 9 (flat config), Prettier 3, `tsc`, `tsc-alias`, Husky + lint-staged.
-- **Tests:** Bun native `bun test` — executed per-file through the in-repo harness `scripts/run-tests-isolated.ts` (Bun only; no vitest/jest — except Solidity in the sibling `nifty-smart-contracts` repo which is a separate workspace).
-- **CLI:** `minty` bin at `commander.ts`.
+These instructions are the repository-level operating contract for coding agents, including Hermes, OpenCode, and other automation.
 
-## Commands
+They complement `CONTRIBUTING.md`. More specific instructions in nested `AGENTS.md` files and project documentation take precedence for their directory.
 
-All script names below are literal `package.json` keys — run them as `bun run <name>`. The runner for `test` is **Bun native**, not vitest/jest.
+## Mission
 
-| Task                 | Command                                   | What it runs                                                                                                                |
-| -------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| Install              | `bun install --frozen-lockfile`           | Pin via lockfile; triggers `postinstall` → `bun run build`                                                                  |
-| Build                | `bun run build`                           | `node scripts/copy-config.mjs` → `npx tsc` → `tsc-alias` → `node scripts/copy-config.mjs` → `node scripts/copy-api-app.mjs` |
-| Test                 | `bun run test`                            | `bun scripts/run-tests-isolated.ts` — isolated Bun test harness, **NOT** vitest                                             |
-| Test watch           | `bun run test:watch`                      | `bun test --watch`                                                                                                          |
-| Test coverage        | `bun run test:coverage`                   | `bun test --coverage --isolate`                                                                                             |
-| Test live (network)  | `bun run test:live`                       | Hits `BASE_URL`; needs network — do not run in normal verify loop                                                           |
-| Lint                 | `bun run lint`                            | `eslint .`                                                                                                                  |
-| Type-check           | `bun run type-check` (alias `type:check`) | `tsc --noEmit`                                                                                                              |
-| Format               | `bun run format`                          | `prettier --ignore-path .prettierignore --write .`                                                                          |
-| Format check         | `bun run format:check`                    | `prettier --ignore-path .prettierignore --check .`                                                                          |
-| Dev (watch)          | `bun dev`                                 | `tsx watch src/index.ts`, port 5005                                                                                         |
-| Start (built)        | `bun start`                               | `node dist/src/index.js`                                                                                                    |
-| Audit endpoints      | `bun run audit:endpoints`                 | Contract gate after a dep bump                                                                                              |
-| Deploy (Vercel prod) | `bun run deploy`                          | `scripts/vercel-build.mjs --prod` + `vercel deploy --prebuilt --prod --scope niftyleague`                                   |
-| IMX admin/onboarding | `bun run onboarding:*` / `admin:*`        | Offline CLI in `src/imx/` — not part of deployed surface                                                                    |
+- Keep formatting, linting, type checking, builds, tests, and coverage reproducible locally and in CI.
+- Prefer the versions pinned in `.mise.toml`.
+- Do not commit secrets, generated credentials, local environment files, or machine-specific paths.
+- Add tests for behavior changes and keep coverage thresholds explicit in the project configuration.
+  Make the smallest complete, well-tested change that solves the requested problem without disturbing unrelated work.
 
-## Structure
+This repository may contain TypeScript, Rust, Python, or any combination of them. Detect the active stack from the files present; do not assume every check applies.
 
+## Read before acting
+
+Before editing:
+
+1. Read this file and `.github/CONTRIBUTING.md`.
+2. Find and read any nested `AGENTS.md` that covers the files you will touch.
+3. Read the nearest README, package manifest, build configuration, and relevant tests.
+4. Inspect the current branch, worktree, remotes, and recent history:
+
+   ```sh
+   git status --short --branch
+   git remote -v
+   git log -5 --oneline
+   ```
+
+5. Identify the repository's package manager, lockfile, runtime versions, test commands, deployment assumptions, and generated files.
+
+If the worktree is dirty, preserve existing changes and avoid overlapping edits until their ownership is clear.
+
+## Priorities
+
+When instructions conflict, use this order:
+
+1. System and user instructions
+2. This repository's instructions and explicit task scope
+3. Nested directory instructions
+4. Existing project conventions
+5. General best practices
+
+Ask for clarification when a missing decision would materially change the implementation. Otherwise make the smallest reasonable assumption and document it.
+
+## Safety boundaries
+
+- Do not discard, reset, overwrite, or rewrite user-owned changes.
+- Do not expose or commit secrets, credentials, tokens, private keys, local environment files, or personal machine paths.
+- Do not modify production resources, repository settings, branch protections, secrets, deployments, or external systems unless explicitly requested.
+- Do not add organization- or product-specific details to this reusable baseline.
+- Do not change dependency managers or lockfiles unnecessarily.
+- Do not bypass hooks, tests, review requirements, or required checks to hide a failure.
+- Do not claim completion while required validation, review, deployment, or user decisions remain pending.
+- Publishing, committing, or opening a pull request requires explicit task scope or user authorization.
+
+## Standard workflow
+
+1. Restate the desired outcome and identify the files or systems in scope.
+2. Inspect before editing; preserve unrelated work.
+3. Plan the smallest coherent change.
+4. Implement with existing project patterns.
+5. Run focused checks while iterating.
+6. Inspect the final diff for accidental changes, secrets, formatting, and generated files.
+7. Run the broadest applicable validation available.
+8. Report what changed, exact checks and results, skipped checks with reasons, risks, and remaining work.
+
+For normal feature work, branch from `staging` and target pull requests at `staging`. Treat `main` as the protected release branch. Follow `.github/CONTRIBUTING.md` for the complete internal and external contribution flow.
+
+## Toolchain and dependencies
+
+- Use the versions pinned in `.mise.toml`; run `mise install` when needed.
+- Use the package manager indicated by the existing lockfile:
+  - `bun.lock` or `bun.lockb` → Bun
+  - `pnpm-lock.yaml` → pnpm
+  - `yarn.lock` → Yarn
+  - `package-lock.json` → npm
+- Use the existing Python environment and dependency manifest. Prefer a project-managed virtual environment.
+- Use Cargo commands and the committed Cargo lockfile for Rust projects.
+- Do not mix package managers or regenerate lockfiles as a side effect.
+- Keep dependency additions narrowly scoped and explain security, licensing, and runtime impact.
+
+## Validation
+
+Use the shared scripts when present. They detect supported tools and skip inapplicable checks:
+
+```sh
+bash .github/scripts/ci.sh format
+bash .github/scripts/ci.sh lint
+bash .github/scripts/ci.sh type_check
+bash .github/scripts/ci.sh build
+bash .github/scripts/ci.sh unit
+bash .github/scripts/ci.sh integration
+bash .github/scripts/ci.sh e2e
+bash .github/scripts/ci.sh smoke
+bash .github/scripts/security.sh
 ```
-src/
-  index.ts                 # Express app + route mount; trust-proxy + buildBaseUrl
-  index.test.ts            # Hermetic endpoint tests (supertest)
-  index.webhook.test.ts    # Blocknative webhook handler tests
-  classes/                 # Service classes (e.g. metadata resolvers)
-  config/                  # Constants + metadata (marketplace, etc.)
-  constants/               # API constants
-  contracts/               # Contract ABIs + read method bindings (ethers v6)
-  imx/                     # IMX onboarding/admin CLIs (offline only)
-  types/                   # Shared TS types
-  utils/                   # api.ts (pipeRequest, withCache), nftl.ts, degensBurned.ts
-scripts/
-  copy-config.mjs          # Copies config/default.json into api/.app/config/ (runs TWICE in build)
-  copy-api-app.mjs         # Stages dist/ into api/ for the Vercel function bundle
-  run-tests-isolated.ts    # Per-file bun test harness — required, do not call raw `bun test`
-  audit-endpoints.mjs      # Contract audit gate
-  vercel-build.mjs         # Manual function bundle injection (vercel.json includeFiles is ignored)
-config/
-  default.json             # Runtime config; every @@VAR must exist in Vercel env
-  Config.d.ts              # Augments node-config-ts IConfig
-api/                       # Vercel function entry (staging output of build)
-test/                      # Live (network) smoke tests
-commander.ts               # minty CLI entry
-tsconfig.json              # ESM, bundler resolution, @/* alias
-tsconfig.eslint.json       # ESLint type-aware include set
-eslint.config.js           # Flat config
-.prettierignore            # Excludes dist/, build outputs
-bunfig.toml                # Excludes dist/, node_modules/, coverage/ from test discovery
-mise.toml                  # node 24.18.0 + bun 1.3.14 (CI matches via jdx/mise-action)
+
+Run focused tests first, then the complete applicable set for release, security, workflow, dependency, and configuration changes.
+
+At minimum:
+
+- TypeScript/JavaScript: Prettier formatting, ESLint linting, type-check, build, unit tests, and relevant browser/integration tests
+- Rust: default rustfmt, Clippy with warnings treated as errors, check, unit/integration tests, and dependency audit
+- Python: Ruff formatting and linting, compile or type checks, pytest, coverage, and dependency audit
+- Mixed projects: validate each active ecosystem and its integration boundaries
+
+If a check cannot run, state the exact reason. A skipped check is not a passing check.
+
+## Tests and coverage
+
+- Add or update tests for behavior changes and regressions.
+- Keep unit, integration, E2E, and smoke coverage in the suite where each applies.
+- Preserve project-specific coverage thresholds; do not lower them to make CI green.
+- Keep test data deterministic and remove secrets from logs and fixtures.
+- Use the narrowest test command while iterating, then run the affected package or workspace suite.
+
+## GitHub workflows and configuration
+
+- Keep workflows concise, independently runnable, and safe to re-run.
+- Use `push` for `main, staging` and `pull_request` for `staging` unless a workflow has a documented event-specific reason.
+- Give workflows clear names and jobs concise names; avoid repeating the workflow name in the job name.
+- Use per-workflow concurrency groups that cancel superseded runs while allowing independent workflows to run in parallel.
+- Use least-privilege permissions and pin action versions consistently with the template.
+- Keep CI, Test, Security, CodeQL, Draft PR, Release PR, and Release concerns separated.
+- Security and CodeQL may skip when repository visibility or GitHub plan support does not permit them. Do not make an unavailable check required.
+- Optional Turborepo Remote Caching uses `TURBO_TOKEN` and `TURBO_TEAM`; do not add Vercel deployment behavior just to enable caching.
+- Update branch protection when adding or renaming required job checks; verify the actual GitHub status context.
+
+## Documentation and generated files
+
+- Update documentation when behavior, setup, configuration, commands, or operational procedures change.
+- Keep `.env.example` limited to variable names and safe placeholders.
+- Do not commit build output, caches, coverage output, dependency directories, generated credentials, or temporary files.
+- Preserve formatting and line-ending conventions from `.editorconfig` and `.gitattributes`.
+
+## Completion report
+
+End every agent task with:
+
+```text
+Summary:
+Files changed:
+Validation:
+Skipped checks:
+Risks or follow-up:
+Branch/PR:
 ```
 
-## Conventions & Gotchas
-
-- **Bun-only tooling.** `packageManager: bun@1.3.14`, toolchain pinned in `mise.toml` (node `24.18.0` + bun `1.3.14`), CI uses `jdx/mise-action`. Do not introduce pnpm/npm/yarn workflows; legacy `pnpm` mentions in README are stale. One root project — no workspaces.
-- **Husky + lint-staged are active. Never `--no-verify`.** If the staged hook fails on `pnpm`-based commands in `.lintstagedrc.cjs`, either install pnpm globally or migrate the cjs to `bunx` — known half-finished migration.
-- **Test runner is Bun native, executed via the in-repo harness.** Always `bun run test` (which runs `scripts/run-tests-isolated.ts` — each `*.test.ts` in its own `bun` process). Raw `bun test` is unsafe on bun 1.3.14: `mock.module` state leaks across files in one process (~27 false failures), and `bun test --isolate` hangs at summary. The per-file harness avoids both. Not vitest, not jest — Solidity lives in the sibling repo.
-- **Build script order is load-bearing.** `copy-config.mjs` must run **before** `tsc` (so types resolve against the staged config) and **again after** `tsc-alias` (so the final bundle has config). `tsc-alias` must run **after** `tsc` (it rewrites the `@/*` alias to relative `.js` paths for Node's ESM loader). Do not bypass or reorder. `copy-api-app.mjs` runs last to stage `dist/` into `api/` for the Vercel bundle.
-- **`@imtbl/imx-sdk` is not used** — deps are `ethers` v6 + `starknet` + `axios`. The README/old docs sometimes mention the IMX SDK; that is stale. Do not add it.
-- **Vercel deploy is `bun run deploy` only.** Git auto-deploy to production is disabled in the dashboard because the server-side `vercel build` step omits `dist/src/index.js` from the function bundle and 500s every route. `vercel.json`'s `functions.includeFiles` is ignored — `scripts/vercel-build.mjs` manually injects `config/` + `dist/`. Every `@@VAR` in `config/default.json` must be set in the Vercel env or handlers crash on `undefined`.
-- **Express 5 on Vercel edge:** `src/index.ts` sets `app.set('trust proxy', true)` because `@vercel/node` invokes the handler with a raw `(req, res)` bridge where `req.socket` is undefined. **Never reintroduce `req.protocol`** — it reads `req.socket.encrypted` and throws on every edge request. Build base URLs from `X-Forwarded-Proto` / `Host` (see `buildBaseUrl`).
-- **Webhook secret is a URL segment, not a header.** `/:network/webhooks/degen/${config.blocknative.webhookSecret}` — Blocknative's signature scheme expects it. Do not move it to a header.
-- **`pipeRequest` (`src/utils/api.ts`) has a 10s timeout** and returns `502 { errors: [...] }` on upstream failure. Never let it hang. NFTL supply + burn-list resolvers are memoized for 60s via `withCache` and **fall back to last-good on upstream failure** — do not break the last-good fallback.
-- **`config/Config.d.ts` must be kept in sync** with `config/default.json` keys (it augments `node-config-ts`'s `IConfig`).
-- **IMX scripts under `src/imx/onboarding/*` and `src/imx/admin/*` are offline-only CLI tools**, not part of the deployed API surface.
-- **After any dep bump:** run `bun run audit:endpoints` to catch contract regressions, and verify the three known low-severity advisories (`elliptic`, `web3-core-method`, `web3-core-subscriptions`) have not been joined by new SSRF/DoS issues.
-- **Deprecated route blocks in `src/index.ts` are commented out, not deleted** — leave them in place as historical context unless explicitly asked to remove.
+Use exact command names and outcomes. Mention external changes separately from local changes, and distinguish completed work from recommendations.
