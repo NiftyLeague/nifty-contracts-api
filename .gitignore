@@ -71,4 +71,6 @@ pnpm-debug.log*
 mise.local.toml
 .mise.local.toml
 *.code-workspace
+
+# Repository-specific rules
 src/config/
