@@ -1,6 +1,6 @@
 console.warn(
-  'DEPRECATED! Please follow the guide at https://docs.immutable.com/docs/x/launch-collection/register-project/',
-);
+  'DEPRECATED! Please follow the guide at https://docs.immutable.com/docs/x/launch-collection/register-project/'
+)
 
 // import { config } from 'node-config-ts';
 // import { CreateProjectParams, ImmutableXClient } from '@imtbl/imx-sdk';

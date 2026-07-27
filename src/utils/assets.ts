@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'path'
 
 /**
  * Asset kind directories under `assets/images/`.
@@ -7,7 +7,7 @@ import path from 'path';
  * (`generateComic`, `generateItem`, `generateNFT`, `updateDegenImage`)
  * read the source images from these directories.
  */
-export type AssetKind = 'comics' | 'items' | 'degens';
+export type AssetKind = 'comics' | 'items' | 'degens'
 
 /**
  * Resolve the on-disk path of a source image for a given NFT kind.
@@ -20,5 +20,5 @@ export type AssetKind = 'comics' | 'items' | 'degens';
  * JavaScript under `dist/` or from the source via `tsx`.
  */
 export function getAssetPath(kind: AssetKind, fileName: string): string {
-  return path.join(process.cwd(), 'assets', 'images', kind, fileName);
+  return path.join(process.cwd(), 'assets', 'images', kind, fileName)
 }

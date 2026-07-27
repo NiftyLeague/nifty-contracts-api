@@ -1,7 +1,7 @@
-import type { Attribute, Rarity } from '@/types';
-import { DEGEN_METADATA } from './degens';
-import { HYDRA_EGG_IPFS } from '../ipfs';
-import hydrasJson from './hydras.json' with { type: 'json' };
+import type { Attribute, Rarity } from '@/types'
+import { DEGEN_METADATA } from './degens'
+import { HYDRA_EGG_IPFS } from '../ipfs'
+import hydrasJson from './hydras.json' with { type: 'json' }
 
 export const UNHATCHED_METADATA = {
   name: 'HYDRA',
@@ -21,8 +21,8 @@ export const UNHATCHED_METADATA = {
       value: 'Unhatched',
     },
   ],
-};
+}
 
 export const HYDRA_ATTRIBUTES = hydrasJson as {
-  [tokenId: string]: { rarity: Rarity; attributes: Attribute[] };
-};
+  [tokenId: string]: { rarity: Rarity; attributes: Attribute[] }
+}

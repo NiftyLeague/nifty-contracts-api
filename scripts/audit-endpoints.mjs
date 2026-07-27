@@ -15,8 +15,8 @@
  *   AUDIT_NETWORK  Network segment for token routes (default: sepolia)
  */
 
-const BASE_URL = process.argv[2] || process.env.BASE_URL || 'https://api.niftyleague.com';
-const NETWORK = process.env.AUDIT_NETWORK || 'sepolia';
+const BASE_URL = process.argv[2] || process.env.BASE_URL || 'https://api.niftyleague.com'
+const NETWORK = process.env.AUDIT_NETWORK || 'sepolia'
 
 // Each check: path -> { status, contentType, validator }
 const checks = [
@@ -25,7 +25,7 @@ const checks = [
     path: '/',
     status: 200,
     contentType: /application\/json/,
-    validate: body =>
+    validate: (body) =>
       body.name === 'Nifty League Contracts API' &&
       !!body.version &&
       !!body.endpoints?.NFTL &&
@@ -40,11 +40,11 @@ const checks = [
     // production contract for these supply routes (see src/index.test.ts).
     contentType: /text\/html|text\/plain|application\/json/,
     validate: (body, text) => {
-      const v = text ?? body;
+      const v = text ?? body
       try {
-        return BigInt(String(v).trim()) > 0n;
+        return BigInt(String(v).trim()) > 0n
       } catch {
-        return false;
+        return false
       }
     },
   },
@@ -53,80 +53,81 @@ const checks = [
     path: '/degens/burn-list',
     status: 200,
     contentType: /application\/json/,
-    validate: body => Array.isArray(body),
+    validate: (body) => Array.isArray(body),
   },
   {
     name: 'GET /imx/marketplace/collection.json',
     path: '/imx/marketplace/collection.json',
     status: 200,
     contentType: /application\/json/,
-    validate: body => body.name && body.external_link === 'https://niftyleague.com',
+    validate: (body) => body.name && body.external_link === 'https://niftyleague.com',
   },
   {
     name: `GET /${NETWORK}/degen/metadata/1`,
     path: `/${NETWORK}/degen/metadata/1`,
     status: 200,
     contentType: /application\/json/,
-    validate: body => !!body.name,
+    validate: (body) => !!body.name,
   },
   {
     name: 'GET /imx/marketplace/metadata/1',
     path: '/imx/marketplace/metadata/1',
     status: 200,
     contentType: /application\/json/,
-    validate: body => !!body.name,
+    validate: (body) => !!body.name,
   },
-];
+]
 
 async function runCheck(check) {
-  const res = await fetch(`${BASE_URL}${check.path}`, { redirect: 'follow' });
-  const contentType = res.headers.get('content-type') || '';
-  const text = await res.text();
-  let body = text;
+  const res = await fetch(`${BASE_URL}${check.path}`, { redirect: 'follow' })
+  const contentType = res.headers.get('content-type') || ''
+  const text = await res.text()
+  let body = text
   if (contentType.includes('application/json')) {
     try {
-      body = JSON.parse(text);
+      body = JSON.parse(text)
     } catch {
       /* leave as text */
     }
   }
 
-  const failures = [];
-  if (res.status !== check.status) failures.push(`status ${res.status} != ${check.status}`);
+  const failures = []
+  if (res.status !== check.status) failures.push(`status ${res.status} != ${check.status}`)
   if (check.contentType && !check.contentType.test(contentType))
-    failures.push(`content-type "${contentType}" !~ ${check.contentType}`);
-  if (failures.length === 0 && !check.validate(body, text)) failures.push('body did not satisfy contract');
+    failures.push(`content-type "${contentType}" !~ ${check.contentType}`)
+  if (failures.length === 0 && !check.validate(body, text))
+    failures.push('body did not satisfy contract')
 
-  return { check, ok: failures.length === 0, failures, status: res.status, contentType };
+  return { check, ok: failures.length === 0, failures, status: res.status, contentType }
 }
 
 async function main() {
-  console.log(`Auditing ${BASE_URL}\n`);
-  let failed = 0;
+  console.log(`Auditing ${BASE_URL}\n`)
+  let failed = 0
   for (const check of checks) {
     try {
-      const r = await runCheck(check);
+      const r = await runCheck(check)
       if (r.ok) {
-        console.log(`  ✓ ${r.check.name} — ${r.status} ${r.contentType.split(';')[0]}`);
+        console.log(`  ✓ ${r.check.name} — ${r.status} ${r.contentType.split(';')[0]}`)
       } else {
-        failed++;
-        console.log(`  ✗ ${r.check.name} — ${r.failures.join('; ')}`);
+        failed++
+        console.log(`  ✗ ${r.check.name} — ${r.failures.join('; ')}`)
       }
     } catch (e) {
-      failed++;
-      console.log(`  ✗ ${r?.check?.name ?? check.name} — request error: ${e.message}`);
+      failed++
+      console.log(`  ✗ ${r?.check?.name ?? check.name} — request error: ${e.message}`)
     }
   }
 
-  console.log(`\n${checks.length - failed}/${checks.length} endpoints passed.`);
+  console.log(`\n${checks.length - failed}/${checks.length} endpoints passed.`)
   if (failed > 0) {
-    console.error(`\nAUDIT FAILED: ${failed} endpoint(s) deviated from contract.`);
-    process.exit(1);
+    console.error(`\nAUDIT FAILED: ${failed} endpoint(s) deviated from contract.`)
+    process.exit(1)
   }
-  console.log('AUDIT PASSED: all endpoints match contract.');
+  console.log('AUDIT PASSED: all endpoints match contract.')
 }
 
-main().catch(e => {
-  console.error(e);
-  process.exit(1);
-});
+main().catch((e) => {
+  console.error(e)
+  process.exit(1)
+})

@@ -1,31 +1,31 @@
-export type Attribute = { trait_type?: string; value: string };
+export type Attribute = { trait_type?: string; value: string }
 
 export type Metadata = {
-  id: number;
-  token_id: string;
-  name: string;
-  description: string;
-  image?: string;
-  animation_url?: string;
-  youtube_url?: string;
-  external_url?: string;
-  background_color?: string;
-  attributes: Attribute[];
-};
+  id: number
+  token_id: string
+  name: string
+  description: string
+  image?: string
+  animation_url?: string
+  youtube_url?: string
+  external_url?: string
+  background_color?: string
+  attributes: Attribute[]
+}
 
-export type CreationInfo = { blockNumber: number; creatorAddress: string };
+export type CreationInfo = { blockNumber: number; creatorAddress: string }
 
 export type NFTInfo = {
-  tokenId: string | number;
-  metadata: Metadata;
-  metadataURI?: string;
-  metadataGatewayURL?: string;
-  ownerAddress?: string;
-  assetURI?: string;
-  assetGatewayURL?: string;
-  assetDataBase64?: string;
-  creationInfo?: CreationInfo;
-};
+  tokenId: string | number
+  metadata: Metadata
+  metadataURI?: string
+  metadataGatewayURL?: string
+  ownerAddress?: string
+  assetURI?: string
+  assetGatewayURL?: string
+  assetDataBase64?: string
+  creationInfo?: CreationInfo
+}
 
 export enum HydraClan {
   b = 'Battalion',
@@ -67,7 +67,7 @@ export enum ItemTier {
   Mythic = 'Mythic',
 }
 
-export type Rarity = '???' | 'Common' | 'Rare' | 'Meta' | 'Legendary' | 'Mythic';
+export type Rarity = '???' | 'Common' | 'Rare' | 'Meta' | 'Legendary' | 'Mythic'
 
 export enum CharacterItemSlotType {
   None = 'None',

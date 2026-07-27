@@ -1,5 +1,5 @@
-import { DEGEN_METADATA } from './degens';
-import { RUGMAN_IMAGE_IPFS } from '../ipfs';
+import { DEGEN_METADATA } from './degens'
+import { RUGMAN_IMAGE_IPFS } from '../ipfs'
 
 export const RUGMAN = {
   name: 'RugMan',
@@ -60,4 +60,4 @@ export const RUGMAN = {
       value: `RugMan's Rugged Scythe`,
     },
   ],
-};
+}

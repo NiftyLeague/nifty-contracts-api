@@ -1,22 +1,27 @@
-import { config } from 'node-config-ts';
-import './config.js'; // side-effect: traced import of dist/src/config/default.json
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import express, { NextFunction, type Request, type Response } from 'express';
+import { config } from 'node-config-ts'
+import './config.js' // side-effect: traced import of dist/src/config/default.json
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import express, { NextFunction, type Request, type Response } from 'express'
 
-import { getBurnedDegens } from './utils/degensBurned';
-import { resolveDegenMetadata, pipeRequest } from './utils/api';
-import { handleNameChangeByInput } from './utils/handleNameChange';
-import { resolveCirculatingSupply, resolveMaxSupply, resolveTotalSupply, resolveUnclaimedSupply } from './utils/nftl';
+import { getBurnedDegens } from './utils/degensBurned'
+import { resolveDegenMetadata, pipeRequest } from './utils/api'
+import { handleNameChangeByInput } from './utils/handleNameChange'
+import {
+  resolveCirculatingSupply,
+  resolveMaxSupply,
+  resolveTotalSupply,
+  resolveUnclaimedSupply,
+} from './utils/nftl'
 
-import { DEFAULTS, getEndpoints } from './constants/api';
-import { CONTRACT_METHODS } from './constants/contracts';
-import { LEGGIES } from './constants/metadata/degens';
-import { S3_BASE_URL, S3_DEGENS_BUCKET, S3_MARKETPLACE_BUCKET } from './constants/aws';
-import { MARKETPLACE_COLLECTION_METADATA } from './constants/metadata/marketplace';
-import type { Attribute, TargetNetwork } from './types';
+import { DEFAULTS, getEndpoints } from './constants/api'
+import { CONTRACT_METHODS } from './constants/contracts'
+import { LEGGIES } from './constants/metadata/degens'
+import { S3_BASE_URL, S3_DEGENS_BUCKET, S3_MARKETPLACE_BUCKET } from './constants/aws'
+import { MARKETPLACE_COLLECTION_METADATA } from './constants/metadata/marketplace'
+import type { Attribute, TargetNetwork } from './types'
 
-const app = express().set('port', config.port || 5005);
+const app = express().set('port', config.port || 5005)
 
 // Vercel terminates TLS at the edge and invokes this handler via @vercel/node's
 // raw (req, res) bridge, where req.socket is undefined. Without trust proxy,
@@ -24,112 +29,116 @@ const app = express().set('port', config.port || 5005);
 // request. Enabling trust proxy makes Express derive the protocol from
 // X-Forwarded-Proto (which Vercel sets to https), and we build the base URL
 // defensively below as a belt-and-suspenders measure.
-app.set('trust proxy', true);
+app.set('trust proxy', true)
 
 const buildBaseUrl = (req: Request): string => {
-  const proto = req.get('x-forwarded-proto') || 'https';
-  const host = req.get('host') || (config.host ? config.host[config.eth.network as TargetNetwork] : undefined);
-  return `${proto}://${host}`;
-};
+  const proto = req.get('x-forwarded-proto') || 'https'
+  const host =
+    req.get('host') || (config.host ? config.host[config.eth.network as TargetNetwork] : undefined)
+  return `${proto}://${host}`
+}
 
 app.get('/', function (req: Request, res: Response) {
-  const baseUrl = buildBaseUrl(req);
+  const baseUrl = buildBaseUrl(req)
   res.json({
     ...DEFAULTS,
     endpoints: getEndpoints(baseUrl),
-  });
-});
+  })
+})
 
-app.use(bodyParser.json({ limit: '1mb' }));
+app.use(bodyParser.json({ limit: '1mb' }))
 
-app.use(cors());
+app.use(cors())
 
 //////////////////////////////////////////////
 // ------ NFTL
 //////////////////////////////////////////////
 
 const handleCirculatingSupply = async (res: Response, next: NextFunction) => {
-  const supply = await resolveCirculatingSupply();
-  if (supply) res.send(supply);
-  else next(new Error('Unable to resolve supply.'));
-};
+  const supply = await resolveCirculatingSupply()
+  if (supply) res.send(supply)
+  else next(new Error('Unable to resolve supply.'))
+}
 
 app.get('/NFTL/supply', async function (req: Request, res: Response, next: NextFunction) {
-  await handleCirculatingSupply(res, next);
-});
+  await handleCirculatingSupply(res, next)
+})
 
-app.get('/NFTL/supply/circulating', async function (req: Request, res: Response, next: NextFunction) {
-  await handleCirculatingSupply(res, next);
-});
+app.get(
+  '/NFTL/supply/circulating',
+  async function (req: Request, res: Response, next: NextFunction) {
+    await handleCirculatingSupply(res, next)
+  }
+)
 
 app.get('/NFTL/supply/unclaimed', async function (req: Request, res: Response, next: NextFunction) {
-  const supply = await resolveUnclaimedSupply();
-  if (supply) res.send(supply);
-  else next(new Error('Unable to resolve supply.'));
-});
+  const supply = await resolveUnclaimedSupply()
+  if (supply) res.send(supply)
+  else next(new Error('Unable to resolve supply.'))
+})
 
 app.get('/NFTL/supply/total', async function (req: Request, res: Response, next: NextFunction) {
-  const supply = await resolveTotalSupply();
-  if (supply) res.send(supply);
-  else next(new Error('Unable to resolve supply.'));
-});
+  const supply = await resolveTotalSupply()
+  if (supply) res.send(supply)
+  else next(new Error('Unable to resolve supply.'))
+})
 
 app.get('/NFTL/supply/max', async function (req: Request, res: Response, next: NextFunction) {
-  const supply = await resolveMaxSupply();
-  if (supply) res.send(supply);
-  else next(new Error('Unable to resolve supply.'));
-});
+  const supply = await resolveMaxSupply()
+  if (supply) res.send(supply)
+  else next(new Error('Unable to resolve supply.'))
+})
 
 //////////////////////////////////////////////
 // ------ DEGENs
 //////////////////////////////////////////////
 
 app.get('/degens/burn-list', async function (req: Request, res: Response, next: NextFunction) {
-  const burnList = await getBurnedDegens();
-  if (burnList) res.send(burnList);
-  else next(new Error('Unable to resolve burn list.'));
-});
+  const burnList = await getBurnedDegens()
+  if (burnList) res.send(burnList)
+  else next(new Error('Unable to resolve burn list.'))
+})
 
 app.get('/:network/degen/metadata/:token_id', async function (req: Request, res: Response) {
-  const { network, token_id } = req.params;
-  pipeRequest(`${S3_BASE_URL}/${S3_DEGENS_BUCKET}/${network}/metadata/${token_id}.json`, res);
-});
+  const { network, token_id } = req.params
+  pipeRequest(`${S3_BASE_URL}/${S3_DEGENS_BUCKET}/${network}/metadata/${token_id}.json`, res)
+})
 
 app.get('/:network/degen/image/:token_id', async function (req: Request, res: Response) {
-  const { network, token_id } = req.params;
-  const type = LEGGIES.includes(Number(token_id)) ? 'gif' : 'png';
-  pipeRequest(`${S3_BASE_URL}/${S3_DEGENS_BUCKET}/${network}/images/${token_id}.${type}`, res);
-});
+  const { network, token_id } = req.params
+  const type = LEGGIES.includes(Number(token_id)) ? 'gif' : 'png'
+  pipeRequest(`${S3_BASE_URL}/${S3_DEGENS_BUCKET}/${network}/images/${token_id}.${type}`, res)
+})
 
 app.get('/:network/degen/:token_id/background', async function (req: Request, res: Response) {
-  const metadata = await resolveDegenMetadata(req);
-  const background = metadata?.attributes?.find((a: Attribute) => a.trait_type === 'Background');
-  if (background) res.send(background.value);
-  else res.status(404).send({ errors: [{ message: 'Background not found' }] });
-});
+  const metadata = await resolveDegenMetadata(req)
+  const background = metadata?.attributes?.find((a: Attribute) => a.trait_type === 'Background')
+  if (background) res.send(background.value)
+  else res.status(404).send({ errors: [{ message: 'Background not found' }] })
+})
 
 //////////////////////////////////////////////
 // ------ MARKETPLACE
 //////////////////////////////////////////////
 
 app.get('/imx/marketplace/collection.json', async function (req: Request, res: Response) {
-  res.send(MARKETPLACE_COLLECTION_METADATA);
-});
+  res.send(MARKETPLACE_COLLECTION_METADATA)
+})
 
 app.get('/imx/marketplace/metadata/:token_id', async function (req: Request, res: Response) {
-  let tokenId = req.params.token_id;
-  if (Array.isArray(tokenId)) tokenId = tokenId[0];
-  if (tokenId.endsWith('.json')) tokenId = tokenId.slice(0, -5);
-  pipeRequest(`${S3_BASE_URL}/${S3_MARKETPLACE_BUCKET}/metadata/${tokenId}.json`, res);
-});
+  let tokenId = req.params.token_id
+  if (Array.isArray(tokenId)) tokenId = tokenId[0]
+  if (tokenId.endsWith('.json')) tokenId = tokenId.slice(0, -5)
+  pipeRequest(`${S3_BASE_URL}/${S3_MARKETPLACE_BUCKET}/metadata/${tokenId}.json`, res)
+})
 
 app.get('/imx/marketplace/images/:token_id', async function (req: Request, res: Response) {
-  const rawTokenId = req.params.token_id;
-  const tokenId = Array.isArray(rawTokenId) ? rawTokenId[0] : rawTokenId;
+  const rawTokenId = req.params.token_id
+  const tokenId = Array.isArray(rawTokenId) ? rawTokenId[0] : rawTokenId
   // COMICS 1-100 are PNG, Items 101+ are GIF
-  const fileType = Number(tokenId) <= 100 ? 'png' : 'gif';
-  pipeRequest(`${S3_BASE_URL}/${S3_MARKETPLACE_BUCKET}/images/${tokenId}.${fileType}`, res);
-});
+  const fileType = Number(tokenId) <= 100 ? 'png' : 'gif'
+  pipeRequest(`${S3_BASE_URL}/${S3_MARKETPLACE_BUCKET}/images/${tokenId}.${fileType}`, res)
+})
 
 //////////////////////////////////////////////
 // ------ MIGRATION SNAPSHOT (DEPRECATED)
@@ -299,8 +308,8 @@ app.post(
   `/:network/webhooks/degen/${config.blocknative.webhookSecret}`,
   async function (req: Request, res: Response, next: NextFunction) {
     try {
-      const targetNetwork = req.params.network as TargetNetwork;
-      const tx = req.body;
+      const targetNetwork = req.params.network as TargetNetwork
+      const tx = req.body
       if (
         targetNetwork === 'mainnet' &&
         tx.status === 'confirmed' &&
@@ -308,16 +317,16 @@ app.post(
         tx.apiKey === config.blocknative.apiKey.degens
       ) {
         if (tx.input.startsWith(CONTRACT_METHODS.RENAME)) {
-          console.log('DEGEN RENAME WEBHOOK TX:', tx);
-          await handleNameChangeByInput(targetNetwork, tx.input);
+          console.log('DEGEN RENAME WEBHOOK TX:', tx)
+          await handleNameChangeByInput(targetNetwork, tx.input)
         }
       }
-      res.sendStatus(200);
+      res.sendStatus(200)
     } catch (e) {
-      next(e);
+      next(e)
     }
-  },
-);
+  }
+)
 
 // app.post(
 //   `/:network/webhooks/p2e/${config.blocknative.webhookSecret}`,
@@ -363,16 +372,16 @@ app.post(
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const errorHandler = (err: Error, req: Request, res: Response, _: NextFunction) => {
-  console.error(err);
-  res.status(500).send({ errors: [{ message: err.message ?? 'Something went wrong' }] });
-};
+  console.error(err)
+  res.status(500).send({ errors: [{ message: err.message ?? 'Something went wrong' }] })
+}
 
-app.use(errorHandler);
+app.use(errorHandler)
 
 if (!process.env.VERCEL) {
   app.listen(app.get('port'), function () {
-    console.log('Node app is running on port', app.get('port'));
-  });
+    console.log('Node app is running on port', app.get('port'))
+  })
 }
 
-export default app;
+export default app

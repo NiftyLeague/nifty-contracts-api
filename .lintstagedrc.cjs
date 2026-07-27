@@ -3,11 +3,11 @@ module.exports = {
   '**/*.ts': () => 'bun run type-check',
 
   // Lint then format TypeScript and JavaScript files
-  '**/*.(ts|js)': filenames => [
+  '**/*.(ts|js)': (filenames) => [
     `bunx eslint --fix ${filenames.join(' ')}`,
     `bunx prettier --write ${filenames.join(' ')}`,
   ],
 
   // Format MarkDown and JSON
-  '**/*.(md|json)': filenames => `bunx prettier --write ${filenames.join(' ')}`,
-};
+  '**/*.(md|json)': (filenames) => `bunx prettier --write ${filenames.join(' ')}`,
+}

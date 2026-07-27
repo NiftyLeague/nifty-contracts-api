@@ -2,7 +2,7 @@ export const DEFAULTS = {
   name: 'Nifty League Contracts API',
   description: 'Smart Contract API for Nifty League',
   version: '1.0.0',
-};
+}
 
 export const getEndpoints = (baseUrl: string) => ({
   NFTL: {
@@ -110,4 +110,4 @@ export const getEndpoints = (baseUrl: string) => ({
       },
     ],
   },
-});
+})

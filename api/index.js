@@ -9,8 +9,8 @@
 // and therefore produces extensionless/aliased imports that crash at runtime
 // with ERR_MODULE_NOT_FOUND).
 //
-globalThis.process.env.NODE_CONFIG_TS_DIR ??= 'api/.app/config';
+globalThis.process.env.NODE_CONFIG_TS_DIR ??= 'api/.app/config'
 
-const { default: app } = await import('./.app/index.js');
+const { default: app } = await import('./.app/index.js')
 
-export default app;
+export default app
