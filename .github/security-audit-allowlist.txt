@@ -1,0 +1,3 @@
+# GHSA-mh99-v99m-4gvg remains transitive through ESLint plugins using minimatch 3.
+# Revisit when the remaining ESLint plugins support the fixed brace-expansion API.
+GHSA-mh99-v99m-4gvg
