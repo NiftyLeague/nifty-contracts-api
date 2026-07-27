@@ -25,7 +25,7 @@ mock.module('@aws-sdk/client-s3', () => ({
 
 // uploadToS3 creates `client = new S3Client(...)` at module top-level, so it must
 // be imported AFTER the mocks above are registered (bun does not hoist mock.module
-// like vitest's vi.mock).
+// like Bun's mock module API).
 const uploadToS3 = (await import('./uploadToS3')).uploadToS3
 
 beforeEach(() => {
