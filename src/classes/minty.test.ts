@@ -456,3 +456,42 @@ describe('Minty.getCreationInfo', () => {
     expect(await minty.getCreationInfo(1)).toBeUndefined()
   })
 })
+
+// ---------------------------------------------------------------------------
+// Remote-service wrappers and remaining uncovered branches
+// ---------------------------------------------------------------------------
+
+describe('Minty.getIPFSJSON — null return path', () => {
+  it('returns null when getIPFSString yields no content', async () => {
+    const minty = makeMinty()
+    // No init() called → this.ipfs is null → getIPFS returns null →
+    // getIPFSString returns null → str && JSON.parse(str) short-circuits to null
+    const result = await minty.getIPFSJSON(`ipfs://${SAMPLE_CID}`)
+    expect(result).toBeNull()
+  })
+})
+
+describe('Minty.uploadToS3 wrapper', () => {
+  it('delegates to the imported uploadToS3 with correct arguments', async () => {
+    const { uploadToS3: mockedUploadToS3 } = await import('@/utils/uploadToS3')
+    const minty = makeMinty()
+
+    const content = Buffer.from('test-content')
+    await minty.uploadToS3('degens/test.json', content, 'my-bucket')
+
+    expect(mockedUploadToS3).toHaveBeenCalledTimes(1)
+    expect(mockedUploadToS3).toHaveBeenCalledWith('degens/test.json', content, true, 'my-bucket')
+  })
+})
+
+describe('Minty.refreshOpenSea wrapper', () => {
+  it('delegates to refreshOpenSea with the correct target network, token ID, and contract name', async () => {
+    const { refreshOpenSea: mockedRefreshOpenSea } = await import('@/utils/refreshMetadata')
+    const minty = makeMinty()
+
+    await minty.refreshOpenSea(99)
+
+    expect(mockedRefreshOpenSea).toHaveBeenCalledTimes(1)
+    expect(mockedRefreshOpenSea).toHaveBeenCalledWith('mainnet', 99, 'NiftyDegen')
+  })
+})
