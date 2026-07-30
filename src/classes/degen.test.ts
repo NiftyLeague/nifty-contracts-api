@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, mock, spyOn, test } from 'bun:test'
+import { beforeEach, describe, expect, it, mock, spyOn } from 'bun:test'
 
 import { Degen } from './degen'
 

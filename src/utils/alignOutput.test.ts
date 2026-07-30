@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, mock, spyOn, test } from 'bun:test'
+import { afterEach, describe, expect, it, mock, spyOn } from 'bun:test'
 import alignOutput from './alignOutput'
 
 // alignOutput only communicates via console.log — spy on it to assert real behavior.

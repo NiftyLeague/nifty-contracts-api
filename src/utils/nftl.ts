@@ -11,10 +11,19 @@ import { withCache } from './api'
 
 const SUPPLY_TTL_MS = 60_000
 
+async function fetchTotalSupply(targetNetwork: TargetNetwork): Promise<string | null> {
+  const nftlContract = await getContractFactory<NFTLToken>(targetNetwork, NFTL_CONTRACT_NAME)
+  if (nftlContract) {
+    const totalSupply = await nftlContract.totalSupply()
+    return totalSupply.toString()
+  }
+  return null
+}
+
 export async function resolveCirculatingSupplyImpl(): Promise<string | null> {
   try {
-    const secret = config.eth.etherscan
     const targetNetwork = config.eth.network as TargetNetwork
+    const secret = config.eth.etherscan
     const chainId = CHAIN_ID[targetNetwork]
     const contractaddress = NFTL_ADDRESS[targetNetwork]
 
@@ -54,24 +63,8 @@ export async function resolveCirculatingSupplyImpl(): Promise<string | null> {
       console.warn('No Etherscan API key configured; skipping Etherscan request.')
     }
     // Fallback: get totalSupply directly from the contract
-    const nftlContract = await getContractFactory<NFTLToken>(targetNetwork, NFTL_CONTRACT_NAME)
-    if (nftlContract) {
-      const totalSupply = await nftlContract.totalSupply()
-      return totalSupply.toString()
-    }
-    return null
+    return await fetchTotalSupply(targetNetwork)
   } catch {
-    // Final fallback: try contract totalSupply
-    try {
-      const targetNetwork = config.eth.network as TargetNetwork
-      const nftlContract = await getContractFactory<NFTLToken>(targetNetwork, NFTL_CONTRACT_NAME)
-      if (nftlContract) {
-        const totalSupply = await nftlContract.totalSupply()
-        return totalSupply.toString()
-      }
-    } catch {
-      // Ignore
-    }
     return null
   }
 }
