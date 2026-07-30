@@ -1,6 +1,6 @@
 import request from 'supertest'
 import type { Express } from 'express'
-import { afterEach, beforeAll, beforeEach, describe, expect, it, mock, spyOn, test } from 'bun:test'
+import { beforeAll, beforeEach, describe, expect, it, mock, spyOn } from 'bun:test'
 
 import { DEFAULTS, getEndpoints } from './constants/api'
 import {
@@ -95,8 +95,6 @@ beforeAll(async () => {
   ;({ handleNameChangeById } = await import('./utils/handleNameChange'))
   app = (await import('./index')).default
 })
-
-afterEach(() => {})
 
 // ---------------------------------------------------------------------------
 // Helpers

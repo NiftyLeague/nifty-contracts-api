@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, mock, test } from 'bun:test'
+import { beforeEach, describe, expect, it, mock } from 'bun:test'
 
 const mockFetch = mock<() => Promise<any>>()
 const mockGetContractFactory = mock<() => Promise<any>>()

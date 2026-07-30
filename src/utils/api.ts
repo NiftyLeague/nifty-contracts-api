@@ -40,7 +40,6 @@ export const pipeRequest = (url: string, res: Response) => {
     // S3 metadata / images are immutable — let the edge cache them.
     res.setHeader('cache-control', 'public, max-age=86400, immutable')
     getRes.pipe(res)
-    getRes.on('end', () => res.end())
   })
 
   req.setTimeout(REQUEST_TIMEOUT_MS, () => {

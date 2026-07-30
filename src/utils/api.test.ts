@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, jest, mock, spyOn } from 'bun:test'
+import { afterEach, describe, expect, it, jest, mock } from 'bun:test'
 
 import { sleep, withCache } from './api'
 

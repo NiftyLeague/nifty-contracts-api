@@ -1,6 +1,6 @@
 import request from 'supertest'
 import type { Express } from 'express'
-import { beforeAll, beforeEach, describe, expect, it, mock, test } from 'bun:test'
+import { beforeAll, beforeEach, describe, expect, it, mock } from 'bun:test'
 
 import { CONTRACT_METHODS } from './constants/contracts'
 
