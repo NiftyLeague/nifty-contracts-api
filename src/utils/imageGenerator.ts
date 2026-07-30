@@ -1,14 +1,14 @@
-import fs from 'fs';
-import fetch from 'node-fetch';
-import { config } from 'node-config-ts';
+import fs from 'fs'
+import fetch from 'node-fetch'
+import { config } from 'node-config-ts'
 
 /**
  * Returns random background option based on probabilities
  */
 export function raritySelector(tokenId: number) {
-  const backgroundOptions = [...Array(90).fill(0), ...Array(6).fill(1), 2, 2, 2, 3];
-  const idx = Math.floor(Math.random() * backgroundOptions.length);
-  return Math.min(backgroundOptions[idx], tokenId > 3 ? 3 : 1);
+  const backgroundOptions = [...Array(90).fill(0), ...Array(6).fill(1), 2, 2, 2, 3]
+  const idx = Math.floor(Math.random() * backgroundOptions.length)
+  return Math.min(backgroundOptions[idx], tokenId > 3 ? 3 : 1)
 }
 
 /**
@@ -40,34 +40,34 @@ export function generateImageURL(traits: number[], rarity: number, token: number
     ['Neckwear', traits[19]],
     ['Left Item', traits[20]],
     ['Right Item', traits[21]],
-  ];
+  ]
   const params = new URLSearchParams({
     version: config.imageGenerator.version,
     traits: JSON.stringify(traitArray),
     secret: config.imageGenerator.secret,
     rarity: rarity.toString(),
     token: token.toString(),
-  });
-  return `${config.imageGenerator.baseURL}?${params.toString()}`;
+  })
+  return `${config.imageGenerator.baseURL}?${params.toString()}`
 }
 
 /**
  * Download NFT image from webserver.
  */
 export async function downloadImage(url: string, dest: fs.PathLike) {
-  const res = await fetch(url);
+  const res = await fetch(url)
   /* Create an empty file where we can save data */
-  const fileStream = fs.createWriteStream(dest);
+  const fileStream = fs.createWriteStream(dest)
 
   /* Using Promises so that we can use the ASYNC AWAIT syntax */
   await new Promise((resolve, reject) => {
-    res.body?.pipe(fileStream);
-    res.body?.on('error', reject);
+    res.body?.pipe(fileStream)
+    res.body?.on('error', reject)
     fileStream.on('finish', async () => {
-      console.log(`✅ The file is finished downloading.`);
-      resolve(undefined);
-    });
-  });
+      console.log(`✅ The file is finished downloading.`)
+      resolve(undefined)
+    })
+  })
 }
 
 // export async function downloadImage(url: string, dest: fs.PathLike) {

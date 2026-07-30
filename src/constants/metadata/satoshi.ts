@@ -1,5 +1,5 @@
-import { DEGEN_METADATA } from './degens';
-import { SATOSHI_IMAGE_IPFS } from '../ipfs';
+import { DEGEN_METADATA } from './degens'
+import { SATOSHI_IMAGE_IPFS } from '../ipfs'
 
 export const SATOSHI = {
   name: 'Satoshi',
@@ -72,4 +72,4 @@ export const SATOSHI = {
       value: `Satoshi's Samurai Katana`,
     },
   ],
-};
+}

@@ -3,6 +3,10 @@ name: API Docs
 permissions:
   contents: read
 
+concurrency:
+  group: api-docs-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   # Allow to run manually
   workflow_dispatch:
@@ -13,6 +17,10 @@ on:
       - 'config/**'
     branches:
       - main
+      - staging
+  pull_request:
+    branches:
+      - staging
 
 jobs:
   build-docs:

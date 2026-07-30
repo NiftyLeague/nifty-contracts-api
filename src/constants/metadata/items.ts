@@ -1,11 +1,18 @@
-import { Attribute, ItemType, ItemSource, ItemTier, CharacterItemSlotType, Metadata } from '@/types/metadata';
-import { ITEMS_IMAGES_CID } from '../ipfs';
+import {
+  Attribute,
+  ItemType,
+  ItemSource,
+  ItemTier,
+  CharacterItemSlotType,
+  Metadata,
+} from '@/types/metadata'
+import { ITEMS_IMAGES_CID } from '../ipfs'
 
 const ATTRIBUTES = (
   type: ItemType,
   source: ItemSource,
   tier = ItemTier.None,
-  slot = CharacterItemSlotType.None,
+  slot = CharacterItemSlotType.None
 ): Attribute[] => {
   return [
     {
@@ -24,8 +31,8 @@ const ATTRIBUTES = (
       trait_type: 'Slot',
       value: slot,
     },
-  ];
-};
+  ]
+}
 
 export const ITEMS_METADATA: Metadata[] = [
   {
@@ -35,7 +42,12 @@ export const ITEMS_METADATA: Metadata[] = [
     image: `ipfs://${ITEMS_IMAGES_CID}/items/101.gif`,
     external_url: 'https://niftyleague.com',
     description: 'Nifty League CAPE awarded to hero Degens who burned Comic #1.',
-    attributes: ATTRIBUTES(ItemType.Wearable, ItemSource.ComicsBurn1, ItemTier.Legendary, CharacterItemSlotType.Back),
+    attributes: ATTRIBUTES(
+      ItemType.Wearable,
+      ItemSource.ComicsBurn1,
+      ItemTier.Legendary,
+      CharacterItemSlotType.Back
+    ),
   },
   {
     id: 102,
@@ -44,7 +56,12 @@ export const ITEMS_METADATA: Metadata[] = [
     image: `ipfs://${ITEMS_IMAGES_CID}/items/102.gif`,
     external_url: 'https://niftyleague.com',
     description: 'Nifty League HALO bestowed on angel Degens who burned Comic #2.',
-    attributes: ATTRIBUTES(ItemType.Wearable, ItemSource.ComicsBurn2, ItemTier.Epic, CharacterItemSlotType.Hat),
+    attributes: ATTRIBUTES(
+      ItemType.Wearable,
+      ItemSource.ComicsBurn2,
+      ItemTier.Epic,
+      CharacterItemSlotType.Hat
+    ),
   },
   {
     id: 103,
@@ -53,7 +70,12 @@ export const ITEMS_METADATA: Metadata[] = [
     image: `ipfs://${ITEMS_IMAGES_CID}/items/103.gif`,
     external_url: 'https://niftyleague.com',
     description: 'Nifty League DIAMOND BAT directed to diamond-handed Degens who burned Comic #3.',
-    attributes: ATTRIBUTES(ItemType.Weapon, ItemSource.ComicsBurn3, ItemTier.Mythic, CharacterItemSlotType.Primary),
+    attributes: ATTRIBUTES(
+      ItemType.Weapon,
+      ItemSource.ComicsBurn3,
+      ItemTier.Mythic,
+      CharacterItemSlotType.Primary
+    ),
   },
   {
     id: 104,
@@ -62,7 +84,12 @@ export const ITEMS_METADATA: Metadata[] = [
     image: `ipfs://${ITEMS_IMAGES_CID}/items/104.gif`,
     external_url: 'https://niftyleague.com',
     description: 'Nifty League BREAD BAT gifted to hungry Degens who burned Comic #4.',
-    attributes: ATTRIBUTES(ItemType.Weapon, ItemSource.ComicsBurn4, ItemTier.Legendary, CharacterItemSlotType.Primary),
+    attributes: ATTRIBUTES(
+      ItemType.Weapon,
+      ItemSource.ComicsBurn4,
+      ItemTier.Legendary,
+      CharacterItemSlotType.Primary
+    ),
   },
   {
     id: 105,
@@ -70,8 +97,14 @@ export const ITEMS_METADATA: Metadata[] = [
     name: 'Purple Bat',
     image: `ipfs://${ITEMS_IMAGES_CID}/items/105.gif`,
     external_url: 'https://niftyleague.com',
-    description: 'Nifty League special edition PURPLE BAT presented to supportive Degens who burned Comic #5.',
-    attributes: ATTRIBUTES(ItemType.Weapon, ItemSource.ComicsBurn5, ItemTier.Epic, CharacterItemSlotType.Primary),
+    description:
+      'Nifty League special edition PURPLE BAT presented to supportive Degens who burned Comic #5.',
+    attributes: ATTRIBUTES(
+      ItemType.Weapon,
+      ItemSource.ComicsBurn5,
+      ItemTier.Epic,
+      CharacterItemSlotType.Primary
+    ),
   },
   {
     id: 106,
@@ -79,8 +112,14 @@ export const ITEMS_METADATA: Metadata[] = [
     name: 'Companion',
     image: `ipfs://${ITEMS_IMAGES_CID}/items/106.gif`,
     external_url: 'https://niftyleague.com',
-    description: 'Nifty League COMPANION pet entrusted to courageous Degens who burned the rare Comic #6.',
-    attributes: ATTRIBUTES(ItemType.Wearable, ItemSource.ComicsBurn6, ItemTier.Mythic, CharacterItemSlotType.Special),
+    description:
+      'Nifty League COMPANION pet entrusted to courageous Degens who burned the rare Comic #6.',
+    attributes: ATTRIBUTES(
+      ItemType.Wearable,
+      ItemSource.ComicsBurn6,
+      ItemTier.Mythic,
+      CharacterItemSlotType.Special
+    ),
   },
   {
     id: 107,
@@ -92,4 +131,4 @@ export const ITEMS_METADATA: Metadata[] = [
       'Nifty League KEY TO THE CITADEL [comic edition], granted to elite Degens who burned a full set of 6 comics.',
     attributes: ATTRIBUTES(ItemType.Item, ItemSource.ComicsBurnSet),
   },
-];
+]

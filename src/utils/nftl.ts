@@ -1,117 +1,131 @@
-import { config } from 'node-config-ts';
-import fetch from 'node-fetch';
-import { parseEther } from 'ethers';
+import { config } from 'node-config-ts'
+import fetch from 'node-fetch'
+import { parseEther } from 'ethers'
 
-import { CHAIN_ID, NFTL_ADDRESS, NFTL_CONTRACT_NAME } from '@/constants/contracts';
-import { getContractFactory } from '@/contracts';
-import type { TargetNetwork } from '@/types';
-import { getBurnedDegens } from './degensBurned';
-import { NFTLToken } from '@/types/typechain';
-import { withCache } from './api';
+import { CHAIN_ID, NFTL_ADDRESS, NFTL_CONTRACT_NAME } from '@/constants/contracts'
+import { getContractFactory } from '@/contracts'
+import type { TargetNetwork } from '@/types'
+import { getBurnedDegens } from './degensBurned'
+import { NFTLToken } from '@/types/typechain'
+import { withCache } from './api'
 
-const SUPPLY_TTL_MS = 60_000;
+const SUPPLY_TTL_MS = 60_000
 
 export async function resolveCirculatingSupplyImpl(): Promise<string | null> {
   try {
-    const secret = config.eth.etherscan;
-    const targetNetwork = config.eth.network as TargetNetwork;
-    const chainId = CHAIN_ID[targetNetwork];
-    const contractaddress = NFTL_ADDRESS[targetNetwork];
+    const secret = config.eth.etherscan
+    const targetNetwork = config.eth.network as TargetNetwork
+    const chainId = CHAIN_ID[targetNetwork]
+    const contractaddress = NFTL_ADDRESS[targetNetwork]
 
     // Etherscan API V2 unified endpoint
     if (secret) {
-      const supplyURI = `https://api.etherscan.io/v2/api?module=stats&action=tokensupply&contractaddress=${contractaddress}&chainId=${chainId}&apikey=${secret}`;
+      const supplyURI = `https://api.etherscan.io/v2/api?module=stats&action=tokensupply&contractaddress=${contractaddress}&chainId=${chainId}&apikey=${secret}`
       try {
-        const supplyRes = await fetch(supplyURI, {});
+        const supplyRes = await fetch(supplyURI, {})
         if (supplyRes.status < 400) {
-          const response = (await supplyRes.json()) as { result?: string; status?: string; message?: string };
-          if (response.result && /^\d+$/.test(response.result)) {
-            return response.result;
+          const response = (await supplyRes.json()) as {
+            result?: string
+            status?: string
+            message?: string
           }
-          console.warn('Etherscan v2 returned unexpected result, falling back to contract totalSupply:', response);
+          if (response.result && /^\d+$/.test(response.result)) {
+            return response.result
+          }
+          console.warn(
+            'Etherscan v2 returned unexpected result, falling back to contract totalSupply:',
+            response
+          )
         } else {
-          const text = await supplyRes.text();
-          console.warn('Etherscan v2 returned non-OK status, falling back to contract:', supplyRes.status, text);
+          const text = await supplyRes.text()
+          console.warn(
+            'Etherscan v2 returned non-OK status, falling back to contract:',
+            supplyRes.status,
+            text
+          )
         }
       } catch (e) {
-        console.warn('Etherscan v2 request failed, falling back to contract totalSupply:', (e as Error).message);
+        console.warn(
+          'Etherscan v2 request failed, falling back to contract totalSupply:',
+          (e as Error).message
+        )
       }
     } else {
-      console.warn('No Etherscan API key configured; skipping Etherscan request.');
+      console.warn('No Etherscan API key configured; skipping Etherscan request.')
     }
     // Fallback: get totalSupply directly from the contract
-    const nftlContract = await getContractFactory<NFTLToken>(targetNetwork, NFTL_CONTRACT_NAME);
+    const nftlContract = await getContractFactory<NFTLToken>(targetNetwork, NFTL_CONTRACT_NAME)
     if (nftlContract) {
-      const totalSupply = await nftlContract.totalSupply();
-      return totalSupply.toString();
+      const totalSupply = await nftlContract.totalSupply()
+      return totalSupply.toString()
     }
-    return null;
+    return null
   } catch {
     // Final fallback: try contract totalSupply
     try {
-      const targetNetwork = config.eth.network as TargetNetwork;
-      const nftlContract = await getContractFactory<NFTLToken>(targetNetwork, NFTL_CONTRACT_NAME);
+      const targetNetwork = config.eth.network as TargetNetwork
+      const nftlContract = await getContractFactory<NFTLToken>(targetNetwork, NFTL_CONTRACT_NAME)
       if (nftlContract) {
-        const totalSupply = await nftlContract.totalSupply();
-        return totalSupply.toString();
+        const totalSupply = await nftlContract.totalSupply()
+        return totalSupply.toString()
       }
     } catch {
       // Ignore
     }
-    return null;
+    return null
   }
 }
 
 export async function resolveUnclaimedSupplyImpl(): Promise<string | null> {
   try {
-    const targetNetwork = config.eth.network as TargetNetwork;
-    const nftlContract = await getContractFactory<NFTLToken>(targetNetwork, NFTL_CONTRACT_NAME);
+    const targetNetwork = config.eth.network as TargetNetwork
+    const nftlContract = await getContractFactory<NFTLToken>(targetNetwork, NFTL_CONTRACT_NAME)
     if (nftlContract) {
-      const burnedDegens = await getBurnedDegens();
+      const burnedDegens = await getBurnedDegens()
       const activeDegens = Array.from({ length: 10000 }, (_, i) => i + 1).filter(
-        num => burnedDegens !== null && !burnedDegens.includes(num),
-      );
-      const unclaimed = await nftlContract.accumulatedMultiCheck(activeDegens);
-      return unclaimed.toString();
+        (num) => burnedDegens !== null && !burnedDegens.includes(num)
+      )
+      const unclaimed = await nftlContract.accumulatedMultiCheck(activeDegens)
+      return unclaimed.toString()
     }
-    return null;
+    return null
   } catch {
-    return null;
+    return null
   }
 }
 
 export async function resolveTotalSupplyImpl(): Promise<string | null> {
   try {
-    const circulatingSupply = await resolveCirculatingSupplyImpl();
-    const unclaimedSupply = await resolveUnclaimedSupplyImpl();
-    if (!circulatingSupply || !unclaimedSupply) return null;
-    return (BigInt(circulatingSupply) + BigInt(unclaimedSupply)).toString();
+    const circulatingSupply = await resolveCirculatingSupplyImpl()
+    const unclaimedSupply = await resolveUnclaimedSupplyImpl()
+    if (!circulatingSupply || !unclaimedSupply) return null
+    return (BigInt(circulatingSupply) + BigInt(unclaimedSupply)).toString()
   } catch {
-    return null;
+    return null
   }
 }
 
 export const calculateRemainingEmissions = (): string => {
-  const today = new Date();
-  const endDate = new Date('2024-09-14');
-  if (today.getTime() > endDate.getTime()) return parseEther('0').toString();
+  const today = new Date()
+  const endDate = new Date('2024-09-14')
+  if (today.getTime() > endDate.getTime()) return parseEther('0').toString()
 
-  const degenSupply = 9201;
-  const nftlPerDay = 68.5;
-  const daysRemaining = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  const degenSupply = 9201
+  const nftlPerDay = 68.5
+  const daysRemaining = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
 
-  const remainingEmissions = daysRemaining * nftlPerDay * degenSupply;
-  return parseEther(remainingEmissions.toString()).toString();
-};
+  const remainingEmissions = daysRemaining * nftlPerDay * degenSupply
+  return parseEther(remainingEmissions.toString()).toString()
+}
 
 export async function resolveMaxSupplyImpl(): Promise<string | null> {
   try {
-    const totalSupply = await resolveTotalSupplyImpl();
-    if (!totalSupply) return null;
-    const remainingEmissions = calculateRemainingEmissions();
-    return (BigInt(totalSupply) + BigInt(remainingEmissions)).toString();
+    const totalSupply = await resolveTotalSupplyImpl()
+    if (!totalSupply) return null
+    const remainingEmissions = calculateRemainingEmissions()
+    return (BigInt(totalSupply) + BigInt(remainingEmissions)).toString()
   } catch {
-    return null;
+    return null
   }
 }
 
@@ -119,7 +133,7 @@ export async function resolveMaxSupplyImpl(): Promise<string | null> {
 // or the NFTL contract on every request — that's rate-limit prone and risks the
 // function's 30s ceiling. The cache returns the last-good value on transient
 // upstream failure.
-export const resolveCirculatingSupply = withCache(SUPPLY_TTL_MS, resolveCirculatingSupplyImpl);
-export const resolveUnclaimedSupply = withCache(SUPPLY_TTL_MS, resolveUnclaimedSupplyImpl);
-export const resolveTotalSupply = withCache(SUPPLY_TTL_MS, resolveTotalSupplyImpl);
-export const resolveMaxSupply = withCache(SUPPLY_TTL_MS, resolveMaxSupplyImpl);
+export const resolveCirculatingSupply = withCache(SUPPLY_TTL_MS, resolveCirculatingSupplyImpl)
+export const resolveUnclaimedSupply = withCache(SUPPLY_TTL_MS, resolveUnclaimedSupplyImpl)
+export const resolveTotalSupply = withCache(SUPPLY_TTL_MS, resolveTotalSupplyImpl)
+export const resolveMaxSupply = withCache(SUPPLY_TTL_MS, resolveMaxSupplyImpl)

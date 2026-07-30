@@ -8,7 +8,7 @@ export const TRIBES = {
   7: 'Hydra',
   8: 'RugMan',
   9: 'Satoshi',
-};
+}
 
 export const SKIN_COLORS = {
   // Ape
@@ -89,7 +89,7 @@ export const SKIN_COLORS = {
   127: '???',
   128: '???',
   129: '???',
-};
+}
 export const FUR_COLORS = {
   // Ape
   70: 'Sweet Curry',
@@ -130,7 +130,7 @@ export const FUR_COLORS = {
   // Alien
   // Hydra
   130: '???',
-};
+}
 export const EYE_COLORS = {
   101: 'White',
   102: 'River Styx',
@@ -141,7 +141,7 @@ export const EYE_COLORS = {
   107: 'Primrose Path',
   108: 'Cherry Soda',
   109: 'Icy Brook',
-};
+}
 export const PUPIL_COLORS = {
   110: 'River Styx',
   111: 'Cherry Soda',
@@ -152,7 +152,7 @@ export const PUPIL_COLORS = {
   116: 'Sparky Blue',
   117: 'Primrose Path',
   118: 'White',
-};
+}
 export const HAIR = {
   150: 'Beige Afro',
   151: 'Brown Afro',
@@ -267,7 +267,7 @@ export const HAIR = {
   260: 'Blonde Straight',
   261: 'Pink Straight',
   262: 'Purple Straight',
-};
+}
 export const MOUTHS = {
   263: 'Cigarette',
   264: 'Blue Cigarette',
@@ -283,7 +283,7 @@ export const MOUTHS = {
   274: 'Black Vape',
   275: 'Blue Vape',
   276: 'Pink Vape',
-};
+}
 export const BEARDS = {
   277: 'Beige Circle Beard',
   278: 'Caramel Circle Beard',
@@ -348,7 +348,7 @@ export const BEARDS = {
   337: 'Black Van Dyke',
   338: 'Gray Van Dyke',
   339: 'Blonde Van Dyke',
-};
+}
 export const TOPS = {
   340: 'Yellow Bra',
   341: 'Pink Bra',
@@ -449,7 +449,7 @@ export const TOPS = {
   436: 'Red Torn Vest',
   437: 'Brown Torn Vest',
   438: 'Black Torn Vest',
-};
+}
 export const OUTERWEAR = {
   439: 'Black Dinner Jacket',
   440: 'Purple Dinner Jacket',
@@ -527,7 +527,7 @@ export const OUTERWEAR = {
   512: 'Pink Waistcoat',
   513: 'Blue Waistcoat',
   514: 'Red Waistcoat',
-};
+}
 export const PRINTS = {
   515: 'Banana',
   516: 'Baseball Bat',
@@ -570,7 +570,7 @@ export const PRINTS = {
   553: 'Blue Smile',
   554: 'Yellow Smile',
   555: 'Sun',
-};
+}
 export const BOTTOMS = {
   556: 'White Boxers',
   557: 'Red Boxers',
@@ -674,7 +674,7 @@ export const BOTTOMS = {
   655: 'White/Purple Zebra Pants',
   656: 'Black/White Zebra Pants',
   657: 'Pink/Black Zebra Pants',
-};
+}
 export const FOOTWEAR = {
   658: 'Purple Basic Shoes',
   659: 'Green Basic Shoes',
@@ -713,7 +713,7 @@ export const FOOTWEAR = {
   692: 'Pink Work Boots',
   693: 'Blue Work Boots',
   694: 'Red/Yellow Work Boots',
-};
+}
 export const BELTS = {
   695: 'Brown Basic',
   696: 'Black Basic',
@@ -727,7 +727,7 @@ export const BELTS = {
   704: 'Purple/Yellow Striped',
   705: 'Black Studded',
   706: 'White Studded',
-};
+}
 export const HATS = {
   707: 'Red Baseball Cap',
   708: 'Charcoal Baseball Cap',
@@ -772,7 +772,7 @@ export const HATS = {
   747: 'Top Hat',
   748: 'Orange Traffic Cone',
   749: 'Green Traffic Cone',
-};
+}
 export const EYEWEAR = {
   750: 'Purple Broken Glasses',
   751: 'Blue Broken Glasses',
@@ -824,7 +824,7 @@ export const EYEWEAR = {
   797: 'Titanium/Blue Visor',
   798: 'Gold/Blue Visor',
   799: 'Gold/Red Visor',
-};
+}
 export const PIERCINGS = {
   800: 'Diamond Stud',
   801: 'White Diamond Stud',
@@ -836,7 +836,7 @@ export const PIERCINGS = {
   807: 'Gold Nose Ring',
   808: 'Platinum Nose Ring',
   809: 'Black Nose Ring',
-};
+}
 export const WRISTS = {
   810: 'Yellow/Green Sweatband',
   811: 'Pink/Purple Sweatband',
@@ -850,7 +850,7 @@ export const WRISTS = {
   819: 'Black Watch',
   820: 'Brown Watch',
   821: 'Gold Watch',
-};
+}
 export const HANDS = {
   822: 'Red Boxing Gloves',
   823: 'White Boxing Gloves',
@@ -877,7 +877,7 @@ export const HANDS = {
   844: 'Pink/Blue Mittens',
   845: 'Purple/Yellow Mittens',
   846: 'Green/Red Mittens',
-};
+}
 export const NECKWEAR = {
   847: 'Black Bowtie',
   848: 'Brown Bowtie',
@@ -916,7 +916,7 @@ export const NECKWEAR = {
   881: 'Blue Tie',
   882: 'Beige Tie',
   883: 'Bright Green Tie',
-};
+}
 export const LEFT_ITEMS = {
   884: 'Arrow',
   885: 'Axe',
@@ -1010,7 +1010,7 @@ export const LEFT_ITEMS = {
   973: 'Green Yoyo',
   974: 'Pink Yoyo',
   975: 'Blue Yoyo',
-};
+}
 export const RIGHT_ITEMS = {
   976: 'Arrow',
   977: 'Axe',
@@ -1060,4 +1060,4 @@ export const RIGHT_ITEMS = {
   1021: 'Red Umbrella',
   1022: 'Vanilla Ice Cream',
   1023: 'Wand',
-};
+}

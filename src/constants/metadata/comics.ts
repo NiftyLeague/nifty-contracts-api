@@ -1,8 +1,8 @@
-import { Attribute, ItemType, ItemSource, Metadata } from '@/types/metadata';
-import { COMICS_IMAGES_CID } from '../ipfs';
+import { Attribute, ItemType, ItemSource, Metadata } from '@/types/metadata'
+import { COMICS_IMAGES_CID } from '../ipfs'
 
 const COMICS_DESCRIPTION =
-  '📚 Each comic can be burned for a special in-game item! You can also burn a full set (Comics #1-6) for a Citadel Key.';
+  '📚 Each comic can be burned for a special in-game item! You can also burn a full set (Comics #1-6) for a Citadel Key.'
 
 const ATTRIBUTES = (type: ItemType, source: ItemSource): Attribute[] => {
   return [
@@ -14,8 +14,8 @@ const ATTRIBUTES = (type: ItemType, source: ItemSource): Attribute[] => {
       trait_type: 'Source',
       value: source,
     },
-  ];
-};
+  ]
+}
 
 export const COMICS_METADATA: Metadata[] = [
   {
@@ -72,4 +72,4 @@ export const COMICS_METADATA: Metadata[] = [
     description: COMICS_DESCRIPTION,
     attributes: ATTRIBUTES(ItemType.Comic, ItemSource.DegenMint),
   },
-];
+]

@@ -1,17 +1,20 @@
-import type { JsonRpcProvider, TransactionReceipt, TransactionResponse } from 'ethers';
-import { sleep } from './api';
+import type { JsonRpcProvider, TransactionReceipt, TransactionResponse } from 'ethers'
+import { sleep } from './api'
 
 /**
  * Get Transaction Receipt given tx hash
  */
-export async function getTxReceipt(provider: JsonRpcProvider, tx: TransactionResponse): Promise<TransactionReceipt> {
+export async function getTxReceipt(
+  provider: JsonRpcProvider,
+  tx: TransactionResponse
+): Promise<TransactionReceipt> {
   while (true) {
-    const receipt = await provider.getTransactionReceipt(tx.hash);
+    const receipt = await provider.getTransactionReceipt(tx.hash)
     if (receipt && receipt.logs) {
-      console.log('TX RECEIPT', receipt);
-      return receipt;
+      console.log('TX RECEIPT', receipt)
+      return receipt
     }
-    console.log('Waiting for mined block to include your trasaction...');
-    await sleep(4000);
+    console.log('Waiting for mined block to include your trasaction...')
+    await sleep(4000)
   }
 }

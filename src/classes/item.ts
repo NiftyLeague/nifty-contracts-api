@@ -1,23 +1,23 @@
-import path from 'path';
-import fs from 'fs';
+import path from 'path'
+import fs from 'fs'
 
-import type { Metadata, TargetNetwork } from '@/types';
-import { ITEMS_METADATA } from '@/constants/metadata/items';
-import { ITEMS_CONTRACT_NAME } from '@/constants/contracts';
-import { S3_MARKETPLACE_BUCKET } from '@/constants/aws';
-import { ITEMS_IMAGES_CID } from '@/constants/ipfs';
-import { getAssetPath } from '@/utils/assets';
-import { makeGatewayURL } from '@/utils/uriHelpers';
-import { Minty } from './minty';
+import type { Metadata, TargetNetwork } from '@/types'
+import { ITEMS_METADATA } from '@/constants/metadata/items'
+import { ITEMS_CONTRACT_NAME } from '@/constants/contracts'
+import { S3_MARKETPLACE_BUCKET } from '@/constants/aws'
+import { ITEMS_IMAGES_CID } from '@/constants/ipfs'
+import { getAssetPath } from '@/utils/assets'
+import { makeGatewayURL } from '@/utils/uriHelpers'
+import { Minty } from './minty'
 
 /**
  * Construct and asynchronously initialize a new Minty instance.
  * @returns {Promise<Item>} a new instance of Minty, ready to mint NFTs.
  */
 export async function MakeItem(targetNetwork: TargetNetwork) {
-  const m = new Item(targetNetwork, ITEMS_CONTRACT_NAME);
-  await m.init();
-  return m;
+  const m = new Item(targetNetwork, ITEMS_CONTRACT_NAME)
+  await m.init()
+  return m
 }
 
 /**
@@ -46,12 +46,16 @@ class Item extends Minty {
    * @returns {Promise<CreateMetadataResult>}
    */
   async makeItemMetadata(tokenId: number, assetGatewayURL: string) {
-    const item = ITEMS_METADATA.find(i => i.id === Number(tokenId));
-    if (!item) throw new Error(`Item ID ${tokenId} not found`);
-    const metadata: Metadata = { ...item };
-    metadata.image = assetGatewayURL;
-    await this.uploadToS3(`metadata/${tokenId}.json`, JSON.stringify(metadata, null, 2), S3_MARKETPLACE_BUCKET);
-    return metadata;
+    const item = ITEMS_METADATA.find((i) => i.id === Number(tokenId))
+    if (!item) throw new Error(`Item ID ${tokenId} not found`)
+    const metadata: Metadata = { ...item }
+    metadata.image = assetGatewayURL
+    await this.uploadToS3(
+      `metadata/${tokenId}.json`,
+      JSON.stringify(metadata, null, 2),
+      S3_MARKETPLACE_BUCKET
+    )
+    return metadata
   }
 
   /**
@@ -68,19 +72,19 @@ class Item extends Minty {
    * @returns {Promise<GenerateNFTResult>}
    */
   async generateItem(tokenId: number) {
-    const filePath = getAssetPath('items', `${tokenId}.gif`);
-    const content = await fs.promises.readFile(filePath);
-    const basename = path.basename(filePath);
-    const { assetURI, assetGatewayURL } = await this.pinImage(`/items/${basename}`, content);
-    await this.uploadToS3(`images/${basename}`, content, S3_MARKETPLACE_BUCKET);
-    const metadata = await this.makeItemMetadata(tokenId, assetGatewayURL);
+    const filePath = getAssetPath('items', `${tokenId}.gif`)
+    const content = await fs.promises.readFile(filePath)
+    const basename = path.basename(filePath)
+    const { assetURI, assetGatewayURL } = await this.pinImage(`/items/${basename}`, content)
+    await this.uploadToS3(`images/${basename}`, content, S3_MARKETPLACE_BUCKET)
+    const metadata = await this.makeItemMetadata(tokenId, assetGatewayURL)
 
     return {
       tokenId,
       metadata,
       assetURI,
       assetGatewayURL,
-    };
+    }
   }
 
   //////////////////////////////////////////////
@@ -97,8 +101,8 @@ class Item extends Minty {
    * @returns {Promise<NameChangeInfo>}
    */
   async updateItemMetadata(tokenId: number) {
-    const assetGatewayURL = makeGatewayURL(`ipfs://${ITEMS_IMAGES_CID}/items/${tokenId}.gif`);
-    const newMetadata = await this.makeItemMetadata(tokenId, assetGatewayURL);
-    return { newMetadata };
+    const assetGatewayURL = makeGatewayURL(`ipfs://${ITEMS_IMAGES_CID}/items/${tokenId}.gif`)
+    const newMetadata = await this.makeItemMetadata(tokenId, assetGatewayURL)
+    return { newMetadata }
   }
 }

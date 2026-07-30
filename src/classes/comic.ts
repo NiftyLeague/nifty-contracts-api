@@ -1,23 +1,23 @@
-import path from 'path';
-import fs from 'fs';
+import path from 'path'
+import fs from 'fs'
 
-import type { Metadata, TargetNetwork } from '@/types';
-import { COMICS_METADATA } from '@/constants/metadata/comics';
-import { COMICS_CONTRACT_NAME } from '@/constants/contracts';
-import { S3_MARKETPLACE_BUCKET } from '@/constants/aws';
-import { COMICS_IMAGES_CID } from '@/constants/ipfs';
-import { getAssetPath } from '@/utils/assets';
-import { makeGatewayURL } from '@/utils/uriHelpers';
-import { Minty } from './minty';
+import type { Metadata, TargetNetwork } from '@/types'
+import { COMICS_METADATA } from '@/constants/metadata/comics'
+import { COMICS_CONTRACT_NAME } from '@/constants/contracts'
+import { S3_MARKETPLACE_BUCKET } from '@/constants/aws'
+import { COMICS_IMAGES_CID } from '@/constants/ipfs'
+import { getAssetPath } from '@/utils/assets'
+import { makeGatewayURL } from '@/utils/uriHelpers'
+import { Minty } from './minty'
 
 /**
  * Construct and asynchronously initialize a new Minty instance.
  * @returns {Promise<Comic>} a new instance of Minty, ready to mint NFTs.
  */
 export async function MakeComic(targetNetwork: TargetNetwork) {
-  const m = new Comic(targetNetwork, COMICS_CONTRACT_NAME);
-  await m.init();
-  return m;
+  const m = new Comic(targetNetwork, COMICS_CONTRACT_NAME)
+  await m.init()
+  return m
 }
 
 /**
@@ -46,12 +46,16 @@ class Comic extends Minty {
    * @returns {Promise<CreateMetadataResult>}
    */
   async makeComicMetadata(tokenId: number, assetGatewayURL: string) {
-    const comic = COMICS_METADATA.find(c => c.id === Number(tokenId));
-    if (!comic) throw new Error(`Comic ID ${tokenId} not found`);
-    const metadata: Metadata = { ...comic };
-    metadata.image = assetGatewayURL;
-    await this.uploadToS3(`metadata/${tokenId}.json`, JSON.stringify(metadata, null, 2), S3_MARKETPLACE_BUCKET);
-    return metadata;
+    const comic = COMICS_METADATA.find((c) => c.id === Number(tokenId))
+    if (!comic) throw new Error(`Comic ID ${tokenId} not found`)
+    const metadata: Metadata = { ...comic }
+    metadata.image = assetGatewayURL
+    await this.uploadToS3(
+      `metadata/${tokenId}.json`,
+      JSON.stringify(metadata, null, 2),
+      S3_MARKETPLACE_BUCKET
+    )
+    return metadata
   }
 
   /**
@@ -68,12 +72,15 @@ class Comic extends Minty {
    * @returns {Promise<GenerateNFTResult>}
    */
   async generateComic(tokenId: number) {
-    const filePath = getAssetPath('comics', `${tokenId}.png`);
-    const content = await fs.promises.readFile(filePath);
-    const basename = path.basename(filePath);
-    const { assetURI, assetGatewayURL } = await this.pinImage(`/nifty-launch-comics/${basename}`, content);
-    await this.uploadToS3(`images/${basename}`, content, S3_MARKETPLACE_BUCKET);
-    const metadata = await this.makeComicMetadata(tokenId, assetGatewayURL);
+    const filePath = getAssetPath('comics', `${tokenId}.png`)
+    const content = await fs.promises.readFile(filePath)
+    const basename = path.basename(filePath)
+    const { assetURI, assetGatewayURL } = await this.pinImage(
+      `/nifty-launch-comics/${basename}`,
+      content
+    )
+    await this.uploadToS3(`images/${basename}`, content, S3_MARKETPLACE_BUCKET)
+    const metadata = await this.makeComicMetadata(tokenId, assetGatewayURL)
     // await this.refreshOpenSea(tokenId);
 
     return {
@@ -81,7 +88,7 @@ class Comic extends Minty {
       metadata,
       assetURI,
       assetGatewayURL,
-    };
+    }
   }
 
   //////////////////////////////////////////////
@@ -98,8 +105,8 @@ class Comic extends Minty {
    * @returns {Promise<NameChangeInfo>}
    */
   async updateComicMetadata(tokenId: number) {
-    const assetGatewayURL = makeGatewayURL(`ipfs://${COMICS_IMAGES_CID}/comics/${tokenId}.png`);
-    const newMetadata = await this.makeComicMetadata(tokenId, assetGatewayURL);
-    return { newMetadata };
+    const assetGatewayURL = makeGatewayURL(`ipfs://${COMICS_IMAGES_CID}/comics/${tokenId}.png`)
+    const newMetadata = await this.makeComicMetadata(tokenId, assetGatewayURL)
+    return { newMetadata }
   }
 }

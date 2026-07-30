@@ -1,7 +1,7 @@
-import { color } from 'json-colorizer';
-import type { ColorTheme } from 'json-colorizer';
+import { color } from 'json-colorizer'
+import type { ColorTheme } from 'json-colorizer'
 
-const boldBlue = (text: string) => color.bold(color.blue(text));
+const boldBlue = (text: string) => color.bold(color.blue(text))
 
 export const COLORIZE_OPTIONS = {
   indent: 2,
@@ -17,4 +17,4 @@ export const COLORIZE_OPTIONS = {
     BooleanLiteral: color.cyan,
     NullLiteral: color.red,
   } as ColorTheme,
-};
+}
