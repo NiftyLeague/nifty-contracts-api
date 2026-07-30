@@ -1,5 +1,5 @@
 import { CID } from 'multiformats/cid'
-import { beforeEach, describe, expect, it, mock, test } from 'bun:test'
+import { beforeEach, describe, expect, it, mock } from 'bun:test'
 
 const mockAdd = mock<() => Promise<any>>()
 const mockCat = mock()

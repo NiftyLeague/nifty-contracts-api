@@ -28,18 +28,22 @@ export async function getItemIdByTokenId_SAFE(tokenId: string): Promise<bigint> 
 
   // fix if itemId is zero
   if (itemId === 0n) {
-    // find the non-zero itemId in the previous tokenIds and replace zero with it
+    // find the non-zero itemId in the previous tokenids and replace zero with it
     let prevTokenId = Number(tokenId)
     let prevItemId: bigint
+    let attempts = 0
+    const MAX_ATTEMPTS = 10000
 
-    while (true) {
+    while (attempts < MAX_ATTEMPTS) {
       prevTokenId -= 1
+      if (prevTokenId < 1) break
       prevItemId = await contract['itemIdByTokenId'](prevTokenId)
-
       if (prevItemId !== 0n) {
         return prevItemId
       }
+      attempts++
     }
+    throw new Error(`Could not find a non-zero itemId for token ID: ${tokenId}`)
   }
   return itemId
 }

@@ -27,15 +27,6 @@ export type NFTInfo = {
   creationInfo?: CreationInfo
 }
 
-export enum HydraClan {
-  b = 'Battalion',
-  n = 'Naked',
-  o = 'Outlier',
-  r = 'Royalty',
-  s = 'Shadowclan',
-  t = 'Traditionalist',
-}
-
 export enum ItemType {
   Comic = 'Comic',
   Wearable = 'Wearable',
@@ -86,10 +77,7 @@ export enum CharacterItemSlotType {
   Wrist = 'Wrist',
   Hands = 'Hands',
   Neckwear = 'Neckwear',
-  // LeftHeldItem = 'Left Held Item',
-  // RightHeldItem = 'Right Held Item',
   Back = 'Back',
-  // Weapon = 'Weapon',
   Primary = 'Primary',
   Special = 'Special',
 }

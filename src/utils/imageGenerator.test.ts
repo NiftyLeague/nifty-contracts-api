@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, mock, spyOn } from 'bun:test'
+import { describe, expect, it, mock, spyOn } from 'bun:test'
 
 // --- mocks must be set before source imports ---
 
@@ -36,8 +36,6 @@ mock.module('fs', () => ({
 import { generateImageURL, raritySelector, downloadImage } from './imageGenerator'
 
 describe('raritySelector', () => {
-  afterEach(() => {})
-
   it('returns rarity 0 most of the time', () => {
     spyOn(Math, 'random').mockReturnValue(0.1)
     expect(raritySelector(100)).toBe(0)

@@ -25,7 +25,6 @@ mock.module('ethers', () => ({
       }
     },
   },
-  BytesLike: {},
 }))
 
 mock.module('json-colorizer', () => ({
