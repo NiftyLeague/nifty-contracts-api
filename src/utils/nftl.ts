@@ -65,7 +65,13 @@ export async function resolveCirculatingSupplyImpl(): Promise<string | null> {
     // Fallback: get totalSupply directly from the contract
     return await fetchTotalSupply(targetNetwork)
   } catch {
-    return null
+    // One retry: transient provider failures are common, so give the contract
+    // call a second chance before giving up on this request.
+    try {
+      return await fetchTotalSupply(config.eth.network as TargetNetwork)
+    } catch {
+      return null
+    }
   }
 }
 
