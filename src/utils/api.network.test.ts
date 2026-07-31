@@ -71,9 +71,14 @@ describe('api.pipeRequest', () => {
     const fakeStream = {
       statusCode: 200,
       headers: { 'content-type': 'application/json' },
-      pipe: mock(),
-      on: mock(function (this: any, _evt: string, cb: () => void) {
-        if (_evt === 'end') cb()
+      // Node's Readable.pipe() ends the destination writable when the source
+      // stream ends; simulate that here instead of relying on an explicit
+      // 'end' listener in pipeRequest.
+      pipe: mock(function (this: any, dest: any) {
+        dest.end()
+        return dest
+      }),
+      on: mock(function (this: any) {
         return this
       }),
     }
