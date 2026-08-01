@@ -81,7 +81,6 @@ class Comic extends Minty {
     )
     await this.uploadToS3(`images/${basename}`, content, S3_MARKETPLACE_BUCKET)
     const metadata = await this.makeComicMetadata(tokenId, assetGatewayURL)
-    // await this.refreshOpenSea(tokenId);
 
     return {
       tokenId,

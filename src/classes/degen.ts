@@ -4,7 +4,6 @@ import fs from 'fs'
 import { Metadata, TargetNetwork } from '@/types'
 import { getAssetPath } from '@/utils/assets'
 import { downloadImage, generateImageURL } from '@/utils/imageGenerator'
-// import { makeGatewayURL } from '@/utils/uriHelpers';
 
 import {
   CHARACTER_BACKGROUNDS,
@@ -54,7 +53,6 @@ export class Degen extends Minty {
   async generateNFT(tokenId: number) {
     const traits = await this.getCharacterTraits(tokenId)
     const rarity = 1
-    // const filePath = await this.generateImage(tokenId, traits, rarity);
     const filePath = getAssetPath('degens', `${tokenId}.${rarity < 3 ? 'png' : 'gif'}`)
     const content = await fs.promises.readFile(filePath)
     // Upload NFT asset from file

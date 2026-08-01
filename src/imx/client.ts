@@ -25,9 +25,7 @@ import axios from 'axios'
 import { keccak256, toUtf8Bytes, HDNodeWallet } from 'ethers'
 import type { Signer } from 'ethers'
 import { ec } from 'starknet'
-import { config } from 'node-config-ts'
 
-import type { TargetNetwork } from '@/types'
 import { getWallet } from '@/utils/wallet'
 import { generateIMXAuthorisationHeaders } from '@/utils/sign'
 
@@ -39,8 +37,6 @@ const REGISTER_REQUEST_MSG =
 
 // Max STARK field prime (2^251 + 17 * 2^192 + 1).
 const STARK_PRIME = starkCurve.MAX_VALUE
-
-type ImxNetworkConfig = (typeof config.imx)[TargetNetwork]
 
 /**
  * Build the IMX L1->Stark derivation path for an address, matching the SDK's
@@ -272,8 +268,4 @@ export async function updateMetadataSchemaByName(
     }
   )
   return resp.data
-}
-
-export function getImxNetworkConfig(network: TargetNetwork): ImxNetworkConfig {
-  return config.imx[network]
 }
