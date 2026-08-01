@@ -32,19 +32,17 @@ export async function fetchBurnedDegens(): Promise<number[]> {
     const baseURI = `https://eth-${targetNetwork}.g.alchemy.com/nft/v3/${apiKey}`
     const endpoint = `${baseURI}/getNFTsForOwner?contractAddresses[]=${degenAddress}&withMetadata=false&pageSize=100`
 
-    let inventoryRes: number[] = []
-
-    // Fetch BURN_ADDY1
-    const inventoryURI1 = `${endpoint}&owner=${BURN_ADDY1}`
-    inventoryRes = await fetchAndProcess(inventoryURI1, inventoryRes)
-
     // BURN_ADDY1 and BURN_ADDY2 are independent Alchemy queries (different
-    // owner filters), so no inter-call delay is needed between them.
-    // Fetch BURN_ADDY2
+    // owner filters) with no inter-call dependency, so fetch both in parallel
+    // to halve the worst-case burn-list latency.
+    const inventoryURI1 = `${endpoint}&owner=${BURN_ADDY1}`
     const inventoryURI2 = `${endpoint}&owner=${BURN_ADDY2}`
-    inventoryRes = await fetchAndProcess(inventoryURI2, inventoryRes)
+    const [burned1, burned2] = await Promise.all([
+      fetchAndProcess(inventoryURI1, []),
+      fetchAndProcess(inventoryURI2, []),
+    ])
 
-    return inventoryRes.sort((a, b) => a - b)
+    return [...burned1, ...burned2].sort((a, b) => a - b)
   } catch {
     return []
   }
