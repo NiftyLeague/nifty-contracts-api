@@ -58,16 +58,3 @@ export async function generateIMXAuthorisationHeaders(
     signature,
   }
 }
-
-export async function signMessage(
-  message: string,
-  signer: Signer
-): Promise<{ message: string; ethAddress: string; ethSignature: string }> {
-  const ethAddress = await signer.getAddress()
-  const ethSignature = await signRaw(message, signer)
-  return {
-    message,
-    ethAddress,
-    ethSignature,
-  }
-}

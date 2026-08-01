@@ -106,7 +106,6 @@ async function main() {
 
 const TOTAL_DEGENS = 10000
 const START_INDEX = 1
-// const HYDRA_START_INDEX = 9901;
 
 async function refreshDegen(tokenId: number) {
   await refreshOpenSea(targetNetwork, tokenId)
