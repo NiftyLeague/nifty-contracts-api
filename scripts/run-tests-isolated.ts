@@ -2,8 +2,8 @@
 // Run each test file in its own bun process. bun 1.3.14 leaks `mock.module`
 // state across files in a single process (27 false failures) and `bun test
 // --isolate` hangs at summary. Per-file processes avoid both. Fast via xargs -P.
-import { readdirSync, statSync } from 'node:fs'
-import { join } from 'node:path'
+import { existsSync, readdirSync, statSync } from 'node:fs'
+import { join, resolve } from 'node:path'
 import { execFileSync } from 'node:child_process'
 
 function findTestFiles(dir: string, acc: string[] = []): string[] {
@@ -20,7 +20,20 @@ function findTestFiles(dir: string, acc: string[] = []): string[] {
   return acc
 }
 
-const files = findTestFiles(process.cwd())
+function resolveTestFiles(inputs: string[]): string[] {
+  if (inputs.length === 0) return findTestFiles(process.cwd())
+
+  const files: string[] = []
+  for (const input of inputs) {
+    const path = resolve(process.cwd(), input)
+    if (!existsSync(path)) throw new Error(`Test path does not exist: ${input}`)
+    if (statSync(path).isDirectory()) findTestFiles(path, files)
+    else if (path.endsWith('.test.ts') || path.endsWith('.test.tsx')) files.push(path)
+  }
+  return files
+}
+
+const files = resolveTestFiles(process.argv.slice(2))
 let failed = 0
 for (const f of files) {
   try {
