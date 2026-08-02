@@ -36,6 +36,8 @@ export const uploadToS3 = async (
     console.log(`✅ Content uploaded to S3 ${baseDirectory}/${fileName}`)
   } catch (err) {
     console.error(err)
-    if (retry) uploadToS3(fileName, content, false, baseDirectory)
+    // Retry once, awaiting the result so callers don't resolve before the
+    // retry attempt completes (previous fire-and-forget call).
+    if (retry) return uploadToS3(fileName, content, false, baseDirectory)
   }
 }

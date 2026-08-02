@@ -51,7 +51,7 @@ describe('api.resolveDegenMetadata', () => {
     expect(meta).toEqual({ token_id: 7 })
     expect(mockFetch).toHaveBeenCalledWith(
       'https://nifty-league.s3.amazonaws.com/degens/mainnet/metadata/7.json',
-      {}
+      expect.objectContaining({ signal: expect.any(AbortSignal) })
     )
   })
 })
