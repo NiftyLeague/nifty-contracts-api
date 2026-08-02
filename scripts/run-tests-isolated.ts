@@ -33,7 +33,23 @@ function resolveTestFiles(inputs: string[]): string[] {
   return files
 }
 
-const files = resolveTestFiles(process.argv.slice(2))
+const inputs: string[] = []
+const excludes: string[] = []
+const args = process.argv.slice(2)
+for (let index = 0; index < args.length; index += 1) {
+  const arg = args[index]
+  if (arg === '--exclude') {
+    const excluded = args[index + 1]
+    if (!excluded) throw new Error('--exclude requires a test path')
+    excludes.push(resolve(process.cwd(), excluded))
+    index += 1
+  } else {
+    inputs.push(arg)
+  }
+}
+
+const excluded = new Set(excludes)
+const files = resolveTestFiles(inputs).filter((file) => !excluded.has(file))
 let failed = 0
 for (const f of files) {
   try {
