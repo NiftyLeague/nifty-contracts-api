@@ -37,7 +37,7 @@ const checks = [
     path: '/NFTL/supply/max',
     status: 200,
     // res.send(string) yields text/html in Express 5 — that is the actual
-    // production contract for these supply routes (see src/index.test.ts).
+    // production contract for these supply routes (see src/index.integration.test.ts).
     contentType: /text\/html|text\/plain|application\/json/,
     validate: (body, text) => {
       const v = text ?? body
