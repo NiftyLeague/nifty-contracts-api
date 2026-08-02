@@ -75,13 +75,13 @@ cannot pollute the run.
 
 ## API contract → test mapping (for AI maintenance)
 
-| Route                | Contract source                         | Hermetic unit test                            | Live test                         |
-| -------------------- | --------------------------------------- | --------------------------------------------- | --------------------------------- |
-| `GET /`              | `src/constants/api.ts`                  | `src/index.test.ts`                           | `test/smoke/api.contract.test.ts` |
-| `/NFTL/supply*`      | `src/utils/nftl.ts`                     | `src/index.test.ts`, `src/utils/nftl.test.ts` | `test/smoke/...`                  |
-| `/degens/burn-list`  | `src/utils/degensBurned.ts`             | `src/index.test.ts`                           | `test/smoke/...`                  |
-| `/:network/degen/*`  | `src/utils/api.ts` (`pipeRequest`)      | `src/index.test.ts` (mocked)                  | `test/smoke/...`                  |
-| `/imx/marketplace/*` | `src/constants/metadata/marketplace.ts` | `src/index.test.ts`                           | `test/smoke/...`                  |
+| Route                | Contract source                         | Hermetic test                                             | Live test                         |
+| -------------------- | --------------------------------------- | --------------------------------------------------------- | --------------------------------- |
+| `GET /`              | `src/constants/api.ts`                  | `src/index.integration.test.ts`                           | `test/smoke/api.contract.test.ts` |
+| `/NFTL/supply*`      | `src/utils/nftl.ts`                     | `src/index.integration.test.ts`, `src/utils/nftl.test.ts` | `test/smoke/...`                  |
+| `/degens/burn-list`  | `src/utils/degensBurned.ts`             | `src/index.integration.test.ts`                           | `test/smoke/...`                  |
+| `/:network/degen/*`  | `src/utils/api.ts` (`pipeRequest`)      | `src/index.integration.test.ts` (mocked)                  | `test/smoke/...`                  |
+| `/imx/marketplace/*` | `src/constants/metadata/marketplace.ts` | `src/index.integration.test.ts`                           | `test/smoke/...`                  |
 
 When a dependency update breaks a route, the failure surfaces in the matching
 hermetic test (fast) and, if it reaches production, in `bun run audit:endpoints`
