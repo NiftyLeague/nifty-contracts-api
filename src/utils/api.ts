@@ -5,9 +5,15 @@ import type { Metadata } from '@/types'
 
 const REQUEST_TIMEOUT_MS = 10000
 
+// node-fetch v3 accepts an AbortSignal timeout option. Keeps slow/dead
+// upstreams from hanging the function up to maxDuration, matching the
+// timeout behaviour used in pipeRequest and degensBurned.
+const fetchWithTimeout = (url: string) =>
+  fetch(url, { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) })
+
 export async function fetchMetadata(URI: string): Promise<Metadata | null> {
   try {
-    const response = await fetch(URI, {})
+    const response = await fetchWithTimeout(URI)
     if (response.status < 400) return response.json() as unknown as Metadata
     return null
   } catch {
