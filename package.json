@@ -4,7 +4,7 @@
   "description": "Nifty League Contracts API & Webhooks",
   "repository": "github:NiftyLeague/nifty-contracts-api.git",
   "author": "Nifty Andy",
-  "license": "AGPL-3.0-or-later",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "dist/src/index.js",
   "bin": {
