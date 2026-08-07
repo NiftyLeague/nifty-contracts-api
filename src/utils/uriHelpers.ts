@@ -15,7 +15,7 @@ export function stripIpfsUriPrefix(cidOrURI: string) {
 export function ensureIpfsUriPrefix(cidOrURI: CID | string) {
   let uri = cidOrURI.toString()
   if (!uri.startsWith('ipfs://')) {
-    uri = 'ipfs://' + cidOrURI
+    uri = 'ipfs://' + uri
   }
   // Avoid the Nyan Cat bug (https://github.com/ipfs/go-ipfs/pull/7930)
   if (uri.startsWith('ipfs://ipfs/')) {

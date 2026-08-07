@@ -1,6 +1,5 @@
 import { config } from 'node-config-ts'
 import fetch from 'node-fetch'
-import { parseEther } from 'ethers'
 
 import { CHAIN_ID, NFTL_ADDRESS, NFTL_CONTRACT_NAME } from '@/constants/contracts'
 import { getContractFactory } from '@/contracts'
@@ -81,8 +80,9 @@ export async function resolveUnclaimedSupplyImpl(): Promise<string | null> {
     const nftlContract = await getContractFactory<NFTLToken>(targetNetwork, NFTL_CONTRACT_NAME)
     if (nftlContract) {
       const burnedDegens = await getBurnedDegens()
+      const burnedSet = new Set(burnedDegens ?? [])
       const activeDegens = Array.from({ length: 10000 }, (_, i) => i + 1).filter(
-        (num) => burnedDegens !== null && !burnedDegens.includes(num)
+        (num) => !burnedSet.has(num)
       )
       const unclaimed = await nftlContract.accumulatedMultiCheck(activeDegens)
       return unclaimed.toString()
@@ -105,16 +105,8 @@ export async function resolveTotalSupplyImpl(): Promise<string | null> {
 }
 
 export const calculateRemainingEmissions = (): string => {
-  const today = new Date()
-  const endDate = new Date('2024-09-14')
-  if (today.getTime() > endDate.getTime()) return parseEther('0').toString()
-
-  const degenSupply = 9201
-  const nftlPerDay = 68.5
-  const daysRemaining = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
-
-  const remainingEmissions = daysRemaining * nftlPerDay * degenSupply
-  return parseEther(remainingEmissions.toString()).toString()
+  // Emissions period ended 2024-09-14; no remaining emissions.
+  return '0'
 }
 
 export async function resolveMaxSupplyImpl(): Promise<string | null> {

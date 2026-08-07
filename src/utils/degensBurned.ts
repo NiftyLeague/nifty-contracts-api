@@ -1,22 +1,14 @@
 import { config } from 'node-config-ts'
-import fetch from 'node-fetch'
 
 import { getContractAddress } from '@/contracts'
 import { DEGEN_CONTRACT_NAME } from '@/constants/contracts'
 import type { TargetNetwork } from '@/types'
-import { sleep, withCache } from './api'
+import { sleep, fetchWithTimeout, withCache } from './api'
 
 const BURN_ADDY1 = '0x000000000000000000000000000000000000dEaD'
 const BURN_ADDY2 = '0x0000000000000000000000000000000000000001'
 
 const BURN_LIST_TTL_MS = 60_000
-
-const FETCH_TIMEOUT_MS = 10000
-
-// node-fetch v3 accepts an AbortSignal timeout option. Keeps Alchemy paged calls
-// from hanging the function up to maxDuration on a slow/dead upstream.
-const fetchWithTimeout = (url: string, options: any) =>
-  fetch(url, { ...options, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) })
 
 type NftOwned = {
   contractAddress: string
