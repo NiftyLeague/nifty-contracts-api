@@ -159,4 +159,75 @@ describe('api.pipeRequest', () => {
     expect((res as any).status).toHaveBeenCalledWith(502)
     expect((res as any).json).toHaveBeenCalled()
   })
+
+  it('returns a 502 when the upstream request times out', async () => {
+    const res = {
+      headersSent: false,
+      setHeader: mock(),
+      status: mock(function (this: any) {
+        return this
+      }),
+      json: mock(),
+      end: mock(),
+    } as unknown as Response
+
+    mockHttpsGet.mockImplementation((_url: string, cb: (s: any) => void) => {
+      const req = {
+        setTimeout: mock(function (this: any, _ms: number, timeoutCb: () => void) {
+          setImmediate(timeoutCb)
+          return this
+        }),
+        on: mock(function (this: any, evt: string, handler: (e?: Error) => void) {
+          if (evt === 'error') {
+            ;(this as any).errorHandler = handler
+          }
+          return this
+        }),
+        destroy: mock(function (this: any, err?: Error) {
+          const handler = (this as any).errorHandler
+          if (handler) handler(err)
+          return this
+        }),
+      }
+      cb({ statusCode: 200, headers: {}, pipe: mock(), on: mock() })
+      return req
+    })
+
+    pipeRequest('https://example.com/x', res)
+    await new Promise((r) => setTimeout(r, 20))
+
+    expect((res as any).status).toHaveBeenCalledWith(502)
+    expect((res as any).json).toHaveBeenCalledWith(
+      expect.objectContaining({ errors: expect.any(Array) })
+    )
+  })
+
+  it('ends the response when the request errors after headers are sent', async () => {
+    const res = {
+      headersSent: true,
+      setHeader: mock(),
+      status: mock(function (this: any) {
+        return this
+      }),
+      json: mock(),
+      end: mock(),
+    } as unknown as Response
+
+    const fakeReq = {
+      setTimeout: mock(),
+      on: mock(function (this: any, evt: string, cb: (e?: Error) => void) {
+        if (evt === 'error') cb(new Error('boom'))
+        return this
+      }),
+      destroy: mock(),
+    }
+    mockHttpsGet.mockReturnValue(fakeReq as never)
+
+    pipeRequest('https://example.com/x', res)
+    await new Promise((r) => setTimeout(r, 5))
+
+    expect((res as any).end).toHaveBeenCalled()
+    expect((res as any).status).not.toHaveBeenCalled()
+    expect((res as any).json).not.toHaveBeenCalled()
+  })
 })
