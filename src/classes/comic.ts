@@ -6,7 +6,7 @@ import { MarketplaceCollection } from './marketplaceCollection'
 
 /**
  * Construct and asynchronously initialize a new Comic instance.
- * @returns {Promise<Comic>} a new instance of Minty, ready to mint NFTs.
+ * @returns {Promise<Comic>} a new instance of Comic, ready to mint NFTs.
  */
 export async function MakeComic(targetNetwork: TargetNetwork) {
   const m = new Comic(targetNetwork)
@@ -15,10 +15,10 @@ export async function MakeComic(targetNetwork: TargetNetwork) {
 }
 
 /**
- * Minty is the main object responsible for storing NFT data and interacting with the smart contract.
+ * Comic is the main object responsible for storing NFT data and interacting with the smart contract.
  * Before constructing, make sure that the contract has been deployed
  *
- * Minty requires async initialization, so the Minty class (and its constructor) are not exported.
+ * Comic requires async initialization, so the Comic class (and its constructor) are not exported.
  * To make one, use the async {@link MakeComic} function.
  */
 class Comic extends MarketplaceCollection {

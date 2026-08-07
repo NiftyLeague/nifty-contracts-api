@@ -8,8 +8,8 @@ const REQUEST_TIMEOUT_MS = 10000
 // node-fetch v3 accepts an AbortSignal timeout option. Keeps slow/dead
 // upstreams from hanging the function up to maxDuration, matching the
 // timeout behaviour used in pipeRequest and degensBurned.
-const fetchWithTimeout = (url: string) =>
-  fetch(url, { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) })
+export const fetchWithTimeout = (url: string, options: any = {}) =>
+  fetch(url, { ...options, signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) })
 
 export async function fetchMetadata(URI: string): Promise<Metadata | null> {
   try {
