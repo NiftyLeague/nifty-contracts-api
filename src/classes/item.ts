@@ -6,7 +6,7 @@ import { MarketplaceCollection } from './marketplaceCollection'
 
 /**
  * Construct and asynchronously initialize a new Item instance.
- * @returns {Promise<Item>} a new instance of Minty, ready to mint NFTs.
+ * @returns {Promise<Item>} a new instance of Item, ready to mint NFTs.
  */
 export async function MakeItem(targetNetwork: TargetNetwork) {
   const m = new Item(targetNetwork)
@@ -15,10 +15,10 @@ export async function MakeItem(targetNetwork: TargetNetwork) {
 }
 
 /**
- * Minty is the main object responsible for storing NFT data and interacting with the smart contract.
+ * Item is the main object responsible for storing NFT data and interacting with the smart contract.
  * Before constructing, make sure that the contract has been deployed
  *
- * Minty requires async initialization, so the Minty class (and its constructor) are not exported.
+ * Item requires async initialization, so the Item class (and its constructor) are not exported.
  * To make one, use the async {@link MakeItem} function.
  */
 class Item extends MarketplaceCollection {

@@ -216,7 +216,7 @@ export class Minty {
    */
   async getIPFS(cidOrURI: string) {
     const cid = stripIpfsUriPrefix(cidOrURI)
-    return this.ipfs && concat(await all(this.ipfs?.cat(cid)))
+    return this.ipfs && concat(await all(this.ipfs.cat(cid)))
   }
 
   /**
