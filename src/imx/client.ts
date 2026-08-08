@@ -142,12 +142,11 @@ export async function getUser(apiUrl: string, address: string): Promise<ImxUser>
  */
 export async function registerUser(apiUrl: string, signer: Signer): Promise<ImxUser> {
   const address = (await signer.getAddress()).toLowerCase()
-  const { publicKey: starkKey } = await deriveStarkKeyPair(signer)
+  const { publicKey: starkKey, privateKey: starkPriv } = await deriveStarkKeyPair(signer)
 
   // stark_signature: Stark signature over pedersen(pedersen(starkKey), pack(address))
   const inner = pedersen(starkKey, '0x0')
   const msgHash = pedersen(inner, packAddressFelt(address))
-  const starkPriv = (await deriveStarkKeyPair(signer)).privateKey
   const reduced = `0x${(BigInt(msgHash) % STARK_PRIME).toString(16)}`
   const starkSig = starkCurve.sign(reduced, starkPriv)
   const starkSignature = `0x${starkSig.r.toString(16).padStart(64, '0')}${starkSig.s.toString(16).padStart(64, '0')}`

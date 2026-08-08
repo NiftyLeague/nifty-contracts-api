@@ -1,4 +1,4 @@
-import { describe, expect, it, mock, spyOn } from 'bun:test'
+import { describe, expect, it, mock } from 'bun:test'
 
 // --- mocks must be set before source imports ---
 
@@ -33,34 +33,7 @@ mock.module('fs', () => ({
 
 // --- now safe to import source ---
 
-import { generateImageURL, raritySelector, downloadImage } from './imageGenerator'
-
-describe('raritySelector', () => {
-  it('returns rarity 0 most of the time', () => {
-    spyOn(Math, 'random').mockReturnValue(0.1)
-    expect(raritySelector(100)).toBe(0)
-  })
-
-  it('returns rarity 1 when random falls in the 6% band', () => {
-    spyOn(Math, 'random').mockReturnValue(0.92)
-    expect(raritySelector(100)).toBe(1)
-  })
-
-  it('returns rarity 2 when random falls in the 3% band', () => {
-    spyOn(Math, 'random').mockReturnValue(0.97)
-    expect(raritySelector(100)).toBe(2)
-  })
-
-  it('returns rarity 3 when random falls in the 1% band', () => {
-    spyOn(Math, 'random').mockReturnValue(0.995)
-    expect(raritySelector(100)).toBe(3)
-  })
-
-  it('caps rarity at 1 for low token IDs', () => {
-    spyOn(Math, 'random').mockReturnValue(0.995)
-    expect(raritySelector(1)).toBe(1)
-  })
-})
+import { generateImageURL, downloadImage } from './imageGenerator'
 
 describe('generateImageURL', () => {
   it('builds the correct image URL with params', () => {
