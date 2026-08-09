@@ -1,4 +1,6 @@
-export default function alignOutput(labelValuePairs: any[]) {
+type LabelValuePair = [label: string, value: unknown]
+
+export default function alignOutput(labelValuePairs: LabelValuePair[]) {
   const maxLabelLength = labelValuePairs
     .map(([l]) => l.length)
     .reduce((len, max) => (len > max ? len : max))

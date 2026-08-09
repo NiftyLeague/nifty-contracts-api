@@ -26,7 +26,7 @@ const writeStreamMock = {
 }
 const fsSpy = mock(function () {
   return writeStreamMock
-}) as never
+}) as ReturnType<typeof mock>
 mock.module('fs', () => ({
   default: fs,
   createWriteStream: fsSpy,
@@ -42,7 +42,7 @@ describe('imageGenerator.downloadImage', () => {
       }),
       on: mock(),
     }
-    mockFetch.mockResolvedValue({ body })
+    mockFetch.mockResolvedValue({ ok: true, body })
 
     await downloadImage('https://images.example/x.png', '/tmp/out.png')
 
@@ -61,10 +61,57 @@ describe('imageGenerator.downloadImage', () => {
         return this
       }),
     }
-    mockFetch.mockResolvedValue({ body })
+    mockFetch.mockResolvedValue({ ok: true, body })
 
     await expect(downloadImage('https://images.example/x.png', '/tmp/out.png')).rejects.toThrow(
       'stream failed'
+    )
+  })
+
+  it('rejects when the upstream responds with a non-OK status', async () => {
+    fsSpy.mockClear()
+    mockFetch.mockResolvedValue({ ok: false, status: 404, statusText: 'Not Found' })
+
+    await expect(
+      downloadImage('https://images.example/missing.png', '/tmp/out.png')
+    ).rejects.toThrow('404 Not Found')
+    expect(fsSpy).not.toHaveBeenCalled()
+  })
+
+  it('rejects when the upstream response has no body', async () => {
+    fsSpy.mockClear()
+    mockFetch.mockResolvedValue({ ok: true, body: null })
+
+    await expect(downloadImage('https://images.example/empty.png', '/tmp/out.png')).rejects.toThrow(
+      'Failed to download image'
+    )
+    expect(fsSpy).not.toHaveBeenCalled()
+  })
+
+  it('rejects when the write stream emits an error', async () => {
+    const body = {
+      pipe: mock(function (this: any) {
+        return this
+      }),
+      on: mock(),
+    }
+    const failingWriteStream = {
+      on: mock(function (this: any, _e: string, cb: (err: Error) => void) {
+        if (_e === 'error') cb(new Error('disk full'))
+        return this
+      }),
+    }
+    const fsSpyFail = mock(function () {
+      return failingWriteStream
+    }) as never
+    mock.module('fs', () => ({
+      default: fs,
+      createWriteStream: fsSpyFail,
+    }))
+    mockFetch.mockResolvedValue({ ok: true, body })
+
+    await expect(downloadImage('https://images.example/x.png', '/tmp/out.png')).rejects.toThrow(
+      'disk full'
     )
   })
 })

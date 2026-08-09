@@ -44,9 +44,16 @@ export function generateImageURL(traits: number[], rarity: number, token: number
 
 /**
  * Download NFT image from webserver.
+ *
+ * Rejects (instead of hanging) when the upstream responds with a non-OK
+ * status, omits a body, or when writing to disk fails.
  */
 export async function downloadImage(url: string, dest: fs.PathLike) {
   const res = await fetch(url)
+  if (!res.ok || !res.body) {
+    throw new Error(`Failed to download image: ${res.status} ${res.statusText}`)
+  }
+
   /* Create an empty file where we can save data */
   const fileStream = fs.createWriteStream(dest)
 
@@ -54,6 +61,7 @@ export async function downloadImage(url: string, dest: fs.PathLike) {
   await new Promise((resolve, reject) => {
     res.body?.pipe(fileStream)
     res.body?.on('error', reject)
+    fileStream.on('error', reject)
     fileStream.on('finish', async () => {
       console.log(`✅ The file is finished downloading.`)
       resolve(undefined)

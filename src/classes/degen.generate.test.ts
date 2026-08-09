@@ -78,22 +78,24 @@ describe('Degen.generateImage', () => {
   it('uses .png extension for rarity < 3', async () => {
     const degen = makeDegen()
     const filePath = await degen.generateImage(42, [1, 0, 3], 1)
-    expect(filePath).toBe('./assets/images/degens/42.png')
+    expect(mockGetAssetPath).toHaveBeenCalledWith('degens', '42.png')
+    expect(filePath).toBe('/fake/degens/42.png')
     expect(mockGenerateImageURL).toHaveBeenCalledWith([1, 0, 3], 1, 42)
     expect(mockDownloadImage).toHaveBeenCalledWith(
       'https://unity.example/image/42',
-      './assets/images/degens/42.png'
+      '/fake/degens/42.png'
     )
   })
 
   it('uses .gif extension for rarity >= 3', async () => {
     const degen = makeDegen()
     const filePath = await degen.generateImage(7, [], 3)
-    expect(filePath).toBe('./assets/images/degens/7.gif')
+    expect(mockGetAssetPath).toHaveBeenCalledWith('degens', '7.gif')
+    expect(filePath).toBe('/fake/degens/7.gif')
     expect(mockGenerateImageURL).toHaveBeenCalledWith([], 3, 7)
     expect(mockDownloadImage).toHaveBeenCalledWith(
       'https://unity.example/image/7',
-      './assets/images/degens/7.gif'
+      '/fake/degens/7.gif'
     )
   })
 })
