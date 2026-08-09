@@ -2,6 +2,7 @@ import fetch from 'node-fetch'
 import https from 'https'
 import type { Request, Response } from 'express'
 import type { Metadata } from '@/types'
+import { S3_BASE_URL, S3_DEGENS_BUCKET } from '@/constants/aws'
 
 const REQUEST_TIMEOUT_MS = 10000
 
@@ -23,7 +24,7 @@ export async function fetchMetadata(URI: string): Promise<Metadata | null> {
 
 export async function resolveDegenMetadata(req: Request): Promise<Metadata | null> {
   const { network, token_id } = req.params
-  const URI = `https://nifty-league.s3.amazonaws.com/degens/${network}/metadata/${token_id}.json`
+  const URI = `${S3_BASE_URL}/${S3_DEGENS_BUCKET}/${network}/metadata/${token_id}.json`
   return fetchMetadata(URI)
 }
 

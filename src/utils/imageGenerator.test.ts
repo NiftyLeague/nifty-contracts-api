@@ -13,6 +13,7 @@ mock.module('node-config-ts', () => ({
 }))
 
 const fetchSpy = mock(async (_url: string) => ({
+  ok: true,
   body: {
     pipe: mock(() => {}),
     on: mock((_event: string, cb: () => void) => {
