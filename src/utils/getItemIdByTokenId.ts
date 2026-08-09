@@ -13,8 +13,7 @@ function getBurnerContract() {
   return new Contract(address, abi, provider) as BaseContract
 }
 
-async function getItemIdByTokenId(tokenId: string): Promise<bigint> {
-  const contract = getBurnerContract()
+async function getItemIdByTokenId(contract: BaseContract, tokenId: string): Promise<bigint> {
   const itemId: bigint = await contract['itemIdByTokenId'](tokenId)
   return itemId
 }
@@ -24,7 +23,7 @@ export async function getItemIdByTokenId_SAFE(tokenId: string): Promise<bigint> 
   const itemIndex: bigint = await contract['itemIndex']()
   if (BigInt(tokenId) > itemIndex) throw new Error(`Item ID not found for token ID: ${tokenId}`)
 
-  const itemId: bigint = await getItemIdByTokenId(tokenId)
+  const itemId: bigint = await getItemIdByTokenId(contract, tokenId)
 
   // fix if itemId is zero
   if (itemId === 0n) {

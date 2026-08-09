@@ -54,39 +54,40 @@ app.use(cors())
 // ------ NFTL
 //////////////////////////////////////////////
 
-const handleCirculatingSupply = async (res: Response, next: NextFunction) => {
-  const supply = await resolveCirculatingSupply()
+// All /NFTL/supply routes share the same shape: resolve, send, or hand the
+// error to Express's error handler. Keeping one helper avoids duplicating the
+// send/next branch across five route registrations.
+const handleSupply = async (
+  res: Response,
+  next: NextFunction,
+  resolve: () => Promise<string | null>
+) => {
+  const supply = await resolve()
   if (supply) res.send(supply)
   else next(new Error('Unable to resolve supply.'))
 }
 
 app.get('/NFTL/supply', async function (req: Request, res: Response, next: NextFunction) {
-  await handleCirculatingSupply(res, next)
+  await handleSupply(res, next, resolveCirculatingSupply)
 })
 
 app.get(
   '/NFTL/supply/circulating',
   async function (req: Request, res: Response, next: NextFunction) {
-    await handleCirculatingSupply(res, next)
+    await handleSupply(res, next, resolveCirculatingSupply)
   }
 )
 
 app.get('/NFTL/supply/unclaimed', async function (req: Request, res: Response, next: NextFunction) {
-  const supply = await resolveUnclaimedSupply()
-  if (supply) res.send(supply)
-  else next(new Error('Unable to resolve supply.'))
+  await handleSupply(res, next, resolveUnclaimedSupply)
 })
 
 app.get('/NFTL/supply/total', async function (req: Request, res: Response, next: NextFunction) {
-  const supply = await resolveTotalSupply()
-  if (supply) res.send(supply)
-  else next(new Error('Unable to resolve supply.'))
+  await handleSupply(res, next, resolveTotalSupply)
 })
 
 app.get('/NFTL/supply/max', async function (req: Request, res: Response, next: NextFunction) {
-  const supply = await resolveMaxSupply()
-  if (supply) res.send(supply)
-  else next(new Error('Unable to resolve supply.'))
+  await handleSupply(res, next, resolveMaxSupply)
 })
 
 //////////////////////////////////////////////
@@ -126,15 +127,14 @@ app.get('/imx/marketplace/collection.json', async function (req: Request, res: R
 })
 
 app.get('/imx/marketplace/metadata/:token_id', async function (req: Request, res: Response) {
-  let tokenId = req.params.token_id
-  if (Array.isArray(tokenId)) tokenId = tokenId[0]
-  if (tokenId.endsWith('.json')) tokenId = tokenId.slice(0, -5)
+  // Express 5 route params are strings; strip an optional .json suffix.
+  const rawTokenId = String(req.params.token_id)
+  const tokenId = rawTokenId.endsWith('.json') ? rawTokenId.slice(0, -5) : rawTokenId
   pipeRequest(`${S3_BASE_URL}/${S3_MARKETPLACE_BUCKET}/metadata/${tokenId}.json`, res)
 })
 
 app.get('/imx/marketplace/images/:token_id', async function (req: Request, res: Response) {
-  const rawTokenId = req.params.token_id
-  const tokenId = Array.isArray(rawTokenId) ? rawTokenId[0] : rawTokenId
+  const tokenId = String(req.params.token_id)
   // COMICS 1-100 are PNG, Items 101+ are GIF
   const fileType = Number(tokenId) <= 100 ? 'png' : 'gif'
   pipeRequest(`${S3_BASE_URL}/${S3_MARKETPLACE_BUCKET}/images/${tokenId}.${fileType}`, res)
